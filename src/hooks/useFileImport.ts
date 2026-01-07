@@ -108,6 +108,7 @@ export function useFileImport() {
 
   return {
     raw,
+    setRaw,
     protocols,
     error,
     busy,

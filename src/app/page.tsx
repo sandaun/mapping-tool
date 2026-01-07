@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
+import { generateSignalsRows } from '@/lib/actions/generateSignals';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -14,6 +15,7 @@ import { ErrorDisplay } from '@/components/ErrorDisplay';
 export default function Home() {
   const {
     raw,
+    setRaw,
     protocols,
     error,
     busy,
@@ -79,6 +81,32 @@ export default function Home() {
     setParseWarnings(result.warnings);
   }
 
+  function onGenerateSignals() {
+    if (!raw || deviceSignals.length === 0) return;
+
+    try {
+      const result = generateSignalsRows(
+        deviceSignals,
+        selectedTemplateId,
+        raw,
+        'simple'
+      );
+
+      setRaw(result.updatedWorkbook);
+
+      if (result.warnings.length > 0) {
+        setParseWarnings((prev) => [...prev, ...result.warnings]);
+      }
+
+      // Clear CSV input i signals després de generar
+      setCsvInput('');
+      setDeviceSignals([]);
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Error desconegut';
+      setParseWarnings((prev) => [...prev, message]);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50 px-6 py-10 text-zinc-900">
       <main className="mx-auto flex w-full max-w-4xl flex-col gap-6">
@@ -125,6 +153,7 @@ export default function Home() {
             onCsvInputChange={setCsvInput}
             onParseCSV={onParseCSV}
             onCopyPrompt={onCopyPrompt}
+            onGenerateSignals={onGenerateSignals}
             deviceSignals={deviceSignals}
             parseWarnings={parseWarnings}
             busy={busy}

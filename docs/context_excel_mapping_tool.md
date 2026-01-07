@@ -231,6 +231,64 @@ Examples:
 
 ---
 
+## Future enhancements (post-MVP)
+
+### Device management
+
+- **Multiple device instances**: Allow user to specify how many identical devices to generate with the same signal set (e.g., generate 3 devices with the same 10 signals → 30 rows)
+- **Custom slave IDs**: Allow manual specification of Modbus slave ID, or auto-increment from last existing device
+- **Port and protocol configuration**: Allow selection of RTU vs TCP, and custom port names (currently defaults to "RTU // Port A")
+
+### Policies and automation
+
+- **Grouped allocation**: Allocate addresses grouped by device (e.g., Device 0: 0-99, Device 1: 100-199)
+- **Offset-by-type allocation**: Different base addresses for different signal types
+- **Custom conversion tables**: User-defined conversion IDs and mappings
+
+### BACnet Units auto-detection
+
+**Post-MVP (keyword matching):**
+
+- **Simple keyword dictionary**: Automatic unit assignment based on signal name patterns
+  - Temperature signals → 62 (degrees_Celsius)
+  - Humidity signals → 98 (percent_relative_humidity)
+  - Pressure signals → 53 (pascals) or 55 (bars)
+  - Flow signals → 119 (liters_per_minute) or 135 (cubic_meters_per_hour)
+  - Power signals → 132 (watts) or 48 (kilowatts)
+  - Current signals → 3 (amperes)
+  - CO2/PPM signals → 96 (parts_per_million)
+- **Fallback to 95 (no_units)** if no pattern match
+- **Multi-language support**: Keywords in English, Spanish, Catalan
+
+**Future (AI-powered):**
+
+- **OpenAI integration**: Interpret non-standard signal names and suggest most probable units
+- **Context-aware detection**: Consider device type and industry domain (HVAC, electrical, industrial)
+- **Confidence scoring**: Show probability of unit match, allow user to confirm/override
+- **Learning from corrections**: Store user corrections to improve future suggestions
+- **Batch processing**: Analyze all signals together for better context understanding
+
+### AI-powered parsing
+
+- **OpenAI API integration**: Parse unstructured device documentation (PDFs, manuals) into structured signal lists
+- **Text extraction**: Support for EDE files, manufacturer-specific formats
+
+### Validation and preview
+
+- **Signal selection UI**: Interactive table with checkboxes to select which signals to generate
+  - Preview all parsed signals before generation
+  - Allow user to deselect unwanted signals (debug, duplicates, obsolete)
+  - Show signal details (name, type, address, mapped values)
+  - Bulk select/deselect options (all, none, by device, by type)
+  - Filter and search capabilities
+  - Generate only selected signals
+- **Canonical layer**: Intermediate normalized representation for validation before writing to Excel
+- **Diff preview**: Show before/after comparison of changes
+- **Conflict detection**: Warn about duplicate addresses, instances, or signal names
+- **Pre-generation validation**: Check for address conflicts, missing required fields, invalid data types
+
+---
+
 ## Key sentence (mental model)
 
 > Excel defines the language. Device signals provide the vocabulary. Policies define the grammar. AI only helps with translation, not writing.

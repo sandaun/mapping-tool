@@ -52,3 +52,9 @@ Examples:
 ## AI usage
 
 AI can help interpret unclear text or propose mappings, but the final table changes must be deterministic, validated, and user-reviewable (diff/preview).
+
+## Git commit conventions
+
+- Commit messages MUST be a single line, maximum 72 characters
+- Use imperative mood: "Add feature" not "Added feature"
+- Be concise and descriptive

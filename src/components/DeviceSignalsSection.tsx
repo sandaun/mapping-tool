@@ -7,6 +7,7 @@ type DeviceSignalsSectionProps = {
   onCsvInputChange: (value: string) => void;
   onParseCSV: () => void;
   onCopyPrompt: () => void;
+  onGenerateSignals: () => void;
   deviceSignals: DeviceSignal[];
   parseWarnings: string[];
   busy: boolean;
@@ -18,6 +19,7 @@ export function DeviceSignalsSection({
   onCsvInputChange,
   onParseCSV,
   onCopyPrompt,
+  onGenerateSignals,
   deviceSignals,
   parseWarnings,
   busy,
@@ -88,8 +90,18 @@ export function DeviceSignalsSection({
       {/* Preview signals */}
       {deviceSignals.length > 0 && (
         <div className="mt-4 rounded-lg bg-zinc-50 p-3">
-          <div className="text-sm font-medium">
-            Senyals parseades: {deviceSignals.length}
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-medium">
+              Senyals parseades: {deviceSignals.length}
+            </div>
+            <button
+              type="button"
+              onClick={onGenerateSignals}
+              disabled={busy}
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            >
+              Generate Signals
+            </button>
           </div>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-left text-sm">
