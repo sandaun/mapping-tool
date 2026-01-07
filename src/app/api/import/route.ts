@@ -9,6 +9,12 @@ import {
 
 export const runtime = 'nodejs';
 
+function isStringArray(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) && value.every((item) => typeof item === 'string')
+  );
+}
+
 export async function POST(request: Request) {
   const formData = await request.formData();
   const file = formData.get('file');
@@ -28,9 +34,13 @@ export async function POST(request: Request) {
 
     // Llegir expectedSheets opcional del FormData (JSON string)
     const expectedSheetsRaw = formData.get('expectedSheets');
-    const expectedSheets = expectedSheetsRaw
-      ? (JSON.parse(String(expectedSheetsRaw)) as string[])
-      : undefined;
+    let expectedSheets: string[] | undefined;
+    if (expectedSheetsRaw) {
+      const parsed: unknown = JSON.parse(String(expectedSheetsRaw));
+      if (isStringArray(parsed)) {
+        expectedSheets = parsed;
+      }
+    }
 
     const raw = workbookArrayBufferToRaw(arrayBuffer, expectedSheets);
 

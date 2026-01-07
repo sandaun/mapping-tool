@@ -92,22 +92,33 @@ export function parseDeviceSignalsCSV(
       const addressRaw = cols[addressIdx];
       const dataType = cols[dataTypeIdx];
       const units = unitsIdx >= 0 ? cols[unitsIdx] : undefined;
-      const description = descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
+      const description =
+        descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
 
-      if (!deviceId || !signalName || !registerType || !addressRaw || !dataType) {
+      if (
+        !deviceId ||
+        !signalName ||
+        !registerType ||
+        !addressRaw ||
+        !dataType
+      ) {
         warnings.push(
-          `Fila ${i + 2}: camps obligatoris buits (deviceId, signalName, registerType, address, dataType).`
+          `Fila ${
+            i + 2
+          }: camps obligatoris buits (deviceId, signalName, registerType, address, dataType).`
         );
         continue;
       }
 
       const address = parseInt(addressRaw, 10);
       if (isNaN(address)) {
-        warnings.push(`Fila ${i + 2}: address "${addressRaw}" no és un número.`);
+        warnings.push(
+          `Fila ${i + 2}: address "${addressRaw}" no és un número.`
+        );
         continue;
       }
 
-      signals.push({
+      const signal: ModbusSignal = {
         deviceId,
         signalName,
         registerType,
@@ -115,7 +126,8 @@ export function parseDeviceSignalsCSV(
         dataType,
         units,
         description,
-      } as ModbusSignal);
+      };
+      signals.push(signal);
     }
   } else if (gatewayType === 'modbus-slave__bacnet-client') {
     // Espera: deviceId,signalName,objectType,instance,units,description
@@ -146,34 +158,40 @@ export function parseDeviceSignalsCSV(
       const objectType = cols[objectTypeIdx];
       const instanceRaw = cols[instanceIdx];
       const units = unitsIdx >= 0 ? cols[unitsIdx] : undefined;
-      const description = descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
+      const description =
+        descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
 
       if (!deviceId || !signalName || !objectType || !instanceRaw) {
         warnings.push(
-          `Fila ${i + 2}: camps obligatoris buits (deviceId, signalName, objectType, instance).`
+          `Fila ${
+            i + 2
+          }: camps obligatoris buits (deviceId, signalName, objectType, instance).`
         );
         continue;
       }
 
       const instance = parseInt(instanceRaw, 10);
       if (isNaN(instance)) {
-        warnings.push(`Fila ${i + 2}: instance "${instanceRaw}" no és un número.`);
+        warnings.push(
+          `Fila ${i + 2}: instance "${instanceRaw}" no és un número.`
+        );
         continue;
       }
 
-      signals.push({
+      const signal: BACnetSignal = {
         deviceId,
         signalName,
         objectType,
         instance,
         units,
         description,
-      } as BACnetSignal);
+      };
+      signals.push(signal);
     }
   }
 
   if (signals.length === 0 && warnings.length === 0) {
-    warnings.push('No s\'han pogut parsejar senyals.');
+    warnings.push("No s'han pogut parsejar senyals.");
   }
 
   return { signals, warnings };

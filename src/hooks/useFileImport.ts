@@ -2,6 +2,20 @@ import { useState } from 'react';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { ImportResponse, ProtocolsMetadata } from '@/types/page.types';
 
+// Type guards
+function isErrorResponse(data: unknown): data is { error: unknown } {
+  return typeof data === 'object' && data !== null && 'error' in data;
+}
+
+function isImportResponse(data: unknown): data is ImportResponse {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'raw' in data &&
+    'protocols' in data
+  );
+}
+
 export function useFileImport() {
   const [raw, setRaw] = useState<RawWorkbook | null>(null);
   const [protocols, setProtocols] = useState<ProtocolsMetadata | null>(null);
@@ -33,18 +47,20 @@ export function useFileImport() {
         body: formData,
       });
 
-      const data = (await res.json()) as unknown;
+      const data: unknown = await res.json();
       if (!res.ok) {
-        const message =
-          typeof data === 'object' && data && 'error' in data
-            ? String((data as { error: unknown }).error)
-            : 'Error important.';
+        const message = isErrorResponse(data)
+          ? String(data.error)
+          : 'Error important.';
         throw new Error(message);
       }
 
-      const importData = data as ImportResponse;
-      setRaw(importData.raw);
-      setProtocols(importData.protocols);
+      if (!isImportResponse(data)) {
+        throw new Error('Resposta invàlida del servidor.');
+      }
+
+      setRaw(data.raw);
+      setProtocols(data.protocols);
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setError(message);
@@ -66,11 +82,10 @@ export function useFileImport() {
       });
 
       if (!res.ok) {
-        const data = (await res.json()) as unknown;
-        const message =
-          typeof data === 'object' && data && 'error' in data
-            ? String((data as { error: unknown }).error)
-            : 'Error exportant.';
+        const data: unknown = await res.json();
+        const message = isErrorResponse(data)
+          ? String(data.error)
+          : 'Error exportant.';
         throw new Error(message);
       }
 

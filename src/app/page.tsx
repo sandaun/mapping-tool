@@ -61,10 +61,6 @@ export default function Home() {
     await importArrayBufferAsFile(arrayBuffer, file.name);
   }
 
-  function handleTemplateChange(id: string) {
-    setSelectedTemplateId(id as (typeof TEMPLATES)[number]['id']);
-  }
-
   function onCopyPrompt() {
     navigator.clipboard.writeText(selectedTemplate.promptText);
   }
@@ -105,7 +101,7 @@ export default function Home() {
 
           <TemplateSelector
             selectedTemplateId={selectedTemplateId}
-            onTemplateChange={handleTemplateChange}
+            onTemplateChange={setSelectedTemplateId}
             onLoadTemplate={onLoadTemplate}
             busy={busy}
           />
