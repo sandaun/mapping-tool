@@ -4,6 +4,9 @@
 
 This project is a **Next.js** tool to help engineers build **protocol gateways**, initially focused on **BACnet ↔ Modbus**.
 
+Instead of requiring the user to upload a Signals Excel file every time, the tool provides **gateway-specific Excel templates** stored in the repository.  
+Each template corresponds to a **gateway direction and protocol combination** (e.g. BACnet → Modbus Master, Modbus → BACnet Server, KNX → BACnet, etc.) and defines the exact structure expected by the target software.
+
 The tool imports a **Signals Excel file** whose structure is critical (it is consumed by external software). The goal is to **automatically populate and modify the Signals table** based on real device signal lists, allow the user to review the result, and export the Excel **with the exact same structure**.
 
 The project intentionally separates:
@@ -30,29 +33,28 @@ The project intentionally separates:
 
 ## MVP goal (where we want to arrive)
 
-For BACnet → Modbus gateways:
+This MVP supports **multiple gateway types**, each with its own Signals Excel template.
 
-1. Import the **Signals Excel** to understand:
+### Gateway types (initial scope)
 
-   - structure
-   - column semantics
-   - protocol metadata already present in the file
+- **BACnet Client → Modbus Master**
+  - A BACnet BMS/SCADA controls real Modbus slave devices.
+  - Requires importing **Modbus register maps** (meters, HVAC controllers, PLCs, etc.).
+- **Modbus Client → BACnet Server**
+  - A Modbus SCADA/BMS controls BACnet devices through a virtual BACnet Server.
+  - Requires importing **BACnet point lists** (thermostats, controllers, etc.).
 
-2. Import or paste a **BACnet point list** (signals of one or more devices, e.g. 8 thermostats).
+### Target workflow
 
-3. Automatically:
-
-   - classify points (analog / binary / multistate)
-   - select relevant points (rules + optional AI help)
-   - generate Modbus mappings using deterministic policies
-   - write rows into the Signals table following the exact Excel structure
-
-4. Let the user:
-
-   - review and validate the table
-   - see warnings (duplicate addresses, incompatible formats, etc.)
-
-5. Export the updated Excel.
+1. User selects the **gateway type** from a predefined list.
+2. The system loads the corresponding **Signals Excel template** from the repository.
+3. User imports or pastes **device signal definitions** (Modbus register maps or BACnet point lists).
+4. The system automatically:
+   - classifies signals (analog / binary / multistate)
+   - applies deterministic mapping rules and address allocation policies
+   - writes rows into the Signals table following the selected template structure
+5. User reviews the generated table and warnings.
+6. User exports the updated Excel.
 
 ---
 
@@ -66,6 +68,32 @@ Therefore:
 
 - The Excel does not tell us which devices exist
 - The Excel tells us **how signals must be written** for the target software
+
+---
+
+## Signals Excel templates
+
+Signals Excel files are treated as **gateway-specific templates**, not generic inputs.
+
+- Each template defines:
+  - sheet names
+  - column names
+  - column order
+  - protocol semantics for a specific gateway direction
+- Templates are stored in the repository and loaded automatically based on the selected gateway type.
+- Users do not manually edit template structure; automation only fills or modifies rows.
+
+Example repository structure:
+
+```
+/templates
+  /bacnet-to-modbus
+    Signals.xlsx
+  /modbus-to-bacnet
+    Signals.xlsx
+  /knx-to-bacnet
+    Signals.xlsx
+```
 
 ---
 
@@ -193,7 +221,7 @@ Examples:
 
 ## MVP roadmap
 
-1. Import Signals Excel (done)
+1. Select gateway type and load Signals template
 2. Import device signal list (CSV / JSON / text)
 3. Normalize signals into canonical form
 4. Apply deterministic mapping rules

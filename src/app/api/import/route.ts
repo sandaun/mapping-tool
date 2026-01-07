@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
+import * as XLSX from 'xlsx';
 
-import { ExcelContractError, workbookArrayBufferToRaw } from '@/lib/excel/raw';
+import {
+  ExcelContractError,
+  workbookArrayBufferToRaw,
+  readProtocolsMetadataFromWorkbook,
+} from '@/lib/excel/raw';
 
 export const runtime = 'nodejs';
 
@@ -17,8 +22,19 @@ export async function POST(request: Request) {
 
   try {
     const arrayBuffer = await file.arrayBuffer();
-    const raw = workbookArrayBufferToRaw(arrayBuffer);
-    return NextResponse.json(raw);
+    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+    const protocols = readProtocolsMetadataFromWorkbook(workbook);
+
+    // Llegir expectedSheets opcional del FormData (JSON string)
+    const expectedSheetsRaw = formData.get('expectedSheets');
+    const expectedSheets = expectedSheetsRaw
+      ? (JSON.parse(String(expectedSheetsRaw)) as string[])
+      : undefined;
+
+    const raw = workbookArrayBufferToRaw(arrayBuffer, expectedSheets);
+
+    return NextResponse.json({ raw, protocols });
   } catch (error) {
     if (error instanceof ExcelContractError) {
       return NextResponse.json(

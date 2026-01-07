@@ -12,12 +12,6 @@ export type RawWorkbook = {
   sheets: RawSheet[];
 };
 
-export const EXPECTED_SHEETS = [
-  'Signals',
-  'BACnet Server',
-  'Conversions',
-] as const;
-
 export class ExcelContractError extends Error {
   readonly missingSheets: string[];
 
@@ -82,7 +76,8 @@ function aoaToRawSheet(name: string, aoa: unknown[][]): RawSheet {
 }
 
 export function workbookArrayBufferToRaw(
-  arrayBuffer: ArrayBuffer
+  arrayBuffer: ArrayBuffer,
+  expectedSheets?: string[]
 ): RawWorkbook {
   const uint8 = new Uint8Array(arrayBuffer);
   const workbook = XLSX.read(uint8, {
@@ -97,8 +92,10 @@ export function workbookArrayBufferToRaw(
     return aoaToRawSheet(name, aoa);
   });
 
+  // Validació dinàmica: si es passen expectedSheets, valida'ls; si no, només 'Signals'
+  const sheetsToValidate = expectedSheets ?? ['Signals'];
   const present = new Set(workbook.SheetNames);
-  const missing = EXPECTED_SHEETS.filter((s) => !present.has(s));
+  const missing = sheetsToValidate.filter((s) => !present.has(s));
   if (missing.length > 0) {
     throw new ExcelContractError(
       `Falten sheets esperats: ${missing.join(', ')}`,
@@ -123,4 +120,29 @@ export function rawToXlsxBuffer(raw: RawWorkbook): Buffer {
   }
 
   return XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' }) as Buffer;
+}
+
+export type ProtocolsMetadata = {
+  internalProtocol: string | null;
+  externalProtocol: string | null;
+};
+
+export function readProtocolsMetadataFromWorkbook(
+  workbook: XLSX.WorkBook
+): ProtocolsMetadata {
+  const sheet = workbook.Sheets['Signals'];
+  if (!sheet) {
+    return { internalProtocol: null, externalProtocol: null };
+  }
+
+  const b4 = sheet['B4'];
+  const b5 = sheet['B5'];
+
+  const internalProtocol =
+    b4?.v != null && String(b4.v).trim() !== '' ? String(b4.v).trim() : null;
+
+  const externalProtocol =
+    b5?.v != null && String(b5.v).trim() !== '' ? String(b5.v).trim() : null;
+
+  return { internalProtocol, externalProtocol };
 }
