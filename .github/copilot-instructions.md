@@ -56,5 +56,8 @@ AI can help interpret unclear text or propose mappings, but the final table chan
 ## Git commit conventions
 
 - Commit messages MUST be a single line, maximum 72 characters
+- Use Conventional Commits format: `type: description`
+- Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`
 - Use imperative mood: "Add feature" not "Added feature"
 - Be concise and descriptive
+- Examples: `feat: add BACnet instance allocation`, `fix: correct Modbus address mapping`
