@@ -166,24 +166,6 @@ function findHeaderRowIndex(sheet: {
 }
 
 /**
- * Map BACnet object type code to generic signal name
- */
-function getBACnetTypeName(objectType: string): string {
-  const nameMap: Record<string, string> = {
-    AI: 'Analog Input',
-    AO: 'Analog Output',
-    AV: 'Analog Value',
-    BI: 'Binary Input',
-    BO: 'Binary Output',
-    BV: 'Binary Value',
-    MI: 'Multistate Input',
-    MO: 'Multistate Output',
-    MV: 'Multistate Value',
-  };
-  return nameMap[objectType] ?? objectType;
-}
-
-/**
  * Detect the highest device number already in the Signals sheet
  */
 function getLastDeviceNumber(sheet: {
@@ -355,8 +337,8 @@ export function generateSignalsRows(
       // BACnet columns
       row[findCol('#')] = nextId++;
       row[findCol('Active')] = 'True';
-      row[findCol('Description')] = modbusSignal.signalName; // Nom específic de la senyal
-      row[findCol('Name')] = getBACnetTypeName(objectType); // Nom genèric del tipus
+      row[findCol('Name')] = modbusSignal.signalName; // BACnet object-name
+      row[findCol('Description')] = ''; // Camp opcional (buit per defecte)
       row[findCol('Type')] = formatBACnetType(objectType);
       row[findCol('Instance')] = instance;
       // Auto-detect units from signal name, fallback to defaults
@@ -445,8 +427,8 @@ export function generateSignalsRows(
       // BACnet columns
       row[findCol('#')] = nextId++;
       row[findCol('Active')] = 'True';
-      row[findCol('Description')] = bacnetSignal.signalName; // Nom específic de la senyal
-      row[findCol('Name')] = getBACnetTypeName(bacnetSignal.objectType); // Nom genèric del tipus
+      row[findCol('Name')] = bacnetSignal.signalName; // BACnet object-name
+      row[findCol('Description')] = ''; // Camp opcional (buit per defecte)
       row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
       row[findCol('Instance')] = bacnetSignal.instance;
       // Auto-detect units from signal name, fallback to defaults
