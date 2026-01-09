@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
-import { generateSignalsRows } from '@/lib/actions/generateSignals';
+import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
+import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -85,12 +86,18 @@ export default function Home() {
     if (!raw || deviceSignals.length === 0) return;
 
     try {
-      const result = generateSignalsRows(
-        deviceSignals,
-        selectedTemplateId,
-        raw,
-        'simple'
-      );
+      let result;
+
+      // Dispatch to correct action based on gateway type
+      if (selectedTemplateId === 'bacnet-server__modbus-master') {
+        result = generateBACnetFromModbus(deviceSignals, raw, 'simple');
+      } else if (selectedTemplateId === 'modbus-slave__bacnet-client') {
+        result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
+      } else {
+        throw new Error(
+          `Gateway type not implemented yet: ${selectedTemplateId}`
+        );
+      }
 
       setRaw(result.updatedWorkbook);
 
