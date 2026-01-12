@@ -1,0 +1,4375 @@
+KNX communication protocol
+
+1MNUPRKNX001
+
+User manual
+
+Limitation of Liability
+The Manufacturer reserves the right to modify the specifications in this manual without previous warning. Any copy of this manual, in
+part or in full, whether by photocopy or by other means, even of electronic nature, without the manufacture giving written authorisation,
+breaches the terms of copyright and is liable to prosecution.
+It is absolutely forbidden to use the device for different uses other than those for which it has been devised for, as inferred to in this
+manual. When using the features in this device, obey all laws and respect privacy and legitimate rights of others.
+EXCEPT TO THE EXTENT PROHIBITED BY APPLICABLE LAW, UNDER NO CIRCUMSTANCES SHALL THE MANUFACTURER BE
+LIABLE FOR CONSEQUENTIAL DAMAGES SUSTAINED IN CONNECTION WITH SAID PRODUCT AND THE MANUFACTURER NEITHER
+ASSUMES NOR AUTHORIZES ANY REPRESENTATIVE OR OTHER PERSON TO ASSUME FOR IT ANY OBBLIGATION OR LIABILTY
+OTHER THAN SUCH AS IS EXPRESSLY SET FORTH HEREIN.
+All trademarks in this manual are property of their respective owners.
+The information contained in this manual is for information purposes only, is subject to changes without previous warning and cannot
+be considered binding for the Manufacturer. The Manufacturer assumes no responsabilty for any errors or incoherence possibly
+contained in this manual.
+
+KNX communication protocol
+for KNX modules
+
+September edition 2015
+
+Index
+1. DATAPOINT TYPES.......................................................................... 7
+2. PARAMETERS TO BE PRESET. ........................................................ 7
+2.1 Energy counter selection................................................................................................7
+2.2 Sending mode. ................................................................................................................7
+
+3. ONDEMAND COMMUNICATION OBJECTS...................................... 12
+3.1 Info on the KNX module. ...............................................................................................12
+3.2 Info&status on the combined energy counter...............................................................12
+3.3 Group of measurements...............................................................................................13
+
+4. WRITING COMMUNICATION OBJECTS........................................... 14
+4.1 Energy counter management. ......................................................................................14
+
+5. CYCLIC & VARIATION COMMUNICATION OBJECTS........................ 15
+5.1 Realtime values. ...........................................................................................................15
+5.2 Total energy counters. ..................................................................................................16
+5.3 Tariff 1 energy counters................................................................................................16
+5.4 Tariff 2 energy counters................................................................................................17
+5.5 Partial energy counters. ...............................................................................................18
+5.6 Balance energy counters. .............................................................................................18
+
+1. DATAPOINT TYPES
+DPT
+
+Name
+
+Unit / Range
+
+Format
+
+Resolution
+
+5.010
+
+DPT_Value_1_Ucount
+
+0 ... 255
+
+U8
+
+1 count
+
+8.001
+
+DPT_Value_2_Count
+
+-32768 ... 32767
+
+V16
+
+1 pulses
+
+14.019
+
+DPT_Value_Electric_Current
+
+A
+
+F32
+
+1A
+
+14.028
+
+DPT_Electric_PotentialDifference
+
+V
+
+F32
+
+1V
+
+14.033
+
+DPT_Value_Angular_Frequency
+
+Hz
+
+F32
+
+1 Hz
+
+14.056
+
+DPT_Value_Power
+
+± ≈10-44.85 ... ≈1038.53 W
+
+F32
+
+1W
+
+16.000
+
+DPT_String_ASCII
+
+-
+
+A14
+
+-
+
+29.010
+
+DPT_ActiveEnergy_V64
+
+-9223372036854775808 ... 9223372036854775808 Wh
+
+V64
+
+1 Wh
+
+29.011
+
+DPT_ApparantEnergy_V64
+
+-9223372036854775808 ... 9223372036854775808 VAh
+
+V64
+
+1 VAh
+
+29.012
+
+DPT_ReactiveEnergy_V64
+
+-9223372036854775808 ... 9223372036854775808 varh
+
+V64
+
+1 varh
+
+217.001
+
+DPT_Version
+
+0 ... 31, 0 ... 31, 0 ... 63
+
+U5U5U6 -
+
+-
+
+Custom 1 byte
+
+00000000 ... 11111111
+
+B8
+
+-
+
+-
+
+Custom 2 byte
+
+0000000000000000 ... 1111111111111111
+
+B16
+
+-
+
+English
+
+Here follows all the Datapoint Types (DPT) used by KNX communication module.
+
+Table 1.1 – Datapoint types used by KNX communication module
+
+2. PARAMETERS TO BE PRESET
+The specific parameters and addresses can be assigned and transferred to the bus device by ETS (Engineering Tool Software).
+
+2.1 Energy counter selection
+At first time, it is important to preset the energy counter model.
+Parameter name
+
+Possible selection
+
+Model
+
+3 Phase 4 Wires, 3 Phase 3 Wires, 1 Phase
+
+Table 2.1.1 – Energy counter selection
+
+2.2 Sending mode
+It is important to preset the sending mode of communication objects.
+Different sending modes are available:
+• Cyclic
+• Variation
+• OnDemand
+Cyclic: the object is transmitted cyclically at a preset time interval. Every object set in Cyclic mode cannot be transmitted in Variation
+mode too.
+Variation: the object is transmitted when the difference between the present measurement and the last measured value overcome a
+preset threshold. A different threshold is defined for voltage, current, frequency, active/apparent/reactive powers, active/apparent/
+reactive energies. Every object set in Variation mode cannot be transmitted in Cyclic mode too.
+OnDemand: an object is transmitted when requested. In case of measurement request (e.g. phase voltage) a group of defined
+parameters is transmitted (phase voltage, line voltage, current, ...). Every object can be transmitted OnDemand even if preset as
+Cyclic or Variation mode.
+
+KNX communication protocol
+
+7
+
+According to the sending mode to be used for each object, carry out the programming following the tables here below.
+WIRING MODE LEGEND:
+3.4.3 > 3 phase, 4 wires, 3 currents
+3.3.3 > 3 phase, 3 wires, 3 currents
+1ph > single phase
+		
+3.3.2 > 3 phase, 3 wires, 2 currents
+
+English
+
+PRESET TIME FOR CYCLIC MODE
+Parameter name
+
+Unit
+
+Value range
+
+Cyclic time
+
+s
+
+1...60000 ms
+
+Parameter name
+
+Unit
+
+Value range
+
+Voltage variation
+
+V
+
+0...65535 mV
+
+Current variation
+
+A
+
+0...65535 mA
+
+Power factor variation
+
+-
+
+0...1000 m
+
+Frequency variation
+
+Hz
+
+0...255 (x 0.01 Hz)
+
+Active power variation
+
+W
+
+0...65535 W
+
+Apparent power variation
+
+VA
+
+0...65535 VA
+
+Reactive power variation
+
+var
+
+0...65535 var
+
+Active energy variation
+
+kWh
+
+0...65535 Wh
+
+Apparent energy variation
+
+kVAh
+
+0...65535 VAh
+
+Reactive energy variation
+
+kvarh
+
+0...65535 varh
+
+Table 2.2.1 – Preset time for Cyclic mode
+
+THRESHOLDS FOR VARIATION MODE
+
+Table 2.2.2 – Thresholds according to the parameter for Variation mode
+
+SENDING MODE FOR REALTIME VALUES
+
+8
+
+Parameter name
+
+Possible selection
+
+Phase 1 voltage
+
+OnDemand & Variation / Cyclic
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+Phase 2 voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+Line 12 voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Line 23 voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Line 31 voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+System voltage
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Phase 1 current
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Phase 2 current
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Phase 3 current
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+Neutral current
+
+OnDemand & Variation / Cyclic
+
+X
+
+System current
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 power factor
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 power factor
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 power factor
+
+OnDemand & Variation / Cyclic
+
+X
+
+System power factor
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 active power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 active power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 active power
+
+OnDemand & Variation / Cyclic
+
+X
+
+System active power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 apparent power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 apparent power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 apparent power
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+KNX communication protocol
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+System apparent power
+
+OnDemand & Variation / Cyclic
+
+Phase 1 reactive power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 reactive power
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 reactive power
+
+OnDemand & Variation / Cyclic
+
+X
+
+System reactive power
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+Frequency
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+English
+
+Parameter name
+
+Table 2.2.3 – Realtime values
+
+SENDING MODE FOR TOTAL COUNTERS
+Parameter name
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+System imported active energy
+
+OnDemand & Variation / Cyclic
+
+System exported active energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported ind. apparent energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported ind. apparent energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported cap. apparent energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported cap. apparent energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported ind. reactive energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported ind. reactive energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported cap. reactive energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported cap. reactive energy
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+Table 2.2.4 – Total counters
+
+SENDING MODE FOR TARIFF 1 COUNTERS
+Parameter name
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+Phase 1 imported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+Phase 2 imported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported active energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported inductive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+KNX communication protocol
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+9
+
+English
+
+Parameter name
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+Phase 1 exported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+Phase 2 exported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported capacitive apparent energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported inductive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported capacitive reactive energy - Tariff 1
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Table 2.2.5– Tariff 1 counters (T1)
+
+SENDING MODE FOR TARIFF 2 COUNTERS
+
+10
+
+Parameter name
+
+Possible selection
+
+Phase 1 imported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+Phase 2 imported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported active energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported inductive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+KNX communication protocol
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+Phase 3 exported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+System exported capacitive apparent energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported inductive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 imported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 imported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 imported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System imported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 1 exported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 2 exported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+Phase 3 exported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+System exported capacitive reactive energy - Tariff 2
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+English
+
+Parameter name
+
+Table 2.2.6 – Tariff 2 counters (T2)
+
+SENDING MODE FOR PARTIAL COUNTERS
+Parameter name
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+System imported active energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+System exported active energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported ind. apparent energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported ind. apparent energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported cap. apparent energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported cap. apparent energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported ind. reactive energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported ind. reactive energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System imported cap. reactive energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System exported cap. reactive energy - Partial counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+Table 2.2.7 - Partial counters
+
+SENDING MODE FOR BALANCE COUNTERS
+Parameter name
+
+Possible selection
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+System active energy - Balance counter
+
+OnDemand & Variation / Cyclic
+
+System inductive apparent energy - Balance counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System capacitive apparent energy - Balance counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System inductive reactive energy - Balance counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+System capacitive reactive energy - Balance counter
+
+OnDemand & Variation / Cyclic
+
+X
+
+X
+
+X
+
+Table 2.2.8 – Balance counters
+
+KNX communication protocol
+
+11
+
+3. ONDEMAND COMMUNICATION OBJECTS
+In this chapter, all the communication object can be read OnDemand.
+
+English
+
+FLAG LEGEND:
+C > Communication
+
+R > Read
+
+W > Write
+
+T > Transmission
+
+3.1 Info on the KNX module
+Obj.
+
+Communication object name Format
+
+DPT
+
+Flag
+
+146
+
+KNX firmware release
+
+U5U5U6
+
+217.001
+
+C,R,T
+
+147
+
+KNX hardware release
+
+U5U5U6
+
+217.001
+
+C,R,T
+
+148
+
+KNX serial number
+
+A14
+
+16.000
+
+C,R,T
+
+149
+
+Reserved
+
+150
+
+Reserved
+
+151
+
+Reserved
+
+Response structure
+
+Table 3.1.1 – Info on the KNX module
+These communication objects can be read directly.
+
+3.2 Info&status on the combined energy counter
+Obj.
+
+Communication object name Format
+
+DPT
+
+Flag
+
+Response structure
+
+134
+
+Serial number
+
+A14
+
+16.000
+
+C,R,T
+
+135
+
+Model
+
+N8
+
+NO STD
+
+C,R,T
+
+136
+
+Type
+
+N8
+
+NO STD
+
+C,R,T
+
+137
+
+Firmware release 1
+
+A14
+
+16.000
+
+C,R,T
+
+138
+
+Firmware release 2
+
+A14
+
+16.000
+
+C,R,T
+
+139
+
+Hardware release
+
+A14
+
+16.000
+
+C,R,T
+
+140
+
+Reserved
+
+141
+
+CT value
+
+U16
+
+NO STD
+
+C,R,T
+
+142
+
+Full scale value (FSA)
+
+F32
+
+14.019
+
+C,R,T
+
+143
+
+Wiring mode
+
+N8
+
+NO STD
+
+C,R,T
+
+1=3 phases, 4 wires, 3 CTs
+2=3 phases, 3 wires, 2 CTs
+3=1 phase
+4=3 phases, 3 wires, 3 CTs
+
+144
+
+Primary/secondary values
+
+N1
+
+NO STD
+
+C,R,T
+
+0=primary values, 1=secondary values
+
+145
+
+Error Code
+
+N8
+
+NO STD
+
+C,R,T
+
+152
+
+Voltage alarm status
+
+N2N2N2
+N2N2N2
+B1B1
+
+NO STD
+
+C,R,T
+
+2 Bytes encoded:
+V3|V2|V1|V∑|V23|V31|V12|PhOrd|IR|
+
+153
+
+Current alarm status
+
+B1B1N2
+N2N2N2
+
+NO STD
+
+C,R,T
+
+2 Bytes encoded:
+T|F|ND|ND|ND|ND|IN|I3|I2|I1|I∑|
+
+154
+
+Partial counter status
+
+B16
+
+NO STD
+
+C,R,T
+
+2 Bytes encoded:
+ND|ND|ND|ND|ND|ND|-kvarh∑-C-PAR|
++kvarh∑-C-PAR|-kvarh∑-L-PAR|+kvarh∑-L-PAR|
+-kVAh∑-C-PAR|+kVAh∑-C-PAR|-kVAh∑-L-PAR|
++kVAh∑-L-PAR|-kWh∑-PAR|+kWh∑-PAR|
+
+00=no MID+Reset, 01=no MID, 02=MID,
+03=no MID+Wiring, 04=no MID+Wiring+Profiles,
+05=MID+no varh, 06=no MID+Profiles,
+07=MID+Wiring+Profiles, 08=MID+Profiles,
+09=MID+Wiring, 10=MID+Wiring+no varh,
+11=no MID+Reset+Wiring
+
+Table 3.2.1 – Info&status on the combined energy counter
+N.B.: For alarm status (obj. 152, 153) the bit in the response has the following meaning: 00b=no alarm, 01b=low threshold alarm,
+10b=high threshold alarm
+N.B.: Firmware release 2 is available only with the latest energy counter models.
+
+12
+
+KNX communication protocol
+
+These communication objects can be read directly.
+NOTE
+When the value of the communication object 134, 143, 144, 151, 152, 153 changes, the new value is spontaneously sent by the KNX
+communication module.
+
+SYMBOL
+
+MEANING
+
+SYMBOL
+
+MEANING
+
+LV1
+
+Phase 1 voltage - LOW threshold alarm
+
+HI1
+
+Phase 1 current - HIGH threshold alarm
+
+LV2
+
+Phase 2 voltage - LOW threshold alarm
+
+HI2
+
+Phase 2 current - HIGH threshold alarm
+
+LV3
+
+Phase 3 voltage - LOW threshold alarm
+
+HI3
+
+Phase 3 current - HIGH threshold alarm
+
+LV12
+
+Line 12 voltage - LOW threshold alarm
+
+HIN
+
+Neutral current - HIGH threshold alarm
+
+LV23
+
+Line 23 voltage - LOW threshold alarm
+
+HI∑
+
+System current - HIGH threshold alarm
+
+LV31
+
+Line 31 voltage - LOW threshold alarm
+
++kWh∑-PAR
+
+System imported active energy - Partial c.
+
+LV∑
+
+System voltage - LOW threshold alarm
+
+-kWh∑-PAR
+
+System exported active energy - Partial c.
+
+LI1
+
+Phase 1 current - LOW threshold alarm
+
++kVAh∑-L-PAR
+
+System imported ind. apparent energy - Partial c.
+
+LI2
+
+Phase 2 current - LOW threshold alarm
+
+-kVAh∑-L-PAR
+
+System exported ind. apparent energy - Partial c.
+
+LI3
+
+Phase 3 current - LOW threshold alarm
+
++kVAh∑-C-PAR System imported cap. apparent energy - Partial c.
+
+LIN
+
+Neutral current - LOW threshold alarm
+
+-kVAh∑-C-PAR
+
+System exported cap. apparent energy - Partial c.
+
+LI∑
+
+System current - LOW threshold alarm
+
++kvarh∑-L-PAR
+
+System imported ind. reactive energy - Partial c.
+
+HV1
+
+Phase 1 voltage - HIGH threshold alarm
+
+-kvarh∑-L-PAR
+
+System exported ind. reactive energy - Partial c.
+
+HV2
+
+Phase 2 voltage - HIGH threshold alarm
+
++kvarh∑-C-PAR System imported cap. reactive energy - Partial c.
+
+HV3
+
+Phase 3 voltage - HIGH threshold alarm
+
+-kvarh∑-C-PAR
+
+System exported cap. reactive energy - Partial c.
+
+HV12
+
+Line 12 voltage - HIGH threshold alarm
+
+PhOrd
+
+Phase order (0=123, 1=132)
+
+HV23
+
+Line 23 voltage - HIGH threshold alarm
+
+IR
+
+IR communication status (0=on, 1=off)
+
+HV31
+
+Line 31 voltage - HIGH threshold alarm
+
+T
+
+Tariff in use (0=T1, 1=T2)
+
+HV∑
+
+System voltage - HIGH threshold alarm
+
+ND
+
+Not Defined
+
+F
+
+Frequency out of range alarm
+
+English
+
+LEGEND FOR ALARM&STATUS:
+
+3.3 Group of measurements
+When a new value is written in this object, only data corresponding to bit=1 are sent to the relevant communication addresses.
+E.g. 0101000000000000 this value will produce a line voltage and power factor data sending (objects 3, 4, 5, 12, 13, 14, 15, see the
+following legend and the chapter 5, column “Obj.”).
+Obj.
+
+Communication object name Format
+
+DPT
+
+Flag
+
+Command structure
+
+157
+
+Group of measurements
+(see the following legend)
+
+NO STD
+
+C,W,T
+
+2 Bytes encoded:
+VLN|VLL|I|PF|S|P|Q|F|k(En)∑|
+kWhT1/2|kVAh-L-T1/2|kVAh-C-T1/2|
+kvarh-L-T1/2|kvarh-C-T1/2|PAR|BAL|
+
+B16
+
+Table 3.3.1 – Measurements OnDemand
+LEGEND FOR MEASUREMENTS:
+SYMBOL
+
+MEANING
+
+SYMBOL
+
+MEANING
+
+VLN
+
+Phase voltage (No. 0, 1, 2, 6)
+
+k(En)∑
+
+System energy (No. 29...38)
+
+VLL
+
+Line voltage (No. 3...5)
+
+kWhT1/2
+
+Active energy - Tariff 1, 2 (No. 39...46, 79...86)
+
+I
+
+Current (No. 7...11)
+
+kVAh-L-T1/2
+
+Apparent ind. energy - Tariff 1, 2 (No. 47...54, 87...94)
+
+PF
+
+Power factor (No. 12...15)
+
+kVAh-C-T1/2
+
+Apparent cap. energy - Tariff 1, 2 (No. 55...62, 95...102)
+
+S
+
+Apparent power (No. 20...23)
+
+kvarh-L-T1/2
+
+Reactive ind. energy - Tariff 1, 2 (No. 63...70, 103...110)
+
+P
+
+Active power (No. 16...19)
+
+kvarh-C-T1/2
+
+Reactive cap. energy - Tariff 1, 2 (No. 71...78, 111...118)
+
+Q
+
+Reactive power (No. 24...27)
+
+PAR
+
+Partial energy counters (No. 119...128)
+
+F
+
+Frequency (No. 28)
+
+BAL
+
+Balance energy counters (No. 129...133)
+
+KNX communication protocol
+
+13
+
+4. WRITING COMMUNICATION OBJECTS
+
+English
+
+All the parameters which can be programmed can be found in this chapter.
+NOTE
+The number and the indication of the communication objects displayed in ETS menu can change according to the parameter
+settings.
+FLAG LEGEND:
+C > Communication
+
+R > Read
+
+W > Write
+
+T > Transmission
+
+4.1 Energy counter management
+Obj.
+
+Communication object name Format
+
+DPT
+
+Flag
+
+Command structure
+
+155
+
+Set partial energy counters
+
+NO STD
+
+C,W,T
+
+Byte 2 - partial counter/s operation:
+$00=start
+$01=stop
+$02=reset
+Byte 1 - partial counter selection:
+$00=+kWh∑ PAR
+$01=-kWh∑ PAR
+$02=+kVAh∑-L PAR
+$03=-kVAh∑-L PAR
+$04=+kVAh∑-C PAR
+$05=-kVAh∑-C PAR
+$06=+kvarh∑-L PAR
+$07=-kvarh∑-L PAR
+$08=+kvarh∑-C PAR
+$09=-kvarh∑-C PAR
+$0A=all partial counters
+
+U8N8
+
+e.g. start +kWh∑ PAR counter
+$00=start
+$00=+kWh∑ PAR
+final value to be set: $0000
+156
+
+Reset energy counters
+
+(only for model with RESET function)
+
+N8
+
+NO STD
+
+C,W,T
+
+00=Total, 01=Tariff 1, 02=Tariff 2, 03=All
+
+Table 4.1.1 – Energy counter management
+
+14
+
+KNX communication protocol
+
+5. CYCLIC & VARIATION COMMUNICATION OBJECTS
+NOTE
+The number and the indication of the communication objects displayed in ETS menu can change according to the parameter
+settings.
+FLAG LEGEND:
+C > Communication
+
+R > Read
+
+WIRING MODE LEGEND:
+3.4.3 > 3 phase, 4 wires, 3 currents
+		
+
+W > Write
+
+T > Transmission
+
+3.3.3 > 3 phase, 3 wires, 3 currents
+3.3.2 > 3 phase, 3 wires, 2 currents
+
+1ph > single phase
+
+5.1 Realtime values
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+0
+
+Phase 1 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+1
+
+Phase 2 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+2
+
+Phase 3 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+3
+
+Line 12 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+X
+
+4
+
+Line 23 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+X
+
+5
+
+Line 31 voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+X
+
+6
+
+System voltage
+
+V
+
+F32
+
+14.028
+
+C,T,R
+
+X
+
+X
+
+7
+
+Phase 1 current
+
+A
+
+F32
+
+14.019
+
+C,T,R
+
+X
+
+X
+
+8
+
+Phase 2 current
+
+A
+
+F32
+
+14.019
+
+C,T,R
+
+X
+
+X
+
+9
+
+Phase 3 current
+
+A
+
+F32
+
+14.019
+
+C,T,R
+
+X
+
+X
+
+10
+
+Neutral current
+
+A
+
+F32
+
+14.019
+
+C,T,R
+
+X
+
+11
+
+System current
+
+A
+
+F32
+
+14.019
+
+C,T,R
+
+X
+
+12
+
+Phase 1 power factor
+
+-
+
+F32
+
+14.057
+
+C,T,R
+
+X
+
+13
+
+Phase 2 power factor
+
+-
+
+F32
+
+14.057
+
+C,T,R
+
+X
+
+14
+
+Phase 3 power factor
+
+-
+
+F32
+
+14.057
+
+C,T,R
+
+X
+
+15
+
+System power factor
+
+-
+
+F32
+
+14.057
+
+C,T,R
+
+X
+
+16
+
+Phase 1 active power
+
+W
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+17
+
+Phase 2 active power
+
+W
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+18
+
+Phase 3 active power
+
+W
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+19
+
+System active power
+
+W
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+20
+
+Phase 1 apparent power
+
+VA
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+21
+
+Phase 2 apparent power
+
+VA
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+22
+
+Phase 3 apparent power
+
+VA
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+23
+
+System apparent power
+
+VA
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+24
+
+Phase 1 reactive power
+
+var
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+25
+
+Phase 2 reactive power
+
+var
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+26
+
+Phase 3 reactive power
+
+var
+
+F32
+
+14.056
+
+C,T,R
+
+X
+
+27
+
+System reactive power
+
+var
+
+F32
+
+14.056
+
+C,T,R
+
+28
+
+Frequency
+
+Hz
+
+F32
+
+14.033
+
+C,T,R
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Table 5.1.1 – Realtime values
+
+KNX communication protocol
+
+15
+
+English
+
+All the communication objects set as cyclic or variation mode, can be found in this chapter.
+
+English
+
+5.2 Total energy counters
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+29
+
+System imported active energy
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+30
+
+System exported active energy
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+X
+
+X
+
+31
+
+System imported ind. apparent energy
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+32
+
+System exported ind. apparent energy
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+33
+
+System imported cap. apparent energy
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+34
+
+System exported cap. apparent energy
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+35
+
+System imported ind. reactive energy
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+36
+
+System exported ind. reactive energy
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+37
+
+System imported cap. reactive energy
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+38
+
+System exported cap. reactive energy
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+Table 5.2.1 – Total energy counters
+
+5.3 Tariff 1 energy counters
+
+16
+
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+39
+
+Phase 1 imported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+40
+
+Phase 2 imported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+41
+
+Phase 3 imported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+42
+
+System imported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+43
+
+Phase 1 exported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+44
+
+Phase 2 exported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+45
+
+Phase 3 exported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+46
+
+System exported active energy - Tariff 1
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+47
+
+Phase 1 imported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+48
+
+Phase 2 imported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+49
+
+Phase 3 imported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+50
+
+System imported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+51
+
+Phase 1 exported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+52
+
+Phase 2 exported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+53
+
+Phase 3 exported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+54
+
+System exported inductive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+55
+
+Phase 1 imported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+56
+
+Phase 2 imported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+57
+
+Phase 3 imported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+58
+
+System imported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+59
+
+Phase 1 exported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+60
+
+Phase 2 exported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+61
+
+Phase 3 exported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+62
+
+System exported capacitive apparent energy - Tariff 1
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+63
+
+Phase 1 imported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+64
+
+Phase 2 imported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+65
+
+Phase 3 imported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+66
+
+System imported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+KNX communication protocol
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+67
+
+Phase 1 exported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+68
+
+Phase 2 exported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+69
+
+Phase 3 exported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+70
+
+System exported inductive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+71
+
+Phase 1 imported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+72
+
+Phase 2 imported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+73
+
+Phase 3 imported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+74
+
+System imported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+75
+
+Phase 1 exported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+76
+
+Phase 2 exported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+77
+
+Phase 3 exported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+78
+
+System exported capacitive reactive energy - Tariff 1
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Table 5.3.1 – Tariff 1 energy counters
+
+5.4 Tariff 2 energy counters
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+79
+
+Phase 1 imported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+80
+
+Phase 2 imported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+81
+
+Phase 3 imported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+82
+
+System imported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+83
+
+Phase 1 exported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+84
+
+Phase 2 exported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+85
+
+Phase 3 exported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+86
+
+System exported active energy - Tariff 2
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+87
+
+Phase 1 imported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+88
+
+Phase 2 imported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+89
+
+Phase 3 imported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+90
+
+System imported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+91
+
+Phase 1 exported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+92
+
+Phase 2 exported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+93
+
+Phase 3 exported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+94
+
+System exported inductive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+95
+
+Phase 1 imported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+96
+
+Phase 2 imported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+97
+
+Phase 3 imported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+98
+
+System imported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+99
+
+Phase 1 exported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+100
+
+Phase 2 exported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+101
+
+Phase 3 exported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+102
+
+System exported capacitive apparent energy - Tariff 2
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+103
+
+Phase 1 imported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+104
+
+Phase 2 imported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+105
+
+Phase 3 imported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+106
+
+System imported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+KNX communication protocol
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+17
+
+English
+
+Obj.
+
+English
+
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+
+107
+
+Phase 1 exported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+108
+
+Phase 2 exported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+109
+
+Phase 3 exported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+110
+
+System exported inductive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+111
+
+Phase 1 imported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+112
+
+Phase 2 imported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+113
+
+Phase 3 imported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+114
+
+System imported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+115
+
+Phase 1 exported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+116
+
+Phase 2 exported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+117
+
+Phase 3 exported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+118
+
+System exported capacitive reactive energy - Tariff 2
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Table 5.4.1 – Tariff 2 energy counters
+
+5.5 Partial energy counters
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+119
+
+System imported active energy - Partial counter
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+120
+
+System exported active energy - Partial counter
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+X
+
+X
+
+X
+
+121
+
+System imported ind. apparent energy - Partial counter VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+122
+
+System exported ind. apparent energy - Partial counter
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+123
+
+System imported cap. apparent energy - Partial counter
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+124
+
+System exported cap. apparent energy - Partial counter VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+125
+
+System imported ind. reactive energy - Partial counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+126
+
+System exported ind. reactive energy - Partial counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+127
+
+System imported cap. reactive energy - Partial counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+128
+
+System exported cap. reactive energy - Partial counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+Table 5.5.1 – Partial energy counters
+
+5.6 Balance energy counters
+Obj.
+
+Communication object name
+
+Unit
+
+Format
+
+DPT
+
+Flag
+
+Wiring modes
+3.3.2
+3.4.3
+1ph
+3.3.3
+X
+X
+X
+
+129
+
+System active energy - Balance counter
+
+Wh
+
+V64
+
+29.010
+
+C,T,R
+
+130
+
+System inductive apparent energy - Balance counter
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+131
+
+System capacitive apparent energy - Balance counter
+
+VAh
+
+V64
+
+29.011
+
+C,T,R
+
+X
+
+X
+
+X
+
+132
+
+System inductive reactive energy - Balance counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+133
+
+System capacitive reactive energy - Balance counter
+
+varh
+
+V64
+
+29.012
+
+C,T,R
+
+X
+
+X
+
+X
+
+Table 5.6.1 – Balance energy counters
+
+18
+
+KNX communication protocol
+
+English
+KNX communication protocol
+
+19
+
+
