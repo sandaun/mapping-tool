@@ -44,4 +44,26 @@ Column descriptions:
 
 Output only the CSV with the exact column names above, no explanations.`,
   },
+  {
+    id: 'knx__modbus-master',
+    label: 'KNX → Modbus Master',
+    href: '/templates/knx-to-modbus-master.xlsx',
+    expectedSheets: ['Signals', 'Conversions'],
+    promptText: `Convert the following Modbus device register map into CSV format with these exact columns:
+
+deviceId,signalName,registerType,address,dataType,units,description
+
+Column descriptions:
+- deviceId: unique device identifier (e.g., METER01, HVAC01)
+- signalName: signal name (e.g., ActivePower, Temperature)
+- registerType: HoldingRegister, InputRegister, Coil, or DiscreteInput
+- address: Modbus register address (integer)
+- dataType: Int16, Uint16, Float32, Int32, etc.
+- units: engineering units (kW, V, °C, %, etc.)
+- description: human-readable description
+
+[Paste your device register map here]
+
+Output only the CSV with the exact column names above, no explanations.`,
+  },
 ] as const;

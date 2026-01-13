@@ -38,7 +38,10 @@ export function isBACnetSignal(signal: DeviceSignal): signal is BACnetSignal {
 // CSV Parser
 export function parseDeviceSignalsCSV(
   csvText: string,
-  gatewayType: 'bacnet-server__modbus-master' | 'modbus-slave__bacnet-client'
+  gatewayType:
+    | 'bacnet-server__modbus-master'
+    | 'modbus-slave__bacnet-client'
+    | 'knx__modbus-master'
 ): ParseResult {
   const lines = csvText.trim().split('\n');
   if (lines.length < 2) {
@@ -55,7 +58,10 @@ export function parseDeviceSignalsCSV(
   const signals: DeviceSignal[] = [];
   const warnings: string[] = [];
 
-  if (gatewayType === 'bacnet-server__modbus-master') {
+  if (
+    gatewayType === 'bacnet-server__modbus-master' ||
+    gatewayType === 'knx__modbus-master'
+  ) {
     // Espera: deviceId,signalName,registerType,address,dataType,units,description
     const requiredCols = [
       'deviceId',

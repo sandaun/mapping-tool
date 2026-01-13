@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
 import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
 import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
+import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -93,6 +94,10 @@ export default function Home() {
         result = generateBACnetFromModbus(deviceSignals, raw, 'simple');
       } else if (selectedTemplateId === 'modbus-slave__bacnet-client') {
         result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
+      } else if (selectedTemplateId === 'knx__modbus-master') {
+        result = generateKNXFromModbus(deviceSignals, raw, {
+          startGroupAddress: '0/0/1',
+        });
       } else {
         throw new Error(
           `Gateway type not implemented yet: ${selectedTemplateId}`

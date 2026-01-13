@@ -12,7 +12,8 @@ export type ImportResponse = {
 
 export type TemplateId =
   | 'bacnet-server__modbus-master'
-  | 'modbus-slave__bacnet-client';
+  | 'modbus-slave__bacnet-client'
+  | 'knx__modbus-master';
 
 export type Template = {
   id: TemplateId;
