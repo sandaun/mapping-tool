@@ -12,10 +12,10 @@ import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
 import { ProtocolsInfo } from '@/components/ProtocolsInfo';
-import { ManualImport } from '@/components/ManualImport';
 import { DeviceSignalsSection } from '@/components/DeviceSignalsSection';
 import { ResultsSection } from '@/components/ResultsSection';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
+import { Header } from '@/components/Header';
 
 export default function Home() {
   const {
@@ -28,7 +28,6 @@ export default function Home() {
     exportWorkbook,
   } = useFileImport();
 
-  const [file, setFile] = useState<File | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<
     (typeof TEMPLATES)[number]['id']
   >(TEMPLATES[0].id);
@@ -64,7 +63,7 @@ export default function Home() {
         template.href.split('/').pop()!,
         template.expectedSheets
       );
-      
+
       // Reset pending export quan carrega nova plantilla
       setPendingExport(null);
     } catch (e) {
@@ -72,10 +71,14 @@ export default function Home() {
     }
   }
 
-  async function onImport() {
-    if (!file) return;
-    const arrayBuffer = await file.arrayBuffer();
-    await importArrayBufferAsFile(arrayBuffer, file.name);
+  async function handleCustomFileSelect(file: File) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      await importArrayBufferAsFile(arrayBuffer, file.name);
+      setPendingExport(null);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function onCopyPrompt() {
@@ -163,19 +166,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-6 py-10">
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-        <header className="space-y-3">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Excel Protocol Mapping Tool
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Importa un <span className="font-semibold text-foreground">.xlsx</span>, obtén RAW
-            JSON (lossless per estructura tabular) i exporta un Excel nou.
-          </p>
-        </header>
+    <div className="min-h-screen bg-background">
+      <Header />
 
-        {/* Plantilles de repositori */}
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
+        {/* Gateway Templates */}
         <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Gateway Templates</h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -186,19 +181,12 @@ export default function Home() {
             selectedTemplateId={selectedTemplateId}
             onTemplateChange={setSelectedTemplateId}
             onLoadTemplate={onLoadTemplate}
+            onCustomFileSelect={handleCustomFileSelect}
             busy={busy}
           />
 
           <ProtocolsInfo protocols={protocols} />
         </section>
-
-        {/* Import manual */}
-        <ManualImport
-          file={file}
-          onFileChange={setFile}
-          onImport={onImport}
-          busy={busy}
-        />
 
         {/* Import device signals (només visible si hi ha plantilla carregada) */}
         {raw && (

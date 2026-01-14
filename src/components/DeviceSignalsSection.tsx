@@ -116,7 +116,9 @@ export function DeviceSignalsSection({
             <Badge variant="destructive" className="bg-amber-600">
               {parseWarnings.length}
             </Badge>
-            <span className="text-sm font-semibold text-amber-900">Warnings</span>
+            <span className="text-sm font-semibold text-amber-900">
+              Warnings
+            </span>
           </div>
           <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-amber-800">
             {parseWarnings.map((w, i) => (
