@@ -35,6 +35,10 @@ export default function Home() {
   const [csvInput, setCsvInput] = useState('');
   const [deviceSignals, setDeviceSignals] = useState<DeviceSignal[]>([]);
   const [parseWarnings, setParseWarnings] = useState<string[]>([]);
+  const [pendingExport, setPendingExport] = useState<{
+    signalsCount: number;
+    targetSheet: string;
+  } | null>(null);
 
   const selectedTemplate = useMemo(
     () => TEMPLATES.find((t) => t.id === selectedTemplateId)!,
@@ -46,17 +50,23 @@ export default function Home() {
     [raw]
   );
 
-  async function onLoadTemplate() {
+  async function onLoadTemplate(templateId: (typeof TEMPLATES)[number]['id']) {
     try {
-      const res = await fetch(selectedTemplate.href);
+      const template = TEMPLATES.find((t) => t.id === templateId);
+      if (!template) return;
+
+      const res = await fetch(template.href);
       if (!res.ok) throw new Error("No s'ha pogut carregar la plantilla.");
 
       const arrayBuffer = await res.arrayBuffer();
       await importArrayBufferAsFile(
         arrayBuffer,
-        selectedTemplate.href.split('/').pop()!,
-        selectedTemplate.expectedSheets
+        template.href.split('/').pop()!,
+        template.expectedSheets
       );
+      
+      // Reset pending export quan carrega nova plantilla
+      setPendingExport(null);
     } catch (e) {
       console.error(e);
     }
@@ -125,6 +135,19 @@ export default function Home() {
         setParseWarnings((prev) => [...prev, ...result.warnings]);
       }
 
+      // Determinar target sheet segons template
+      const targetSheet = selectedTemplateId.includes('bacnet-server')
+        ? 'BACnet Server'
+        : selectedTemplateId.includes('modbus')
+        ? 'Modbus Master'
+        : 'KNX';
+
+      // Mostrar badge persistent
+      setPendingExport({
+        signalsCount: deviceSignals.length,
+        targetSheet,
+      });
+
       // Clear CSV input i signals després de generar
       setCsvInput('');
       setDeviceSignals([]);
@@ -134,24 +157,29 @@ export default function Home() {
     }
   }
 
+  function handleExport() {
+    exportWorkbook();
+    setPendingExport(null);
+  }
+
   return (
-    <div className="min-h-screen bg-zinc-50 px-6 py-10 text-zinc-900">
-      <main className="mx-auto flex w-full max-w-4xl flex-col gap-6">
-        <header className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Excel Mapping Tool (MVP)
+    <div className="min-h-screen bg-background px-6 py-10">
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+        <header className="space-y-3">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Excel Protocol Mapping Tool
           </h1>
-          <p className="text-sm text-zinc-600">
-            Importa un <span className="font-medium">.xlsx</span>, obtén RAW
+          <p className="text-sm text-muted-foreground">
+            Importa un <span className="font-semibold text-foreground">.xlsx</span>, obtén RAW
             JSON (lossless per estructura tabular) i exporta un Excel nou.
           </p>
         </header>
 
         {/* Plantilles de repositori */}
-        <section className="rounded-xl border border-zinc-200 bg-white p-4">
-          <h2 className="text-base font-semibold">Plantilles (repositori)</h2>
-          <p className="mt-1 text-sm text-zinc-600">
-            Selecciona un gateway type i carrega la plantilla.
+        <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h2 className="text-lg font-semibold">Gateway Templates</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Selecciona un gateway type per carregar la plantilla automàticament.
           </p>
 
           <TemplateSelector
@@ -183,6 +211,7 @@ export default function Home() {
             onGenerateSignals={onGenerateSignals}
             deviceSignals={deviceSignals}
             parseWarnings={parseWarnings}
+            pendingExport={pendingExport}
             busy={busy}
           />
         )}
@@ -195,7 +224,7 @@ export default function Home() {
           <ResultsSection
             raw={raw}
             sheetNames={sheetNames}
-            onExport={exportWorkbook}
+            onExport={handleExport}
             busy={busy}
           />
         )}

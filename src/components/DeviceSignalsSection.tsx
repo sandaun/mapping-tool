@@ -1,5 +1,7 @@
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import type { Template } from '@/types/page.types';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 type DeviceSignalsSectionProps = {
   template: Template;
@@ -10,6 +12,7 @@ type DeviceSignalsSectionProps = {
   onGenerateSignals: () => void;
   deviceSignals: DeviceSignal[];
   parseWarnings: string[];
+  pendingExport: { signalsCount: number; targetSheet: string } | null;
   busy: boolean;
 };
 
@@ -22,30 +25,35 @@ export function DeviceSignalsSection({
   onGenerateSignals,
   deviceSignals,
   parseWarnings,
+  pendingExport,
   busy,
 }: DeviceSignalsSectionProps) {
+  const isParsed = deviceSignals.length > 0;
+
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-4">
-      <h2 className="text-base font-semibold">Import device signals</h2>
-      <p className="mt-1 text-sm text-zinc-600">
+    <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <h2 className="text-lg font-semibold">Input Device Signals</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
         Enganxa un CSV amb les senyals dels teus dispositius.
       </p>
 
       {/* Prompt per ChatGPT */}
-      <details className="mt-4 rounded-lg border border-zinc-300 bg-zinc-50 p-3">
-        <summary className="cursor-pointer text-sm font-medium text-zinc-700">
-          📋 Prompt per ChatGPT (copia i enganxa)
+      <details className="mt-4 rounded-lg border border-border bg-muted/50 p-3">
+        <summary className="cursor-pointer text-sm font-medium text-foreground">
+          🤖 AI Prompt Helper
         </summary>
-        <pre className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-zinc-600">
+        <pre className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
           {template.promptText}
         </pre>
-        <button
+        <Button
           type="button"
           onClick={onCopyPrompt}
-          className="mt-3 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-50"
+          variant="outline"
+          size="sm"
+          className="mt-3"
         >
-          Copia prompt
-        </button>
+          Copy Prompt
+        </Button>
       </details>
 
       {/* Textarea CSV */}
@@ -59,27 +67,58 @@ export function DeviceSignalsSection({
             onChange={(e) => onCsvInputChange(e.target.value)}
             placeholder="deviceId,signalName,..."
             rows={8}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm font-mono"
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
         </label>
 
-        <button
-          type="button"
-          onClick={onParseCSV}
-          disabled={!csvInput.trim() || busy}
-          className="self-start rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          Parse CSV
-        </button>
+        <div className="flex items-center justify-between">
+          {/* Badge persistent */}
+          <div>
+            {pendingExport && (
+              <div className="flex items-center gap-2">
+                <span className="text-secondary text-lg font-bold">✓</span>
+                <span className="text-sm font-medium text-foreground">
+                  {pendingExport.signalsCount} signals ready to export
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Botons */}
+          <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              onClick={onParseCSV}
+              disabled={!csvInput.trim() || busy}
+              variant="default"
+              size="lg"
+            >
+              Parse Signals
+            </Button>
+            <Button
+              type="button"
+              onClick={onGenerateSignals}
+              disabled={!isParsed || busy}
+              variant="secondary"
+              size="lg"
+              className="shadow-md"
+            >
+              Generate Signals
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Warnings */}
       {parseWarnings.length > 0 && (
-        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3">
-          <div className="text-sm font-medium text-amber-900">
-            Avisos ({parseWarnings.length})
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <div className="flex items-center gap-2">
+            <Badge variant="destructive" className="bg-amber-600">
+              {parseWarnings.length}
+            </Badge>
+            <span className="text-sm font-semibold text-amber-900">Warnings</span>
           </div>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-amber-800">
+          <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-amber-800">
             {parseWarnings.map((w, i) => (
               <li key={i}>{w}</li>
             ))}
@@ -89,19 +128,14 @@ export function DeviceSignalsSection({
 
       {/* Preview signals */}
       {deviceSignals.length > 0 && (
-        <div className="mt-4 rounded-lg bg-zinc-50 p-3">
-          <div className="flex items-center justify-between">
-            <div className="text-sm font-medium">
-              Senyals parseades: {deviceSignals.length}
-            </div>
-            <button
-              type="button"
-              onClick={onGenerateSignals}
-              disabled={busy}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
-            >
-              Generate Signals
-            </button>
+        <div className="mt-4 rounded-lg border border-border bg-muted/30 p-4">
+          <div className="flex items-center gap-2">
+            <Badge variant="default" className="bg-emerald-600">
+              ✓ PARSED
+            </Badge>
+            <span className="text-sm font-medium text-foreground">
+              {deviceSignals.length} signals ready
+            </span>
           </div>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-left text-sm">
@@ -134,10 +168,10 @@ export function DeviceSignalsSection({
                       {'instance' in sig
                         ? sig.instance
                         : 'address' in sig
-                          ? sig.address
-                          : 'groupAddress' in sig
-                            ? sig.groupAddress
-                            : '—'}
+                        ? sig.address
+                        : 'groupAddress' in sig
+                        ? sig.groupAddress
+                        : '—'}
                     </td>
                     <td className="px-2 py-2 text-xs">
                       {'units' in sig ? sig.units ?? '—' : '—'}
