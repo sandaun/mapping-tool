@@ -90,8 +90,9 @@ export function DeviceSignalsSection({
               type="button"
               onClick={onParseCSV}
               disabled={!csvInput.trim() || busy}
-              variant="default"
+              variant="outline"
               size="lg"
+              className="border-primary bg-primary/5 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
             >
               Parse Signals
             </Button>
@@ -99,9 +100,9 @@ export function DeviceSignalsSection({
               type="button"
               onClick={onGenerateSignals}
               disabled={!isParsed || busy}
-              variant="secondary"
+              variant="outline"
               size="lg"
-              className="shadow-md"
+              className="border-secondary bg-secondary/10 text-secondary hover:border-secondary/60 hover:bg-secondary/15 hover:text-secondary dark:bg-secondary/15 dark:hover:bg-secondary/20"
             >
               Generate Signals
             </Button>

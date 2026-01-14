@@ -31,9 +31,9 @@ export function ResultsSection({
           type="button"
           onClick={onExport}
           disabled={busy}
-          variant="default"
+          variant="outline"
           size="lg"
-          className="shadow-lg"
+          className="border-primary bg-primary/5 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
         >
           ⬇ Download Excel
         </Button>
