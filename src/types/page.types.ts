@@ -15,7 +15,8 @@ export type TemplateId =
   | 'modbus-slave__bacnet-client'
   | 'knx__modbus-master'
   | 'knx__bacnet-client'
-  | 'modbus-slave__knx';
+  | 'modbus-slave__knx'
+  | 'bacnet-server__knx';
 
 export type Template = {
   id: TemplateId;

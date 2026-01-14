@@ -55,9 +55,10 @@ export function parseDeviceSignalsCSV(
     | 'knx__modbus-master'
     | 'knx__bacnet-client'
     | 'modbus-slave__knx'
+    | 'bacnet-server__knx'
 ): ParseResult {
-  // Special handling for ETS CSV format (modbus-slave__knx)
-  if (gatewayType === 'modbus-slave__knx') {
+  // Special handling for ETS CSV format (modbus-slave__knx and bacnet-server__knx)
+  if (gatewayType === 'modbus-slave__knx' || gatewayType === 'bacnet-server__knx') {
     return parseETSCSVFormat(csvText);
   }
 
@@ -155,7 +156,8 @@ export function parseDeviceSignalsCSV(
     }
   } else if (
     gatewayType === 'modbus-slave__bacnet-client' ||
-    gatewayType === 'knx__bacnet-client'
+    gatewayType === 'knx__bacnet-client' ||
+    gatewayType === 'bacnet-server__knx'
   ) {
     // Espera: deviceId,signalName,objectType,instance,units,description
     const requiredCols = ['deviceId', 'signalName', 'objectType', 'instance'];

@@ -112,4 +112,29 @@ The system will:
 
 [Paste your ETS CSV export here]`,
   },
-] as const;
+  {
+    id: 'bacnet-server__knx',
+    label: 'BACnet Server → KNX',
+    href: '/templates/bacnet-server-to-knx.xlsx',
+    expectedSheets: ['Signals', 'BACnet Server', 'KNX', 'Conversions'],
+    promptText: `This template generates BACnet Server signals from a KNX project exported from ETS software.
+
+IMPORTANT: Instead of providing device signals, paste the raw CSV export from ETS (Project → Export → Group Addresses).
+
+The CSV should have this format:
+"Function, Subfunction, Signal Name, Group Address, ..., DPT, ..."
+
+Example:
+"Clima, , ,""5/-/-"",..."
+" ,""Sala - Menjador"", ,""5/1/-"",..."
+" , ,""AC On/Off"",""5/1/0"","""","""","""",""DPST-1-1"",..."
+" , ,""AC Temperatura Consigna"",""5/1/5"","""","""","""",""DPST-9-1"",..."
+
+The system will:
+- Parse KNX signals (Description, Group Address, DPT)
+- Generate corresponding BACnet Server objects automatically
+- Assign sequential BACnet instances starting from 0
+
+[Paste your ETS CSV export here]`,
+  },
+] as const satisfies readonly Template[];

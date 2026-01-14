@@ -6,6 +6,7 @@ import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus
 import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
 import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
 import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
+import { generateBACnetServerFromKNX } from '@/lib/actions/generateBACnetServerFromKNX';
 import { generateModbusFromKNX } from '@/lib/actions/generateModbusFromKNX';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
@@ -107,6 +108,10 @@ export default function Home() {
       } else if (selectedTemplateId === 'modbus-slave__knx') {
         result = generateModbusFromKNX(deviceSignals, raw, {
           startAddress: 0,
+        });
+      } else if (selectedTemplateId === 'bacnet-server__knx') {
+        result = generateBACnetServerFromKNX(deviceSignals, raw, {
+          startInstance: 0,
         });
       } else {
         throw new Error(

@@ -362,3 +362,189 @@ export function knxDPTToModbusFormat(dpt: string): string {
 
   return '0: Unsigned';
 }
+
+/**
+ * Map KNX DPT → BACnet Object Type
+ * Used for generating BACnet Server columns from KNX signals (ETS import)
+ * 
+ * @param dpt - KNX DPT code (e.g., "1.001", "9.001")
+ * @returns BACnet object type (AI, AO, AV, BI, BO, BV)
+ */
+export function knxDPTToBACnetType(dpt: string): string {
+  const main = dpt.split('.')[0];
+
+  // DPT 1.x (1-bit boolean) → Binary Value (read/write by default)
+  if (main === '1') return 'BV';
+
+  // DPT 2.x, 3.x (control) → Binary Value
+  if (main === '2' || main === '3') return 'BV';
+
+  // DPT 5.x, 6.x, 7.x, 8.x (8-bit) → Analog Value
+  if (main === '5' || main === '6' || main === '7' || main === '8') return 'AV';
+
+  // DPT 9.x (16-bit float - temperature, etc.) → Analog Value
+  if (main === '9') return 'AV';
+
+  // DPT 12.x, 13.x (32-bit) → Analog Value
+  if (main === '12' || main === '13') return 'AV';
+
+  // DPT 14.x (32-bit float) → Analog Value
+  if (main === '14') return 'AV';
+
+  // DPT 16.x (string) → Multistate Value
+  if (main === '16') return 'MSV';
+
+  // DPT 20.x (HVAC mode, enum) → Multistate Value
+  if (main === '20') return 'MSV';
+
+  // Fallback: Analog Value for unknown types
+  return 'AV';
+}
+
+/**
+ * Map KNX DPT to BACnet Units code
+ * @param dpt - KNX DPT code (e.g., "1.001", "9.001")
+ * @returns BACnet unit code (numeric string) or "-1" for not applicable
+ */
+export function knxDPTToBACnetUnits(dpt: string): string {
+  // Binary types have no units
+  if (dpt.startsWith('1.')) return '-1';
+  if (dpt.startsWith('2.')) return '-1';
+  if (dpt.startsWith('3.')) return '-1';
+  if (dpt.startsWith('20.')) return '-1';
+
+  // Map specific DPTs to BACnet unit codes
+  // Temperature
+  if (dpt === '9.001' || dpt === '14.068') return '62'; // degrees_Celsius
+  if (dpt === '9.002' || dpt === '14.070') return '63'; // degrees_Kelvin
+  if (dpt === '9.027') return '64'; // degrees_Fahrenheit
+
+  // Percentage
+  if (dpt === '5.001' || dpt === '9.007' || dpt === '5.004' || dpt === '6.001' || dpt === '8.010')
+    return '98'; // percent
+
+  // Angle
+  if (dpt === '5.003' || dpt === '14.007') return '2'; // degrees_angular
+  if (dpt === '14.006') return '6'; // radians
+
+  // Time
+  if (dpt === '9.010' || dpt === '14.074') return '71'; // seconds
+  if (dpt === '7.005' || dpt === '8.005' || dpt === '13.100') return '71'; // seconds
+  if (dpt === '7.006' || dpt === '8.006') return '72'; // minutes
+  if (dpt === '7.007' || dpt === '8.007') return '73'; // hours
+  if (dpt === '9.011') return '159'; // milliseconds
+  if (dpt === '7.002' || dpt === '8.002') return '159'; // milliseconds
+
+  // Pressure
+  if (dpt === '9.006' || dpt === '14.058') return '53'; // pascals
+
+  // Illumination
+  if (dpt === '9.004') return '36'; // lux
+
+  // Speed
+  if (dpt === '9.005' || dpt === '14.065') return '74'; // meters_per_second
+  if (dpt === '9.028') return '76'; // kilometers_per_hour
+
+  // Power
+  if (dpt === '9.024') return '48'; // kilowatts
+  if (dpt === '14.056') return '47'; // watts
+
+  // Voltage
+  if (dpt === '9.020' || dpt === '14.027' || dpt === '14.028') return '72'; // volts
+  if (dpt === '14.027') return '74'; // millivolts
+
+  // Current
+  if (dpt === '7.012' || dpt === '9.021') return '5'; // milliamperes
+  if (dpt === '14.019') return '1'; // amperes
+
+  // Energy
+  if (dpt === '13.010') return '18'; // watt_hours
+  if (dpt === '13.013') return '19'; // kilowatt_hours
+  if (dpt === '13.011') return '20'; // volt_ampere_hours
+  if (dpt === '13.014') return '132'; // kilovolt_ampere_hours
+  if (dpt === '13.012') return '21'; // volt_ampere_reactive_hours
+  if (dpt === '13.015') return '133'; // kilovolt_ampere_reactive_hours
+
+  // Volume flow
+  if (dpt === '9.025') return '90'; // liters_per_hour
+  if (dpt === '13.002') return '142'; // cubic_meters_per_hour
+  if (dpt === '14.077') return '88'; // cubic_meters_per_second
+
+  // Luminous
+  if (dpt === '14.042') return '38'; // lumens
+  if (dpt === '14.043') return '35'; // candelas
+
+  // Frequency
+  if (dpt === '14.033') return '27'; // hertz
+
+  // Force
+  if (dpt === '14.032') return '158'; // newtons
+
+  // Area
+  if (dpt === '14.010') return '0'; // square_meters
+
+  // Volume
+  if (dpt === '14.076') return '87'; // cubic_meters
+
+  // Mass
+  if (dpt === '14.051') return '39'; // kilograms
+
+  // Density
+  if (dpt === '14.017') return '122'; // kilograms_per_cubic_meter
+
+  // Default: no_units
+  return '95';
+}
+
+/**
+ * Get BACnet field values based on object type
+ * @param type - BACnet object type (AI, AO, AV, BI, BO, BV, MSI, MSO, MSV)
+ * @param dpt - KNX DPT code for units mapping
+ * @returns Object with units, states, relDef, cov field values
+ */
+export function getBACnetFieldsByType(
+  type: string,
+  dpt: string
+): {
+  units: string;
+  states: string;
+  relDef: string;
+  cov: string;
+} {
+  const baseType = type.substring(0, type.length - 1); // Remove I/O/V suffix
+
+  switch (baseType) {
+    case 'A': // Analog (AI, AO, AV)
+      return {
+        units: knxDPTToBACnetUnits(dpt),
+        states: '-',
+        relDef: type === 'AO' ? '0' : '-',
+        cov: '0',
+      };
+
+    case 'B': // Binary (BI, BO, BV)
+      return {
+        units: '-1',
+        states: '2',
+        relDef: type === 'BO' ? '0' : '-',
+        cov: '-',
+      };
+
+    case 'MS': // Multistate (MSI, MSO, MSV)
+      return {
+        units: '-1',
+        states: '65535',
+        relDef: type === 'MSO' ? '1' : '-',
+        cov: '-',
+      };
+
+    default:
+      return {
+        units: '-',
+        states: '-',
+        relDef: '-',
+        cov: '-',
+      };
+  }
+}
+
