@@ -118,14 +118,26 @@ export function DeviceSignalsSection({
                 {deviceSignals.slice(0, 20).map((sig, i) => (
                   <tr key={i} className="text-zinc-700">
                     <td className="px-2 py-2 font-mono text-xs">
-                      {sig.deviceId}
+                      {'deviceId' in sig ? sig.deviceId : '—'}
                     </td>
                     <td className="px-2 py-2">{sig.signalName}</td>
                     <td className="px-2 py-2 font-mono text-xs">
-                      {'objectType' in sig ? sig.objectType : sig.registerType}
+                      {'objectType' in sig
+                        ? sig.objectType
+                        : 'registerType' in sig
+                          ? sig.registerType
+                          : 'dpt' in sig
+                            ? sig.dpt
+                            : '—'}
                     </td>
                     <td className="px-2 py-2 font-mono text-xs">
-                      {'instance' in sig ? sig.instance : sig.address}
+                      {'instance' in sig
+                        ? sig.instance
+                        : 'address' in sig
+                          ? sig.address
+                          : 'groupAddress' in sig
+                            ? sig.groupAddress
+                            : '—'}
                     </td>
                     <td className="px-2 py-2 text-xs">{sig.units ?? '—'}</td>
                   </tr>

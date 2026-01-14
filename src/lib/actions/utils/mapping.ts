@@ -312,7 +312,7 @@ export function bacnetTypeToKNXDPT(objectType: string, units?: string): string {
 /**
  * Map KNX DPT → Modbus Data Type
  * Used for generating Modbus columns from KNX signals (ETS import)
- * 
+ *
  * @param dpt - KNX DPT code (e.g., "1.001", "9.001")
  * @returns Modbus data type (Uint16, Int16, Float32)
  */
@@ -338,7 +338,7 @@ export function knxDPTToModbusDataType(dpt: string): string {
 
 /**
  * Map KNX DPT → Modbus Data Length (bits)
- * 
+ *
  * @param dpt - KNX DPT code
  * @returns Data length: "16" or "32"
  */
@@ -349,7 +349,7 @@ export function knxDPTToModbusDataLength(dpt: string): string {
 
 /**
  * Map KNX DPT → Modbus Format
- * 
+ *
  * @param dpt - KNX DPT code
  * @returns Modbus format code (e.g., "0: Unsigned", "3: Float")
  */
@@ -366,7 +366,7 @@ export function knxDPTToModbusFormat(dpt: string): string {
 /**
  * Map KNX DPT → BACnet Object Type
  * Used for generating BACnet Server columns from KNX signals (ETS import)
- * 
+ *
  * @param dpt - KNX DPT code (e.g., "1.001", "9.001")
  * @returns BACnet object type (AI, AO, AV, BI, BO, BV)
  */
@@ -420,7 +420,13 @@ export function knxDPTToBACnetUnits(dpt: string): string {
   if (dpt === '9.027') return '64'; // degrees_Fahrenheit
 
   // Percentage
-  if (dpt === '5.001' || dpt === '9.007' || dpt === '5.004' || dpt === '6.001' || dpt === '8.010')
+  if (
+    dpt === '5.001' ||
+    dpt === '9.007' ||
+    dpt === '5.004' ||
+    dpt === '6.001' ||
+    dpt === '8.010'
+  )
     return '98'; // percent
 
   // Angle
@@ -547,4 +553,3 @@ export function getBACnetFieldsByType(
       };
   }
 }
-

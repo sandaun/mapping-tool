@@ -99,8 +99,10 @@ export function generateModbusFromKNX(
     }
 
     // Determine KNX flags based on read/write semantics
-    const isReadable = readWrite === '0: Read' || readWrite === '2: Read / Write';
-    const isWritable = readWrite === '1: Trigger' || readWrite === '2: Read / Write';
+    const isReadable =
+      readWrite === '0: Read' || readWrite === '2: Read / Write';
+    const isWritable =
+      readWrite === '1: Trigger' || readWrite === '2: Read / Write';
     const flags = getDefaultKNXFlags(isReadable, isWritable);
 
     // Build row with 21 columns

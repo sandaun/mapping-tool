@@ -58,7 +58,10 @@ export function parseDeviceSignalsCSV(
     | 'bacnet-server__knx'
 ): ParseResult {
   // Special handling for ETS CSV format (modbus-slave__knx and bacnet-server__knx)
-  if (gatewayType === 'modbus-slave__knx' || gatewayType === 'bacnet-server__knx') {
+  if (
+    gatewayType === 'modbus-slave__knx' ||
+    gatewayType === 'bacnet-server__knx'
+  ) {
     return parseETSCSVFormat(csvText);
   }
 
