@@ -16,6 +16,9 @@ export function allocateModbusAddresses(
     let holdingAddress = 0;
 
     for (const sig of signals) {
+      // Skip KNX signals (no deviceId)
+      if (!('deviceId' in sig)) continue;
+      
       const signalId = `${sig.deviceId}_${sig.signalName}`;
 
       // Tots els objectes BACnet → HoldingRegister (16 o 32 bits)
@@ -42,6 +45,9 @@ export function allocateBACnetInstances(
     let instance = 1;
 
     for (const sig of signals) {
+      // Skip KNX signals (no deviceId)
+      if (!('deviceId' in sig)) continue;
+      
       const signalId = `${sig.deviceId}_${sig.signalName}`;
       allocation.set(signalId, instance++);
     }
