@@ -35,7 +35,7 @@ export function ResultsSection({
           size="lg"
           className="border-primary bg-primary/5 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
         >
-          ⬇ Download Excel
+          Export Signals Template
         </Button>
       </div>
 

@@ -34,7 +34,7 @@ export function DeviceSignalsSection({
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
       <h2 className="text-lg font-semibold">Input Device Signals</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Enganxa un CSV amb les senyals dels teus dispositius.
+        Paste a CSV with signals from your devices.
       </p>
 
       {/* Prompt per ChatGPT */}
@@ -60,7 +60,7 @@ export function DeviceSignalsSection({
       <div className="mt-4 flex flex-col gap-3">
         <label className="flex flex-col gap-2">
           <span className="text-sm font-medium">
-            CSV (enganxa aquí el resultat de ChatGPT)
+            CSV (paste ChatGPT output here)
           </span>
           <textarea
             value={csvInput}
@@ -142,7 +142,7 @@ export function DeviceSignalsSection({
           </div>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-zinc-300 text-xs uppercase text-zinc-600">
+              <thead className="border-b border-border text-xs uppercase text-muted-foreground">
                 <tr>
                   <th className="px-2 py-2">Device</th>
                   <th className="px-2 py-2">Signal</th>
@@ -151,9 +151,9 @@ export function DeviceSignalsSection({
                   <th className="px-2 py-2">Units</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200">
+              <tbody className="divide-y divide-border">
                 {deviceSignals.slice(0, 20).map((sig, i) => (
-                  <tr key={i} className="text-zinc-700">
+                  <tr key={i} className="text-foreground">
                     <td className="px-2 py-2 font-mono text-xs">
                       {'deviceId' in sig ? sig.deviceId : '—'}
                     </td>
@@ -184,8 +184,8 @@ export function DeviceSignalsSection({
               </tbody>
             </table>
             {deviceSignals.length > 20 && (
-              <p className="mt-2 text-xs text-zinc-500">
-                Mostrant les primeres 20 de {deviceSignals.length} senyals.
+              <p className="mt-2 text-xs text-muted-foreground">
+                Showing first 20 of {deviceSignals.length} signals.
               </p>
             )}
           </div>

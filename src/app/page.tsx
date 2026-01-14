@@ -55,7 +55,7 @@ export default function Home() {
       if (!template) return;
 
       const res = await fetch(template.href);
-      if (!res.ok) throw new Error("No s'ha pogut carregar la plantilla.");
+      if (!res.ok) throw new Error('Could not load template.');
 
       const arrayBuffer = await res.arrayBuffer();
       await importArrayBufferAsFile(
@@ -174,7 +174,7 @@ export default function Home() {
         <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Gateway Templates</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Selecciona un gateway type per carregar la plantilla automàticament.
+            Select a gateway type to automatically load the template.
           </p>
 
           <TemplateSelector

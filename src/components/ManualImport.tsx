@@ -17,7 +17,7 @@ export function ManualImport({
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
       <h2 className="text-lg font-semibold">Custom Import</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Puja un fitxer Excel personalitzat.
+        Upload a custom Excel file.
       </p>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
