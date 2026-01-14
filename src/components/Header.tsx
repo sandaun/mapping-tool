@@ -3,6 +3,7 @@
 import { useTheme } from '@/hooks/useTheme';
 import { SunIcon } from '@/components/icons/SunIcon';
 import { MoonIcon } from '@/components/icons/MoonIcon';
+import Image from 'next/image';
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -12,15 +13,18 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo i títol */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-xl text-primary-foreground shadow-sm">
-            🔷
+          <div className="flex h-10 w-17 items-center justify-center rounded-lg text-primary-foreground ">
+            <Image
+              src="/LogoTransparentCut.png"
+              alt="Logo"
+              width={64}
+              height={64}
+            />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground">
-              Excel Protocol Mapping Tool
-            </h1>
+            <h1 className="text-lg font-bold text-foreground">SIGNAL</h1>
             <p className="text-xs text-muted-foreground">
-              Industrial gateway configuration
+              Gateway Mapping Tool
             </p>
           </div>
         </div>
