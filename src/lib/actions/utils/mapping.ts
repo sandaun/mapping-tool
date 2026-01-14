@@ -196,3 +196,115 @@ export function modbusTypeToKNXDPT(
   // Fallback
   return '9.001: temperature (°C)';
 }
+
+/**
+ * Map BACnet objectType + units → KNX DPT (Data Point Type)
+ * Strategy: Units-first (specific DPT), then fallback to objectType-based DPT
+ *
+ * @param objectType - BACnet object type: 'AI', 'AO', 'AV', 'BI', 'BO', 'BV', 'MSI', 'MSO', 'MSV'
+ * @param units - Optional engineering units (e.g., '°C', 'kW', '%', 'lux')
+ * @returns KNX DPT string with name (e.g., '1.001: switch', '9.001: temperature (°C)')
+ */
+export function bacnetTypeToKNXDPT(objectType: string, units?: string): string {
+  // Binary Input/Output/Value → DPT 1.001 (Switch)
+  if (objectType === 'BI' || objectType === 'BO' || objectType === 'BV') {
+    return '1.001: switch';
+  }
+
+  // PRIORITY 1: Units-based mapping (most specific)
+  if (units) {
+    const unitsLower = units.toLowerCase().trim();
+
+    // Temperature
+    if (unitsLower === '°c' || unitsLower === 'c' || unitsLower === 'degc') {
+      return '9.001: temperature (°C)';
+    }
+    if (unitsLower === '°f' || unitsLower === 'f' || unitsLower === 'degf') {
+      return '9.027: temperature (°F)';
+    }
+    if (unitsLower === '°k' || unitsLower === 'k' || unitsLower === 'kelvin') {
+      return '9.002: temperature difference (°K)';
+    }
+
+    // Power & Energy
+    if (unitsLower === 'kw') {
+      return '9.024: power (kW)';
+    }
+    if (unitsLower === 'w') {
+      return '9.024: power (kW)';
+    }
+    if (unitsLower === 'kwh') {
+      return '13.013: active energy (kWh)';
+    }
+    if (unitsLower === 'wh') {
+      return '13.010: active energy (Wh)';
+    }
+    if (unitsLower === 'kvah') {
+      return '13.014: apparent energy (kVAh)';
+    }
+    if (unitsLower === 'vah') {
+      return '13.011: apparent energy (VAh)';
+    }
+
+    // Percentage
+    if (unitsLower === '%' || unitsLower === 'percent') {
+      return '5.001: percentage (0..100%)'; // Analog value percentage
+    }
+
+    // Illuminance
+    if (unitsLower === 'lux') {
+      return '9.004: lux (Lux)';
+    }
+
+    // Pressure
+    if (unitsLower === 'pa' || unitsLower === 'pascal') {
+      return '9.006: pressure (Pa)';
+    }
+
+    // Speed
+    if (unitsLower === 'm/s') {
+      return '9.005: speed (m/s)';
+    }
+    if (unitsLower === 'km/h') {
+      return '9.028: wind speed (km/h)';
+    }
+
+    // Flow
+    if (unitsLower === 'l/h') {
+      return '9.025: volume flow (l/h)';
+    }
+    if (unitsLower === 'm3/h') {
+      return '13.002: flow rate (m3/h)';
+    }
+    if (unitsLower === 'l/s') {
+      return '9.025: volume flow (l/h)';
+    }
+
+    // Voltage & Current
+    if (unitsLower === 'mv') {
+      return '9.020: voltage (mV)';
+    }
+    if (unitsLower === 'ma') {
+      return '9.021: current (mA)';
+    }
+
+    // PPM
+    if (unitsLower === 'ppm') {
+      return '9.008: parts/million (ppm)';
+    }
+  }
+
+  // PRIORITY 2: ObjectType-based fallback (generic)
+  if (objectType === 'AI' || objectType === 'AO' || objectType === 'AV') {
+    // Analog → Default 2-byte float (temperature-like)
+    return '9.001: temperature (°C)';
+  }
+
+  // Multistate → DPT 5.010 (unsigned 8-bit, 0-255)
+  if (objectType === 'MSI' || objectType === 'MSO' || objectType === 'MSV') {
+    return '5.010: counter pulses (0..255)';
+  }
+
+  // Fallback
+  return '9.001: temperature (°C)';
+}

@@ -42,6 +42,7 @@ export function parseDeviceSignalsCSV(
     | 'bacnet-server__modbus-master'
     | 'modbus-slave__bacnet-client'
     | 'knx__modbus-master'
+    | 'knx__bacnet-client'
 ): ParseResult {
   const lines = csvText.trim().split('\n');
   if (lines.length < 2) {
@@ -135,7 +136,10 @@ export function parseDeviceSignalsCSV(
       };
       signals.push(signal);
     }
-  } else if (gatewayType === 'modbus-slave__bacnet-client') {
+  } else if (
+    gatewayType === 'modbus-slave__bacnet-client' ||
+    gatewayType === 'knx__bacnet-client'
+  ) {
     // Espera: deviceId,signalName,objectType,instance,units,description
     const requiredCols = ['deviceId', 'signalName', 'objectType', 'instance'];
     const missing = requiredCols.filter((col) => !headers.includes(col));

@@ -66,4 +66,25 @@ Column descriptions:
 
 Output only the CSV with the exact column names above, no explanations.`,
   },
+  {
+    id: 'knx__bacnet-client',
+    label: 'KNX → BACnet Client',
+    href: '/templates/knx-to-bacnet-client.xlsx',
+    expectedSheets: ['Signals', 'Conversions'],
+    promptText: `Convert the following BACnet point list into CSV format with these exact columns:
+
+deviceId,signalName,objectType,instance,units,description
+
+Column descriptions:
+- deviceId: unique device identifier (e.g., T01, CTRL02)
+- signalName: signal name (e.g., RoomTemperature, Setpoint)
+- objectType: AI, AO, AV, BI, BO, BV, MSI, MSO, or MSV
+- instance: BACnet object instance number (integer)
+- units: engineering units (°C, %, kW, etc.)
+- description: human-readable description
+
+[Paste your BACnet point list here]
+
+Output only the CSV with the exact column names above, no explanations.`,
+  },
 ] as const;

@@ -5,6 +5,7 @@ import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
 import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
 import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
 import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
+import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -96,6 +97,10 @@ export default function Home() {
         result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
       } else if (selectedTemplateId === 'knx__modbus-master') {
         result = generateKNXFromModbus(deviceSignals, raw, {
+          startGroupAddress: '0/0/1',
+        });
+      } else if (selectedTemplateId === 'knx__bacnet-client') {
+        result = generateKNXFromBACnet(deviceSignals, raw, {
           startGroupAddress: '0/0/1',
         });
       } else {
