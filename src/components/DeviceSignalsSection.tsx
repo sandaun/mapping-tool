@@ -125,10 +125,10 @@ export function DeviceSignalsSection({
                       {'objectType' in sig
                         ? sig.objectType
                         : 'registerType' in sig
-                          ? sig.registerType
-                          : 'dpt' in sig
-                            ? sig.dpt
-                            : '—'}
+                        ? sig.registerType
+                        : 'dpt' in sig
+                        ? sig.dpt
+                        : '—'}
                     </td>
                     <td className="px-2 py-2 font-mono text-xs">
                       {'instance' in sig
@@ -139,7 +139,9 @@ export function DeviceSignalsSection({
                             ? sig.groupAddress
                             : '—'}
                     </td>
-                    <td className="px-2 py-2 text-xs">{sig.units ?? '—'}</td>
+                    <td className="px-2 py-2 text-xs">
+                      {'units' in sig ? sig.units ?? '—' : '—'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
