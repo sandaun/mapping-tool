@@ -1,6 +1,5 @@
 import type { TemplateId } from '@/types/page.types';
 import { TEMPLATES } from '@/constants/templates';
-import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
 
 type TemplateSelectorProps = {
@@ -47,31 +46,31 @@ export function TemplateSelector({
         {TEMPLATES.map((template) => {
           const isActive = selectedTemplateId === template.id;
           return (
-            <Button
+            <button
               key={template.id}
               type="button"
               onClick={() => handleTemplateClick(template.id)}
               disabled={busy}
-              variant={isActive ? 'default' : 'outline'}
-              className={`${
-                isActive ? 'shadow-lg ring-2 ring-primary/20' : ''
-              }`}
+              className={
+                isActive
+                  ? 'px-4 py-2 text-xs font-semibold rounded-lg border border-primary bg-primary/5 text-primary shadow-sm dark:bg-primary/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  : 'px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+              }
             >
               {template.label}
-            </Button>
+            </button>
           );
         })}
 
         {/* Botó Custom */}
-        <Button
+        <button
           type="button"
           onClick={handleCustomClick}
           disabled={busy}
-          variant="outline"
-          className="gap-2"
+          className="px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed gap-2 inline-flex items-center"
         >
           📁 Custom
-        </Button>
+        </button>
 
         {/* Input file ocult */}
         <input
