@@ -308,3 +308,57 @@ export function bacnetTypeToKNXDPT(objectType: string, units?: string): string {
   // Fallback
   return '9.001: temperature (°C)';
 }
+
+/**
+ * Map KNX DPT → Modbus Data Type
+ * Used for generating Modbus columns from KNX signals (ETS import)
+ * 
+ * @param dpt - KNX DPT code (e.g., "1.001", "9.001")
+ * @returns Modbus data type (Uint16, Int16, Float32)
+ */
+export function knxDPTToModbusDataType(dpt: string): string {
+  const main = dpt.split('.')[0];
+
+  // DPT 1.x (1-bit boolean) → Uint16 (stored in 16-bit register)
+  if (main === '1') return 'Uint16';
+
+  // DPT 5.x, 6.x, 7.x, 8.x (8-bit unsigned/signed) → Uint16 or Int16
+  if (main === '5' || main === '7') return 'Uint16';
+  if (main === '6' || main === '8') return 'Int16';
+
+  // DPT 9.x (16-bit float), 12.x, 13.x → Float32
+  if (main === '9' || main === '12' || main === '13') return 'Float32';
+
+  // DPT 20.x (HVAC mode, enum) → Uint16
+  if (main === '20') return 'Uint16';
+
+  // Fallback: Float32 for analog values
+  return 'Float32';
+}
+
+/**
+ * Map KNX DPT → Modbus Data Length (bits)
+ * 
+ * @param dpt - KNX DPT code
+ * @returns Data length: "16" or "32"
+ */
+export function knxDPTToModbusDataLength(dpt: string): string {
+  const dataType = knxDPTToModbusDataType(dpt);
+  return dataType === 'Float32' ? '32' : '16';
+}
+
+/**
+ * Map KNX DPT → Modbus Format
+ * 
+ * @param dpt - KNX DPT code
+ * @returns Modbus format code (e.g., "0: Unsigned", "3: Float")
+ */
+export function knxDPTToModbusFormat(dpt: string): string {
+  const dataType = knxDPTToModbusDataType(dpt);
+
+  if (dataType === 'Uint16') return '0: Unsigned';
+  if (dataType === 'Int16') return '1: Signed (C2)';
+  if (dataType === 'Float32') return '3: Float';
+
+  return '0: Unsigned';
+}

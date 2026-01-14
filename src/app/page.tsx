@@ -6,6 +6,7 @@ import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus
 import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
 import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
 import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
+import { generateModbusFromKNX } from '@/lib/actions/generateModbusFromKNX';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -70,7 +71,7 @@ export default function Home() {
     navigator.clipboard.writeText(selectedTemplate.promptText);
   }
 
-  function onParseCSV() {
+  function onParseCsv() {
     setParseWarnings([]);
     setDeviceSignals([]);
 
@@ -102,6 +103,10 @@ export default function Home() {
       } else if (selectedTemplateId === 'knx__bacnet-client') {
         result = generateKNXFromBACnet(deviceSignals, raw, {
           startGroupAddress: '0/0/1',
+        });
+      } else if (selectedTemplateId === 'modbus-slave__knx') {
+        result = generateModbusFromKNX(deviceSignals, raw, {
+          startAddress: 0,
         });
       } else {
         throw new Error(
@@ -168,7 +173,7 @@ export default function Home() {
             template={selectedTemplate}
             csvInput={csvInput}
             onCsvInputChange={setCsvInput}
-            onParseCSV={onParseCSV}
+            onParseCSV={onParseCsv}
             onCopyPrompt={onCopyPrompt}
             onGenerateSignals={onGenerateSignals}
             deviceSignals={deviceSignals}

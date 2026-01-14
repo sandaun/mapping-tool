@@ -104,7 +104,14 @@ const DPT_MAP = new Map<string, string>(
  */
 export function formatDPT(dpt: string): string {
   const name = DPT_MAP.get(dpt);
-  return name ? `${dpt}: ${name}` : dpt;
+  if (name) return `${dpt}: ${name}`;
+
+  // Fallback for unknown 2.x and 3.x DPTs
+  const main = dpt.split('.')[0];
+  if (main === '2') return `2.x: (2-bit. 1 bit controlled)`;
+  if (main === '3') return `3.x: (4-bit. 3-bit controlled)`;
+
+  return dpt;
 }
 
 /**

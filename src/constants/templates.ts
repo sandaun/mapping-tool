@@ -87,4 +87,29 @@ Column descriptions:
 
 Output only the CSV with the exact column names above, no explanations.`,
   },
+  {
+    id: 'modbus-slave__knx',
+    label: 'Modbus Slave → KNX',
+    href: '/templates/modbus-slave-to-knx.xlsx',
+    expectedSheets: ['Signals', 'Conversions'],
+    promptText: `This template generates Modbus Slave signals from a KNX project exported from ETS software.
+
+IMPORTANT: Instead of providing device signals, paste the raw CSV export from ETS (Project → Export → Group Addresses).
+
+The CSV should have this format:
+"Function, Subfunction, Signal Name, Group Address, ..., DPT, ..."
+
+Example:
+"Clima, , ,""5/-/-"",..."
+" ,""Sala - Menjador"", ,""5/1/-"",..."
+" , ,""AC On/Off"",""5/1/0"","""","""","""",""DPST-1-1"",..."
+" , ,""AC Temperatura Consigna"",""5/1/5"","""","""","""",""DPST-9-1"",..."
+
+The system will:
+- Parse KNX signals (Description, Group Address, DPT)
+- Generate corresponding Modbus Slave registers automatically
+- Assign sequential Modbus addresses starting from 0
+
+[Paste your ETS CSV export here]`,
+  },
 ] as const;
