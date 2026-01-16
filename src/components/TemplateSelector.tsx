@@ -39,9 +39,6 @@ export function TemplateSelector({
 
   return (
     <div className="mt-4 flex flex-col gap-3">
-      <span className="text-sm font-medium text-foreground">
-        Gateway Template
-      </span>
       <div className="flex flex-wrap gap-3">
         {TEMPLATES.map((template) => {
           const isActive = selectedTemplateId === template.id;
