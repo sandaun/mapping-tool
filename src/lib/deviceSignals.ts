@@ -33,6 +33,19 @@ export type ParseResult = {
   warnings: string[];
 };
 
+function normalizeModbusDataType(raw: string): string {
+  const value = raw.trim();
+  const lower = value.toLowerCase();
+
+  if (lower === 's16') return 'Int16';
+  if (lower === 'u16') return 'Uint16';
+  if (lower === 's32') return 'Int32';
+  if (lower === 'u32') return 'Uint32';
+  if (lower === 'f32') return 'Float32';
+
+  return value;
+}
+
 // Type guards
 export function isModbusSignal(signal: DeviceSignal): signal is ModbusSignal {
   return 'registerType' in signal && 'address' in signal;
@@ -118,7 +131,7 @@ export function parseDeviceSignalsCSV(
       const signalName = cols[signalNameIdx];
       const registerType = cols[registerTypeIdx];
       const addressRaw = cols[addressIdx];
-      const dataType = cols[dataTypeIdx];
+      const dataTypeRaw = cols[dataTypeIdx];
       const units = unitsIdx >= 0 ? cols[unitsIdx] : undefined;
       const description =
         descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
@@ -128,7 +141,7 @@ export function parseDeviceSignalsCSV(
         !signalName ||
         !registerType ||
         !addressRaw ||
-        !dataType
+        !dataTypeRaw
       ) {
         warnings.push(
           `Fila ${
@@ -151,7 +164,7 @@ export function parseDeviceSignalsCSV(
         signalName,
         registerType,
         address,
-        dataType,
+        dataType: normalizeModbusDataType(dataTypeRaw),
         units,
         description,
       };

@@ -11,13 +11,27 @@ export function getModbusFunctions(
       read: isReadable ? '1: Read Coils' : '-',
       write: isWritable ? '5: Write Single Coil' : '-',
     };
-  } else {
-    // HoldingRegister
+  }
+
+  if (registerType === 'DiscreteInput') {
     return {
-      read: isReadable ? '3: Read Holding Registers' : '-',
-      write: isWritable ? '6: Write Single Register' : '-',
+      read: isReadable ? '2: Read Discrete Inputs' : '-',
+      write: '-',
     };
   }
+
+  if (registerType === 'InputRegister') {
+    return {
+      read: isReadable ? '4: Read Input Registers' : '-',
+      write: '-',
+    };
+  }
+
+  // HoldingRegister
+  return {
+    read: isReadable ? '3: Read Holding Registers' : '-',
+    write: isWritable ? '6: Write Single Register' : '-',
+  };
 }
 
 /**
@@ -40,12 +54,16 @@ export function getModbusReadWrite(objectType: string): string {
  * 0: Unsigned, 1: Signed(C2), 2: Signed(C1), 3: Float, 4: BitFields
  */
 export function getModbusFormat(dataType: string, objectType?: string): string {
-  if (dataType.includes('Float')) return '3: Float';
+  if (dataType.includes('Float') || /^f\d+$/i.test(dataType)) {
+    return '3: Float';
+  }
   if (
-    dataType.toLowerCase().includes('signed') &&
-    !dataType.includes('Unsigned')
-  )
+    /^int\d+$/i.test(dataType) ||
+    /^s\d+$/i.test(dataType) ||
+    /^signed/i.test(dataType)
+  ) {
     return '1: Signed(C2)';
+  }
   // BV (Binary Value) → BitFields
   if (objectType === 'BV') return '4: BitFields';
   // BI, BO, altres Uint16 → Unsigned

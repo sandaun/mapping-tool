@@ -15,9 +15,14 @@ Column descriptions:
 - signalName: signal name (e.g., ActivePower, Temperature)
 - registerType: HoldingRegister, InputRegister, Coil, or DiscreteInput
 - address: Modbus register address (integer)
-- dataType: Int16, Uint16, Float32, Int32, etc.
+- dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
+  (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
 - units: engineering units (kW, V, °C, %, etc.)
 - description: human-readable description
+
+Optional extra columns (append after description if available):
+- mode: R or R/W
+- factor: scaling factor (e.g., 10, 100)
 
 [Paste your device register map here]
 
@@ -58,9 +63,14 @@ Column descriptions:
 - signalName: signal name (e.g., ActivePower, Temperature)
 - registerType: HoldingRegister, InputRegister, Coil, or DiscreteInput
 - address: Modbus register address (integer)
-- dataType: Int16, Uint16, Float32, Int32, etc.
+- dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
+  (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
 - units: engineering units (kW, V, °C, %, etc.)
 - description: human-readable description
+
+Optional extra columns (append after description if available):
+- mode: R or R/W
+- factor: scaling factor (e.g., 10, 100)
 
 [Paste your device register map here]
 
