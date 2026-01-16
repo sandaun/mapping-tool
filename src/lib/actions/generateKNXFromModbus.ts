@@ -56,6 +56,34 @@ export function generateKNXFromModbus(
     return idx;
   };
 
+  const getNextGroupAddressFromSheet = (): GroupAddress => {
+    const colIdx = findCol('Group Address');
+    if (colIdx < 0) return { main: 0, middle: 0, sub: 1 };
+
+    let maxValue = -1;
+    let maxAddress: GroupAddress | null = null;
+    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
+
+    for (let i = startRow; i < signalsSheet.rows.length; i++) {
+      const cell = signalsSheet.rows[i][colIdx];
+      if (typeof cell !== 'string') continue;
+      try {
+        const parsed = parseGroupAddress(cell);
+        const value = (parsed.main << 11) + (parsed.middle << 8) + parsed.sub;
+        if (value > maxValue) {
+          maxValue = value;
+          maxAddress = parsed;
+        }
+      } catch {
+        // Ignore invalid group addresses in existing rows
+      }
+    }
+
+    return maxAddress
+      ? incrementGroupAddress(maxAddress)
+      : { main: 0, middle: 0, sub: 1 };
+  };
+
   // Get the next # value (sequential ID)
   let nextId =
     signalsSheet.rows.length - (headerRowIdx >= 0 ? headerRowIdx : 0);
@@ -67,13 +95,17 @@ export function generateKNXFromModbus(
 
   // Initialize Group Address counter
   let groupAddress: GroupAddress;
-  try {
-    groupAddress = parseGroupAddress(policy.startGroupAddress ?? '0/0/1');
-  } catch {
-    warnings.push(
-      `Invalid startGroupAddress: ${policy.startGroupAddress}. Using default 0/0/1.`
-    );
-    groupAddress = { main: 0, middle: 0, sub: 1 };
+  if (policy.startGroupAddress) {
+    try {
+      groupAddress = parseGroupAddress(policy.startGroupAddress);
+    } catch {
+      warnings.push(
+        `Invalid startGroupAddress: ${policy.startGroupAddress}. Using next available address.`
+      );
+      groupAddress = getNextGroupAddressFromSheet();
+    }
+  } else {
+    groupAddress = getNextGroupAddressFromSheet();
   }
 
   // Process each Modbus signal

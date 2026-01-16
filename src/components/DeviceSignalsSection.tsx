@@ -10,9 +10,9 @@ type DeviceSignalsSectionProps = {
   onParseCSV: () => void;
   onCopyPrompt: () => void;
   onGenerateSignals: () => void;
+  onClearSignals: () => void;
   deviceSignals: DeviceSignal[];
   parseWarnings: string[];
-  pendingExport: { signalsCount: number; targetSheet: string } | null;
   busy: boolean;
 };
 
@@ -23,12 +23,14 @@ export function DeviceSignalsSection({
   onParseCSV,
   onCopyPrompt,
   onGenerateSignals,
+  onClearSignals,
   deviceSignals,
   parseWarnings,
-  pendingExport,
   busy,
 }: DeviceSignalsSectionProps) {
   const isParsed = deviceSignals.length > 0;
+  const canClear =
+    isParsed || csvInput.trim().length > 0 || parseWarnings.length > 0;
 
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -72,17 +74,7 @@ export function DeviceSignalsSection({
         </label>
 
         <div className="flex items-center justify-between">
-          {/* Badge persistent */}
-          <div>
-            {pendingExport && (
-              <div className="flex items-center gap-2">
-                <span className="text-secondary text-lg font-bold">✓</span>
-                <span className="text-sm font-medium text-foreground">
-                  {pendingExport.signalsCount} signals ready to export
-                </span>
-              </div>
-            )}
-          </div>
+          <div />
 
           {/* Botons */}
           <div className="flex items-center gap-3">
@@ -105,6 +97,15 @@ export function DeviceSignalsSection({
               className="border-secondary bg-secondary/10 text-secondary hover:border-secondary/60 hover:bg-secondary/15 hover:text-secondary dark:bg-secondary/15 dark:hover:bg-secondary/20"
             >
               Generate Signals
+            </Button>
+            <Button
+              type="button"
+              onClick={onClearSignals}
+              disabled={!canClear || busy}
+              variant="outline"
+              size="lg"
+            >
+              Clear
             </Button>
           </div>
         </div>

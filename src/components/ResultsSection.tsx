@@ -7,6 +7,7 @@ type ResultsSectionProps = {
   sheetNames: string[];
   onExport: () => void;
   busy: boolean;
+  pendingExport: { signalsCount: number; targetSheet: string } | null;
 };
 
 export function ResultsSection({
@@ -14,6 +15,7 @@ export function ResultsSection({
   sheetNames,
   onExport,
   busy,
+  pendingExport,
 }: ResultsSectionProps) {
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -27,16 +29,26 @@ export function ResultsSection({
           ))}
         </div>
 
-        <Button
-          type="button"
-          onClick={onExport}
-          disabled={busy}
-          variant="outline"
-          size="lg"
-          className="border-primary bg-primary/5 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
-        >
-          Export Signals Template
-        </Button>
+        <div className="flex items-center gap-3">
+          {pendingExport && (
+            <div className="flex items-center gap-2 text-sm text-foreground">
+              <span className="text-secondary text-lg font-bold">✓</span>
+              <span className="text-sm font-medium text-foreground">
+                {pendingExport.signalsCount} signals ready to export
+              </span>
+            </div>
+          )}
+          <Button
+            type="button"
+            onClick={onExport}
+            disabled={busy}
+            variant="outline"
+            size="lg"
+            className="border-primary bg-primary/5 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
+          >
+            Export Signals Template
+          </Button>
+        </div>
       </div>
 
       <details className="mt-4 rounded-lg border border-border bg-muted/50 p-3">

@@ -87,7 +87,6 @@ export default function Home() {
 
   function onParseCsv() {
     setParseWarnings([]);
-    setDeviceSignals([]);
 
     if (!csvInput.trim()) {
       setParseWarnings(['El CSV està buit.']);
@@ -95,8 +94,15 @@ export default function Home() {
     }
 
     const result = parseDeviceSignalsCSV(csvInput, selectedTemplateId);
-    setDeviceSignals(result.signals);
+    // Acumular signals en lloc d'esborrar els anteriors
+    setDeviceSignals((prev) => [...prev, ...result.signals]);
     setParseWarnings(result.warnings);
+  }
+
+  function onClearSignals() {
+    setDeviceSignals([]);
+    setParseWarnings([]);
+    setCsvInput('');
   }
 
   function onGenerateSignals() {
@@ -111,21 +117,13 @@ export default function Home() {
       } else if (selectedTemplateId === 'modbus-slave__bacnet-client') {
         result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
       } else if (selectedTemplateId === 'knx__modbus-master') {
-        result = generateKNXFromModbus(deviceSignals, raw, {
-          startGroupAddress: '0/0/1',
-        });
+        result = generateKNXFromModbus(deviceSignals, raw);
       } else if (selectedTemplateId === 'knx__bacnet-client') {
-        result = generateKNXFromBACnet(deviceSignals, raw, {
-          startGroupAddress: '0/0/1',
-        });
+        result = generateKNXFromBACnet(deviceSignals, raw);
       } else if (selectedTemplateId === 'modbus-slave__knx') {
-        result = generateModbusFromKNX(deviceSignals, raw, {
-          startAddress: 0,
-        });
+        result = generateModbusFromKNX(deviceSignals, raw);
       } else if (selectedTemplateId === 'bacnet-server__knx') {
-        result = generateBACnetServerFromKNX(deviceSignals, raw, {
-          startInstance: 0,
-        });
+        result = generateBACnetServerFromKNX(deviceSignals, raw);
       } else {
         throw new Error(
           `Gateway type not implemented yet: ${selectedTemplateId}`
@@ -146,10 +144,10 @@ export default function Home() {
         : 'KNX';
 
       // Mostrar badge persistent
-      setPendingExport({
-        signalsCount: deviceSignals.length,
+      setPendingExport((prev) => ({
+        signalsCount: (prev?.signalsCount ?? 0) + result.rowsAdded,
         targetSheet,
-      });
+      }));
 
       // Clear CSV input i signals després de generar
       setCsvInput('');
@@ -197,9 +195,9 @@ export default function Home() {
             onParseCSV={onParseCsv}
             onCopyPrompt={onCopyPrompt}
             onGenerateSignals={onGenerateSignals}
+            onClearSignals={onClearSignals}
             deviceSignals={deviceSignals}
             parseWarnings={parseWarnings}
-            pendingExport={pendingExport}
             busy={busy}
           />
         )}
@@ -214,6 +212,7 @@ export default function Home() {
             sheetNames={sheetNames}
             onExport={handleExport}
             busy={busy}
+            pendingExport={pendingExport}
           />
         )}
       </main>

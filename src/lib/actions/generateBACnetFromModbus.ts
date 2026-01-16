@@ -47,6 +47,27 @@ export function generateBACnetFromModbus(
     return idx;
   };
 
+  const getMaxNumericInColumn = (colName: string): number => {
+    const colIdx = findCol(colName);
+    if (colIdx < 0) return -1;
+
+    let max = -1;
+    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
+    for (let i = startRow; i < signalsSheet.rows.length; i++) {
+      const cell = signalsSheet.rows[i][colIdx];
+      const value =
+        typeof cell === 'number'
+          ? cell
+          : typeof cell === 'string'
+          ? Number(cell)
+          : NaN;
+      if (!Number.isNaN(value)) {
+        max = Math.max(max, value);
+      }
+    }
+    return max;
+  };
+
   // Get the next # value (sequential ID)
   let nextId =
     signalsSheet.rows.length - (headerRowIdx >= 0 ? headerRowIdx : 0);
@@ -58,6 +79,8 @@ export function generateBACnetFromModbus(
 
   // Device signals = Modbus → Generate BACnet columns
   const instanceAllocation = allocateBACnetInstances(deviceSignals, policy);
+  const lastInstance = getMaxNumericInColumn('Instance');
+  const baseInstance = lastInstance >= 0 ? lastInstance : 0;
 
   for (const sig of deviceSignals) {
     if (!('registerType' in sig)) continue; // Skip non-Modbus signals
@@ -69,7 +92,7 @@ export function generateBACnetFromModbus(
       modbusSignal.dataType,
       modbusSignal.registerType
     );
-    const instance = instanceAllocation.get(signalId) ?? 0;
+    const instance = (instanceAllocation.get(signalId) ?? 1) + baseInstance;
 
     // Determine if signal is readable/writable based on BACnet object type
     // INPUT (AI, BI, MI): només READ

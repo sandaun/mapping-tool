@@ -66,8 +66,31 @@ export function generateModbusFromKNX(
   let nextId =
     signalsSheet.rows.length - (headerRowIdx >= 0 ? headerRowIdx : 0);
 
-  // Modbus address counter
-  let modbusAddress = policy.startAddress ?? 0;
+  const getMaxNumericInColumn = (colName: string): number => {
+    const colIdx = findCol(colName);
+    if (colIdx < 0) return -1;
+
+    let max = -1;
+    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
+    for (let i = startRow; i < signalsSheet.rows.length; i++) {
+      const cell = signalsSheet.rows[i][colIdx];
+      const value =
+        typeof cell === 'number'
+          ? cell
+          : typeof cell === 'string'
+          ? Number(cell)
+          : NaN;
+      if (!Number.isNaN(value)) {
+        max = Math.max(max, value);
+      }
+    }
+    return max;
+  };
+
+  // Modbus address counter (continue from last used address)
+  const lastAddress = getMaxNumericInColumn('Address');
+  let modbusAddress =
+    policy.startAddress ?? (lastAddress >= 0 ? lastAddress + 1 : 0);
 
   // Process each KNX signal
   for (const knxSignal of knxSignals) {

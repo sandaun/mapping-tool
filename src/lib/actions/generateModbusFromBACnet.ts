@@ -50,6 +50,27 @@ export function generateModbusFromBACnet(
     return idx;
   };
 
+  const getMaxNumericInColumn = (colName: string): number => {
+    const colIdx = findCol(colName);
+    if (colIdx < 0) return -1;
+
+    let max = -1;
+    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
+    for (let i = startRow; i < signalsSheet.rows.length; i++) {
+      const cell = signalsSheet.rows[i][colIdx];
+      const value =
+        typeof cell === 'number'
+          ? cell
+          : typeof cell === 'string'
+          ? Number(cell)
+          : NaN;
+      if (!Number.isNaN(value)) {
+        max = Math.max(max, value);
+      }
+    }
+    return max;
+  };
+
   // Get the next # value (sequential ID)
   let nextId =
     signalsSheet.rows.length - (headerRowIdx >= 0 ? headerRowIdx : 0);
@@ -60,6 +81,8 @@ export function generateModbusFromBACnet(
 
   // Device signals = BACnet → Generate Modbus columns
   const addressAllocation = allocateModbusAddresses(deviceSignals, policy);
+  const lastAddress = getMaxNumericInColumn('Address');
+  const baseAddress = lastAddress >= 0 ? lastAddress + 1 : 0;
 
   for (const sig of deviceSignals) {
     if (!('objectType' in sig)) continue; // Skip non-BACnet signals
@@ -68,7 +91,7 @@ export function generateModbusFromBACnet(
     const signalId = `${bacnetSignal.deviceId}_${bacnetSignal.signalName}`;
 
     const dataType = mapBACnetToModbusDataType(bacnetSignal.objectType);
-    const address = addressAllocation.get(signalId) ?? 0;
+    const address = (addressAllocation.get(signalId) ?? 0) + baseAddress;
 
     // Determine Read/Write based on BACnet object type
     // 0: Read (INPUT), 1: Trigger (OUTPUT), 2: Read / Write (VALUE)
