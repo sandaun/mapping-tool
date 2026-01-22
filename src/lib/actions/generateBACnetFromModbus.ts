@@ -152,14 +152,27 @@ export function generateBACnetFromModbus(
     row[findCol('Base')] = '0-based';
     row[findCol('Read Func')] = modbusFunctions.read;
     row[findCol('Write Func')] = modbusFunctions.write;
-    row[findCol('Data Length')] =
-      modbusSignal.registerType === 'Coil' ? '1' : '16';
-    row[findCol('Format')] =
-      modbusSignal.registerType === 'Coil'
+    const format =
+      modbusSignal.registerType === 'Coil' ||
+      modbusSignal.registerType === 'DiscreteInput'
         ? '-'
         : getModbusFormat(modbusSignal.dataType);
+    let dataLengthValue = '16';
+    if (
+      modbusSignal.registerType === 'Coil' ||
+      modbusSignal.registerType === 'DiscreteInput'
+    ) {
+      dataLengthValue = '1';
+    } else if (format === '3: Float' || /32/.test(modbusSignal.dataType)) {
+      dataLengthValue = '32';
+    }
+    row[findCol('Data Length')] = dataLengthValue;
+    row[findCol('Format')] = format;
     row[findCol('ByteOrder')] =
-      modbusSignal.registerType === 'Coil' ? '-' : '0: Big Endian';
+      modbusSignal.registerType === 'Coil' ||
+      modbusSignal.registerType === 'DiscreteInput'
+        ? '-'
+        : '0: Big Endian';
     row[findCol('Address')] = modbusSignal.address;
     row[findCol('Bit')] = '-';
     row[findCol('# Bits')] = '-';

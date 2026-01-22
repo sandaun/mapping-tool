@@ -191,7 +191,10 @@ export function generateKNXFromModbus(
       modbusSignal.registerType === 'DiscreteInput'
     ) {
       dataLengthValue = '1';
-    } else if (format === '3: Float') {
+    } else if (
+      format === '3: Float' ||
+      /32/.test(modbusSignal.dataType)
+    ) {
       dataLengthValue = '32'; // Float32 = 32 bits = 2 registers
     } else {
       dataLengthValue = '16'; // Int16, Uint16 = 16 bits = 1 register

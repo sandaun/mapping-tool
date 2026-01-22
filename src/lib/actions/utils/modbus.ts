@@ -57,11 +57,7 @@ export function getModbusFormat(dataType: string, objectType?: string): string {
   if (dataType.includes('Float') || /^f\d+$/i.test(dataType)) {
     return '3: Float';
   }
-  if (
-    /^int\d+$/i.test(dataType) ||
-    /^s\d+$/i.test(dataType) ||
-    /^signed/i.test(dataType)
-  ) {
+  if (/^int\d+$/i.test(dataType) || /^s\d+$/i.test(dataType)) {
     return '1: Signed(C2)';
   }
   // BV (Binary Value) → BitFields

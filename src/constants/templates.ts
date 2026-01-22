@@ -17,12 +17,11 @@ Column descriptions:
 - address: Modbus register address (integer)
 - dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
   (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
-- units: engineering units (kW, V, °C, %, etc.)
-- description: human-readable description
-
-Optional extra columns (append after description if available):
+- Optional extra columns (append after description if available):
 - mode: R or R/W
 - factor: scaling factor (e.g., 10, 100)
+- units: engineering units (kW, V, °C, %, etc.)
+- description: human-readable description
 
 [Paste your device register map here]
 
@@ -65,12 +64,11 @@ Column descriptions:
 - address: Modbus register address (integer)
 - dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
   (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
-- units: engineering units (kW, V, °C, %, etc.)
-- description: human-readable description
-
-Optional extra columns (append after description if available):
+- Optional extra columns (append after description if available):
 - mode: R or R/W
 - factor: scaling factor (e.g., 10, 100)
+- units: engineering units (kW, V, °C, %, etc.)
+- description: human-readable description
 
 [Paste your device register map here]
 

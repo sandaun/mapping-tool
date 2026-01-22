@@ -33,10 +33,28 @@ export type ParseResult = {
   warnings: string[];
 };
 
+function normalizeModbusRegisterType(raw: string): string {
+  const value = raw.trim().toLowerCase();
+
+  if (value.includes('coil')) return 'Coil';
+  if (value.includes('discrete')) return 'DiscreteInput';
+  if (value.includes('input') || value.includes('fc04') || value === '4') {
+    return 'InputRegister';
+  }
+  if (value.includes('holding') || value.includes('fc03') || value === '3') {
+    return 'HoldingRegister';
+  }
+
+  return raw.trim();
+}
+
 function normalizeModbusDataType(raw: string): string {
   const value = raw.trim();
   const lower = value.toLowerCase();
 
+  // Software does not support 8-bit data length, normalize to 16-bit.
+  if (lower === 's8') return 'Int16';
+  if (lower === 'u8') return 'Uint16';
   if (lower === 's16') return 'Int16';
   if (lower === 'u16') return 'Uint16';
   if (lower === 's32') return 'Int32';
@@ -129,7 +147,7 @@ export function parseDeviceSignalsCSV(
 
       const deviceId = cols[deviceIdIdx];
       const signalName = cols[signalNameIdx];
-      const registerType = cols[registerTypeIdx];
+      const registerTypeRaw = cols[registerTypeIdx];
       const addressRaw = cols[addressIdx];
       const dataTypeRaw = cols[dataTypeIdx];
       const units = unitsIdx >= 0 ? cols[unitsIdx] : undefined;
@@ -139,7 +157,7 @@ export function parseDeviceSignalsCSV(
       if (
         !deviceId ||
         !signalName ||
-        !registerType ||
+        !registerTypeRaw ||
         !addressRaw ||
         !dataTypeRaw
       ) {
@@ -162,7 +180,7 @@ export function parseDeviceSignalsCSV(
       const signal: ModbusSignal = {
         deviceId,
         signalName,
-        registerType,
+        registerType: normalizeModbusRegisterType(registerTypeRaw),
         address,
         dataType: normalizeModbusDataType(dataTypeRaw),
         units,
