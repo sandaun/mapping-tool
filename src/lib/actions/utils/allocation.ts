@@ -1,6 +1,5 @@
 import type { DeviceSignal } from '../../deviceSignals';
-
-export type AllocationPolicy = 'simple'; // Futur: 'grouped-by-device', 'offset-by-type', etc.
+import type { AllocationPolicy } from '@/types/actions';
 
 /**
  * Allocate Modbus addresses with simple sequential policy.

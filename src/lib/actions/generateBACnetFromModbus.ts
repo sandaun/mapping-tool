@@ -1,21 +1,14 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal, ModbusSignal } from '../deviceSignals';
+import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
+import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { detectUnitFromSignalName } from '../../constants/bacnetUnits';
 import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumber } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
 import { getModbusFunctions, getModbusFormat } from './utils/modbus';
-import {
-  allocateBACnetInstances,
-  type AllocationPolicy,
-} from './utils/allocation';
+import { allocateBACnetInstances } from './utils/allocation';
 import { mapModbusToBACnetObjectType } from './utils/mapping';
-
-export type GenerateSignalsResult = {
-  updatedWorkbook: RawWorkbook;
-  rowsAdded: number;
-  warnings: string[];
-};
 
 /**
  * Generate BACnet signals from Modbus device signals.
@@ -32,7 +25,7 @@ export function generateBACnetFromModbus(
   // Find Signals sheet
   const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
   if (!signalsSheet) {
-    warnings.push("No s'ha trobat el sheet 'Signals'.");
+    warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
@@ -126,7 +119,7 @@ export function generateBACnetFromModbus(
 
     // BACnet columns
     row[findCol('#')] = nextId++;
-    row[findCol('Active')] = 'True';
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
     row[findCol('Description')] = '';
     row[findCol('Name')] = modbusSignal.signalName;
     row[findCol('Type')] = formatBACnetType(objectType);
@@ -144,30 +137,30 @@ export function generateBACnetFromModbus(
     }
     row[findCol('Units')] = unitCode;
 
-    row[findCol('NC')] = '-';
-    row[findCol('Texts')] = '-';
+    row[findCol('NC')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
     row[findCol('# States')] = objectType.startsWith('B')
       ? '2'
       : objectType.startsWith('M')
       ? '65535'
-      : '-';
-    row[findCol('Rel. Def.')] = '-';
-    row[findCol('COV')] = objectType.startsWith('A') ? '0' : '-'; // Analog values: 0, Binary/Multistate: -
+      : EXCEL_VALUES.EMPTY;
+    row[findCol('Rel. Def.')] = EXCEL_VALUES.EMPTY;
+    row[findCol('COV')] = objectType.startsWith('A') ? EXCEL_VALUES.DEFAULT_DEADBAND : EXCEL_VALUES.EMPTY; // Analog values: 0, Binary/Multistate: -
 
     // Modbus columns (second #)
     const modbusIdCol = headers.findIndex(
       (h, i) => h === '#' && i > findCol('COV')
     );
     if (modbusIdCol >= 0) row[modbusIdCol] = nextId - 1;
-    row[findCol('Device')] = `RTU // Port A // Device ${newDeviceNum}`;
+    row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_A(newDeviceNum);
     row[findCol('# Slave')] = newSlaveId;
-    row[findCol('Base')] = '0-based';
+    row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
     row[findCol('Read Func')] = modbusFunctions.read;
     row[findCol('Write Func')] = modbusFunctions.write;
     const format =
       modbusSignal.registerType === 'Coil' ||
       modbusSignal.registerType === 'DiscreteInput'
-        ? '-'
+        ? EXCEL_VALUES.EMPTY
         : getModbusFormat(modbusSignal.dataType);
     let dataLengthValue = '16';
     if (
@@ -183,14 +176,14 @@ export function generateBACnetFromModbus(
     row[findCol('ByteOrder')] =
       modbusSignal.registerType === 'Coil' ||
       modbusSignal.registerType === 'DiscreteInput'
-        ? '-'
-        : '0: Big Endian';
+        ? EXCEL_VALUES.EMPTY
+        : EXCEL_VALUES.BYTE_ORDER_BIG_ENDIAN;
     row[findCol('Address')] = modbusSignal.address;
-    row[findCol('Bit')] = '-';
-    row[findCol('# Bits')] = '-';
-    row[findCol('Deadband')] = '0';
+    row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
+    row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
     row[findCol('Conv. Id')] = '';
-    row[findCol('Conversions')] = '-';
+    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
 
     signalsSheet.rows.push(row);
     rowsAdded++;
