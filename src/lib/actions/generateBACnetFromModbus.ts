@@ -94,15 +94,27 @@ export function generateBACnetFromModbus(
     );
     const instance = (instanceAllocation.get(signalId) ?? 1) + baseInstance;
 
-    // Determine if signal is readable/writable based on BACnet object type
-    // INPUT (AI, BI, MI): només READ
-    // OUTPUT (AO, BO, MO): només WRITE
-    // VALUE (AV, BV, MV): READ + WRITE
-    const isInput = objectType.endsWith('I');
-    const isOutput = objectType.endsWith('O');
-    const isValue = objectType.endsWith('V');
-    const isReadable = isInput || isValue;
-    const isWritable = isOutput || isValue;
+    // Determine if signal is readable/writable
+    // Use mode if available, otherwise fallback to BACnet object type heuristics
+    let isReadable: boolean;
+    let isWritable: boolean;
+
+    if (modbusSignal.mode) {
+      const mode = modbusSignal.mode.toUpperCase();
+      isReadable = mode.includes('R');
+      isWritable = mode.includes('W');
+    } else {
+      // Fallback: use BACnet object type heuristics
+      // INPUT (AI, BI, MI): només READ
+      // OUTPUT (AO, BO, MO): només WRITE
+      // VALUE (AV, BV, MV): READ + WRITE
+      const isInput = objectType.endsWith('I');
+      const isOutput = objectType.endsWith('O');
+      const isValue = objectType.endsWith('V');
+      isReadable = isInput || isValue;
+      isWritable = isOutput || isValue;
+    }
+
     const modbusFunctions = getModbusFunctions(
       modbusSignal.registerType,
       isReadable,

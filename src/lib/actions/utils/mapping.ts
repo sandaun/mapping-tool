@@ -58,23 +58,20 @@ export function mapBACnetToModbusDataType(objectType: string): string {
  * Map Modbus signal properties → KNX DPT (Data Point Type)
  * Strategy: Units-first (specific DPT), then fallback to generic type-based DPT
  *
- * @param dataType - Signal type: 'AI', 'AO', 'DI', 'DO', 'Multistate'
- * @param dataLength - Data length in bits (16 or 32)
- * @param format - Modbus format (e.g., 'Float32', 'Int16', 'Uint16', 'Uint8')
+ * @param signalType - Signal type: 'AI', 'AO', 'DI', 'DO', 'Multistate'
+ * @param dataLength - Data length in bits (1, 16 or 32)
+ * @param modbusDataType - Modbus data type (e.g., 'Float32', 'Int16', 'Uint16', 'Uint32')
  * @param units - Optional engineering units (e.g., '°C', 'kW', '%', 'lux')
  * @returns KNX DPT string with name (e.g., '1.001: switch', '9.001: temperature (°C)')
  */
 export function modbusTypeToKNXDPT(
-  dataType: 'AI' | 'AO' | 'DI' | 'DO' | 'Multistate',
+  signalType: 'AI' | 'AO' | 'DI' | 'DO' | 'Multistate',
   dataLength: number,
-  format: string,
+  modbusDataType: string,
   units?: string
 ): string {
-  // Import formatDPT from constants (will be used at the end)
-  // For now, we'll import it in the function scope
-
   // Digital Input/Output → DPT 1.001 (Switch)
-  if (dataType === 'DI' || dataType === 'DO') {
+  if (signalType === 'DI' || signalType === 'DO') {
     return '1.001: switch';
   }
 
@@ -115,10 +112,10 @@ export function modbusTypeToKNXDPT(
 
     // Percentage
     if (unitsLower === '%' || unitsLower === 'percent') {
-      if (format === 'Uint16' || format === 'Uint8') {
+      if (modbusDataType.includes('Uint')) {
         return '5.001: percentage (0..100%)';
       }
-      if (format === 'Int16' || format === 'Int8') {
+      if (modbusDataType.includes('Int')) {
         return '6.001: percentage (-128..127%)';
       }
       return '9.007: percentage (%)'; // Float percentage
@@ -154,11 +151,22 @@ export function modbusTypeToKNXDPT(
     }
 
     // Voltage & Current
+    if (unitsLower === 'v') {
+      return '14.027: electric potential (V)';
+    }
     if (unitsLower === 'mv') {
       return '9.020: voltage (mV)';
     }
+    if (unitsLower === 'a') {
+      return '14.019: electric current (A)';
+    }
     if (unitsLower === 'ma') {
       return '9.021: current (mA)';
+    }
+
+    // Time
+    if (unitsLower === 'sec' || unitsLower === 's') {
+      return '7.005: time (s)';
     }
 
     // PPM
@@ -168,19 +176,29 @@ export function modbusTypeToKNXDPT(
   }
 
   // PRIORITY 2: Type-based fallback (generic)
-  if (dataType === 'AI' || dataType === 'AO') {
+  if (signalType === 'AI' || signalType === 'AO') {
+    // Uint32 (4-byte unsigned integer) → DPT 12.001
+    if (modbusDataType.includes('Uint32') || modbusDataType.includes('UInt32')) {
+      return '12.001: counter pulses (unsigned)';
+    }
+
+    // Int32 (4-byte signed integer) → DPT 13.001
+    if (modbusDataType.includes('Int32')) {
+      return '13.001: counter pulses (signed)';
+    }
+
     // Float32 (4-byte floating point)
-    if (format === 'Float32' || dataLength === 32) {
+    if (modbusDataType.includes('Float32') || dataLength === 32) {
       return '9.001: temperature (°C)'; // Generic 2-byte float (most common)
     }
 
     // Int16 (2-byte signed integer)
-    if (format === 'Int16' || format === 'Int') {
+    if (modbusDataType.includes('Int16') || modbusDataType.includes('Int')) {
       return '8.001: pulses difference';
     }
 
     // Uint16 (2-byte unsigned integer)
-    if (format === 'Uint16' || format === 'UInt16') {
+    if (modbusDataType.includes('Uint16') || modbusDataType.includes('UInt16')) {
       return '7.001: pulses';
     }
 
@@ -189,7 +207,7 @@ export function modbusTypeToKNXDPT(
   }
 
   // Multistate → DPT 5.010 (unsigned 8-bit, 0-255)
-  if (dataType === 'Multistate') {
+  if (signalType === 'Multistate') {
     return '5.010: counter pulses (0..255)';
   }
 
@@ -281,11 +299,22 @@ export function bacnetTypeToKNXDPT(objectType: string, units?: string): string {
     }
 
     // Voltage & Current
+    if (unitsLower === 'v') {
+      return '14.027: electric potential (V)';
+    }
     if (unitsLower === 'mv') {
       return '9.020: voltage (mV)';
     }
+    if (unitsLower === 'a') {
+      return '14.019: electric current (A)';
+    }
     if (unitsLower === 'ma') {
       return '9.021: current (mA)';
+    }
+
+    // Time
+    if (unitsLower === 'sec' || unitsLower === 's') {
+      return '7.005: time (s)';
     }
 
     // PPM

@@ -8,6 +8,8 @@ export type ModbusSignal = {
   dataType: string; // Int16, Float32, Uint16, etc.
   units?: string;
   description?: string;
+  mode?: string; // R (read-only), W (write-only), R/W (read-write)
+  factor?: number; // Scaling factor (e.g., 10, 100, 1000)
 };
 
 export type BACnetSignal = {
@@ -138,6 +140,8 @@ export function parseDeviceSignalsCSV(
     const dataTypeIdx = headers.indexOf('dataType');
     const unitsIdx = headers.indexOf('units');
     const descriptionIdx = headers.indexOf('description');
+    const modeIdx = headers.indexOf('mode'); // Optional
+    const factorIdx = headers.indexOf('factor'); // Optional
 
     for (let i = 0; i < dataLines.length; i++) {
       const line = dataLines[i].trim();
@@ -153,6 +157,8 @@ export function parseDeviceSignalsCSV(
       const units = unitsIdx >= 0 ? cols[unitsIdx] : undefined;
       const description =
         descriptionIdx >= 0 ? cols[descriptionIdx] : undefined;
+      const mode = modeIdx >= 0 ? cols[modeIdx] : undefined;
+      const factorRaw = factorIdx >= 0 ? cols[factorIdx] : undefined;
 
       if (
         !deviceId ||
@@ -177,6 +183,12 @@ export function parseDeviceSignalsCSV(
         continue;
       }
 
+      // Parse optional factor
+      const factor =
+        factorRaw && factorRaw.trim() !== ''
+          ? parseFloat(factorRaw)
+          : undefined;
+
       const signal: ModbusSignal = {
         deviceId,
         signalName,
@@ -185,6 +197,8 @@ export function parseDeviceSignalsCSV(
         dataType: normalizeModbusDataType(dataTypeRaw),
         units,
         description,
+        mode: mode && mode.trim() !== '' ? mode.trim() : undefined,
+        factor: factor && !isNaN(factor) ? factor : undefined,
       };
       signals.push(signal);
     }

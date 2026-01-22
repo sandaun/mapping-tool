@@ -120,8 +120,19 @@ export function generateKNXFromModbus(
     const isHoldingRegister = modbusSignal.registerType === 'HoldingRegister';
     const isInputRegister = modbusSignal.registerType === 'InputRegister';
 
-    const isReadable = isDiscreteInput || isInputRegister || isHoldingRegister;
-    const isWritable = isCoil || isHoldingRegister;
+    // Use mode if available, otherwise fallback to registerType heuristics
+    let isReadable: boolean;
+    let isWritable: boolean;
+
+    if (modbusSignal.mode) {
+      const mode = modbusSignal.mode.toUpperCase();
+      isReadable = mode.includes('R');
+      isWritable = mode.includes('W');
+    } else {
+      // Fallback: use registerType heuristics
+      isReadable = isDiscreteInput || isInputRegister || isHoldingRegister;
+      isWritable = isCoil || isHoldingRegister;
+    }
 
     // Map Modbus signal to KNX DPT
     let signalType: 'AI' | 'AO' | 'DI' | 'DO' | 'Multistate';
@@ -133,16 +144,24 @@ export function generateKNXFromModbus(
       signalType = isWritable ? 'AO' : 'AI';
     }
 
-    const dataLength =
+    // Calculate data length based on dataType
+    let dataLength: number;
+    if (
       modbusSignal.registerType === 'Coil' ||
       modbusSignal.registerType === 'DiscreteInput'
-        ? 1
-        : 16;
+    ) {
+      dataLength = 1;
+    } else if (/32/.test(modbusSignal.dataType)) {
+      dataLength = 32; // Uint32, Int32, Float32 → 32 bits
+    } else {
+      dataLength = 16; // Uint16, Int16 → 16 bits
+    }
+
     const format = getModbusFormat(modbusSignal.dataType);
     const dpt = modbusTypeToKNXDPT(
       signalType,
       dataLength,
-      format,
+      modbusSignal.dataType, // Pass original dataType instead of format
       modbusSignal.units
     );
 

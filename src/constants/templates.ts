@@ -18,8 +18,8 @@ Column descriptions:
 - dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
   (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
 - Optional extra columns (append after description if available):
-- mode: R or R/W
-- factor: scaling factor (e.g., 10, 100)
+- mode: R (read-only), W (write-only), or R/W (read-write)
+- factor: scaling factor (e.g., 10, 100, 1000)
 - units: engineering units (kW, V, °C, %, etc.)
 - description: human-readable description
 
@@ -65,8 +65,8 @@ Column descriptions:
 - dataType: normalize to Int16, Uint16, Int32, Uint32, Float32, etc.
   (e.g., s16→Int16, u16→Uint16, s32→Int32, u32→Uint32, f32→Float32)
 - Optional extra columns (append after description if available):
-- mode: R or R/W
-- factor: scaling factor (e.g., 10, 100)
+- mode: R (read-only), W (write-only), or R/W (read-write)
+- factor: scaling factor (e.g., 10, 100, 1000)
 - units: engineering units (kW, V, °C, %, etc.)
 - description: human-readable description
 
