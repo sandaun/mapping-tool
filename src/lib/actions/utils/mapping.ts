@@ -58,20 +58,25 @@ export function mapBACnetToModbusDataType(objectType: string): string {
  * Map Modbus signal properties → KNX DPT (Data Point Type)
  * Strategy: Units-first (specific DPT), then fallback to generic type-based DPT
  *
- * @param signalType - Signal type: 'AI', 'AO', 'DI', 'DO', 'Multistate'
+ * @param signalCategory - Signal category: 'AnalogInput', 'AnalogOutput', 'DigitalInput', 'DigitalOutput', 'Multistate'
  * @param dataLength - Data length in bits (1, 16 or 32)
  * @param modbusDataType - Modbus data type (e.g., 'Float32', 'Int16', 'Uint16', 'Uint32')
  * @param units - Optional engineering units (e.g., '°C', 'kW', '%', 'lux')
  * @returns KNX DPT string with name (e.g., '1.001: switch', '9.001: temperature (°C)')
  */
 export function modbusTypeToKNXDPT(
-  signalType: 'AI' | 'AO' | 'DI' | 'DO' | 'Multistate',
+  signalCategory:
+    | 'AnalogInput'
+    | 'AnalogOutput'
+    | 'DigitalInput'
+    | 'DigitalOutput'
+    | 'Multistate',
   dataLength: number,
   modbusDataType: string,
   units?: string
 ): string {
   // Digital Input/Output → DPT 1.001 (Switch)
-  if (signalType === 'DI' || signalType === 'DO') {
+  if (signalCategory === 'DigitalInput' || signalCategory === 'DigitalOutput') {
     return '1.001: switch';
   }
 
@@ -176,7 +181,7 @@ export function modbusTypeToKNXDPT(
   }
 
   // PRIORITY 2: Type-based fallback (generic)
-  if (signalType === 'AI' || signalType === 'AO') {
+  if (signalCategory === 'AnalogInput' || signalCategory === 'AnalogOutput') {
     // Uint32 (4-byte unsigned integer) → DPT 12.001
     if (modbusDataType.includes('Uint32') || modbusDataType.includes('UInt32')) {
       return '12.001: counter pulses (unsigned)';
@@ -207,7 +212,7 @@ export function modbusTypeToKNXDPT(
   }
 
   // Multistate → DPT 5.010 (unsigned 8-bit, 0-255)
-  if (signalType === 'Multistate') {
+  if (signalCategory === 'Multistate') {
     return '5.010: counter pulses (0..255)';
   }
 

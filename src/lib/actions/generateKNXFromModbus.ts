@@ -135,13 +135,18 @@ export function generateKNXFromModbus(
     }
 
     // Map Modbus signal to KNX DPT
-    let signalType: 'AI' | 'AO' | 'DI' | 'DO' | 'Multistate';
+    let signalCategory:
+      | 'AnalogInput'
+      | 'AnalogOutput'
+      | 'DigitalInput'
+      | 'DigitalOutput'
+      | 'Multistate';
     if (isCoil || isDiscreteInput) {
-      signalType = isWritable ? 'DO' : 'DI';
+      signalCategory = isWritable ? 'DigitalOutput' : 'DigitalInput';
     } else if (modbusSignal.dataType === 'Multistate') {
-      signalType = 'Multistate';
+      signalCategory = 'Multistate';
     } else {
-      signalType = isWritable ? 'AO' : 'AI';
+      signalCategory = isWritable ? 'AnalogOutput' : 'AnalogInput';
     }
 
     // Calculate data length based on dataType
@@ -159,7 +164,7 @@ export function generateKNXFromModbus(
 
     const format = getModbusFormat(modbusSignal.dataType);
     const dpt = modbusTypeToKNXDPT(
-      signalType,
+      signalCategory,
       dataLength,
       modbusSignal.dataType, // Pass original dataType instead of format
       modbusSignal.units
