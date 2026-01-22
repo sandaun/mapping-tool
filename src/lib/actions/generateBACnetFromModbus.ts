@@ -1,14 +1,19 @@
-import type { RawWorkbook, CellValue } from '../excel/raw';
-import type { DeviceSignal, ModbusSignal } from '../deviceSignals';
+import type { RawWorkbook } from '../excel/raw';
+import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { detectUnitFromSignalName } from '../../constants/bacnetUnits';
-import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumber } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
 import { getModbusFunctions, getModbusFormat } from './utils/modbus';
 import { allocateBACnetInstances } from './utils/allocation';
 import { mapModbusToBACnetObjectType } from './utils/mapping';
+import { createSheetContext, findSignalsSheet } from './utils/common';
+import { filterModbusSignals } from './utils/signal-filtering';
+import {
+  getReadWriteCapabilities,
+  getBACnetReadWriteCapabilities,
+} from './utils/read-write';
 
 /**
  * Generate BACnet signals from Modbus device signals.
@@ -23,62 +28,33 @@ export function generateBACnetFromModbus(
   let rowsAdded = 0;
 
   // Find Signals sheet
-  const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
+  const signalsSheet = findSignalsSheet(rawWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
-  // Find where the actual headers are
-  const headerRowIdx = findHeaderRowIndex(signalsSheet);
-  const headers =
-    headerRowIdx >= 0 ? signalsSheet.rows[headerRowIdx] : signalsSheet.headers;
-
-  // Helper to find column index by exact name
-  const findCol = (name: string): number => {
-    const idx = headers.findIndex((h) => h === name);
-    return idx;
-  };
-
-  const getMaxNumericInColumn = (colName: string): number => {
-    const colIdx = findCol(colName);
-    if (colIdx < 0) return -1;
-
-    let max = -1;
-    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
-    for (let i = startRow; i < signalsSheet.rows.length; i++) {
-      const cell = signalsSheet.rows[i][colIdx];
-      const value =
-        typeof cell === 'number'
-          ? cell
-          : typeof cell === 'string'
-          ? Number(cell)
-          : NaN;
-      if (!Number.isNaN(value)) {
-        max = Math.max(max, value);
-      }
-    }
-    return max;
-  };
+  // Create sheet context with helpers
+  const ctx = createSheetContext(signalsSheet);
+  const { findCol, getMaxNumericInColumn, createEmptyRow, headers } = ctx;
 
   // Get the next # value (sequential ID)
-  let nextId =
-    signalsSheet.rows.length - (headerRowIdx >= 0 ? headerRowIdx : 0);
+  let nextId = ctx.getNextId();
 
   // Detect last device number to auto-increment
   const lastDeviceNum = getLastDeviceNumber(signalsSheet);
   const newDeviceNum = lastDeviceNum + 1;
   const newSlaveId = 10 + newDeviceNum; // Slave ID = 10 + device number
 
+  // Filter Modbus signals (type-safe, NO 'as')
+  const modbusSignals = filterModbusSignals(deviceSignals);
+
   // Device signals = Modbus → Generate BACnet columns
-  const instanceAllocation = allocateBACnetInstances(deviceSignals, policy);
+  const instanceAllocation = allocateBACnetInstances(modbusSignals, policy);
   const lastInstance = getMaxNumericInColumn('Instance');
   const baseInstance = lastInstance >= 0 ? lastInstance : 0;
 
-  for (const sig of deviceSignals) {
-    if (!('registerType' in sig)) continue; // Skip non-Modbus signals
-
-    const modbusSignal = sig as ModbusSignal;
+  for (const modbusSignal of modbusSignals) {
     const signalId = `${modbusSignal.deviceId}_${modbusSignal.signalName}`;
 
     const objectType = mapModbusToBACnetObjectType(
@@ -89,24 +65,10 @@ export function generateBACnetFromModbus(
 
     // Determine if signal is readable/writable
     // Use mode if available, otherwise fallback to BACnet object type heuristics
-    let isReadable: boolean;
-    let isWritable: boolean;
-
-    if (modbusSignal.mode) {
-      const mode = modbusSignal.mode.toUpperCase();
-      isReadable = mode.includes('R');
-      isWritable = mode.includes('W');
-    } else {
-      // Fallback: use BACnet object type heuristics
-      // INPUT (AI, BI, MI): només READ
-      // OUTPUT (AO, BO, MO): només WRITE
-      // VALUE (AV, BV, MV): READ + WRITE
-      const isInput = objectType.endsWith('I');
-      const isOutput = objectType.endsWith('O');
-      const isValue = objectType.endsWith('V');
-      isReadable = isInput || isValue;
-      isWritable = isOutput || isValue;
-    }
+    const { isReadable, isWritable } = getReadWriteCapabilities(
+      modbusSignal,
+      () => getBACnetReadWriteCapabilities(objectType)
+    );
 
     const modbusFunctions = getModbusFunctions(
       modbusSignal.registerType,
@@ -115,7 +77,7 @@ export function generateBACnetFromModbus(
     );
 
     // Build row with all required columns
-    const row: CellValue[] = new Array(headers.length).fill(null);
+    const row = createEmptyRow();
 
     // BACnet columns
     row[findCol('#')] = nextId++;
