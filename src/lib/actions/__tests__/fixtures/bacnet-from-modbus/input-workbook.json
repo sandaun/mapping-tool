@@ -1,0 +1,1056 @@
+{
+  "sheets": [
+    {
+      "name": "Signals",
+      "headers": [
+        "Intesis MAPS Excel signals file",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "rows": [
+        [
+          "PROJECT_NAME",
+          "Project1",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Intesis MAPS Version",
+          "1.2.26.0",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Internal Protocol",
+          "BACnet Server",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "External Protocol",
+          "Modbus Master",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Timestamp",
+          46044,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "#",
+          "Active",
+          "Description",
+          "Name",
+          "Type",
+          "Instance",
+          "Units",
+          "NC",
+          "Texts",
+          "# States",
+          "Rel. Def.",
+          "COV",
+          "#",
+          "Device",
+          "# Slave",
+          "Base",
+          "Read Func",
+          "Write Func",
+          "Data Length",
+          "Format",
+          "ByteOrder",
+          "Address",
+          "Bit",
+          "# Bits",
+          "Deadband",
+          "Conv. Id",
+          "Conversions"
+        ]
+      ]
+    },
+    {
+      "name": "BACnet Server",
+      "headers": [
+        "Units"
+      ],
+      "rows": [
+        [
+          "-"
+        ],
+        [
+          "ampere_square_meters (169)"
+        ],
+        [
+          "amperes (3)"
+        ],
+        [
+          "amperes_per_meter (167)"
+        ],
+        [
+          "amperes_per_square_meter (168)"
+        ],
+        [
+          "bars (55)"
+        ],
+        [
+          "becquerels (222)"
+        ],
+        [
+          "btus (20)"
+        ],
+        [
+          "btus_per_hour (50)"
+        ],
+        [
+          "btus_per_pound (117)"
+        ],
+        [
+          "btus_per_pound_dry_air (24)"
+        ],
+        [
+          "centimeters(118)"
+        ],
+        [
+          "meters (31)"
+        ],
+        [
+          "centimeters_of_mercury (60)"
+        ],
+        [
+          "centimeters_of_water (57)"
+        ],
+        [
+          "cubic_feet (79)"
+        ],
+        [
+          "cubic_feet_per_hour (191)"
+        ],
+        [
+          "cubic_feet_per_minute (84)"
+        ],
+        [
+          "cubic_feet_per_second (142)"
+        ],
+        [
+          "cubic_meters (80)"
+        ],
+        [
+          "cubic_meters_per_hour (135)"
+        ],
+        [
+          "cubic_meters_per_minute (165)"
+        ],
+        [
+          "cubic_meters_per_second (85)"
+        ],
+        [
+          "currency1 (105)"
+        ],
+        [
+          "currency10 (114)"
+        ],
+        [
+          "currency2 (106)"
+        ],
+        [
+          "currency3 (107)"
+        ],
+        [
+          "currency4 (108)"
+        ],
+        [
+          "currency5 (109)"
+        ],
+        [
+          "currency6 (110)"
+        ],
+        [
+          "currency7 (111)"
+        ],
+        [
+          "currency8 (112)"
+        ],
+        [
+          "currency9 (113)"
+        ],
+        [
+          "cycles_per_hour (25)"
+        ],
+        [
+          "cycles_per_minute (26)"
+        ],
+        [
+          "days (70)"
+        ],
+        [
+          "decibels (199)"
+        ],
+        [
+          "decibels_a (232)"
+        ],
+        [
+          "decibels_millivolt (200)"
+        ],
+        [
+          "decibels_volt (201)"
+        ],
+        [
+          "degree_days_Celsius (65)"
+        ],
+        [
+          "degree_days_Fahrenheit (66)"
+        ],
+        [
+          "degrees_angular (90)"
+        ],
+        [
+          "degrees_Celsius (62)"
+        ],
+        [
+          "degrees_Celsius_per_hour (91)"
+        ],
+        [
+          "degrees_Celsius_per_minute (92)"
+        ],
+        [
+          "degrees_Fahrenheit (64)"
+        ],
+        [
+          "degrees_Fahrenheit_per_hour (93)"
+        ],
+        [
+          "degrees_Fahrenheit_per_minute (94)"
+        ],
+        [
+          "degrees_Kelvin (63)"
+        ],
+        [
+          "degrees_Kelvin_per_hour (181)"
+        ],
+        [
+          "degrees_Kelvin_per_minute (182)"
+        ],
+        [
+          "degrees_phase (14)"
+        ],
+        [
+          "delta_degrees_Fahrenheit (120)"
+        ],
+        [
+          "delta_degrees_Kelvin (121)"
+        ],
+        [
+          "farads (170)"
+        ],
+        [
+          "feet(33)"
+        ],
+        [
+          "candelas_per_square_meter (180)"
+        ],
+        [
+          "feet_per_minute (77)"
+        ],
+        [
+          "feet_per_second (76)"
+        ],
+        [
+          "grams_of_water_per_kilogram_dry_air(28)"
+        ],
+        [
+          "micrometers (194)"
+        ],
+        [
+          "grams_per_cubic_centimeter (221)"
+        ],
+        [
+          "grams_per_cubic_meter (217)"
+        ],
+        [
+          "grams_per_gram (208)"
+        ],
+        [
+          "grams_per_kilogram (210)"
+        ],
+        [
+          "grams_per_liter (214)"
+        ],
+        [
+          "grams_per_milliliter (213)"
+        ],
+        [
+          "grams_per_square_meter (235)"
+        ],
+        [
+          "gray (225)"
+        ],
+        [
+          "hectopascals (133)"
+        ],
+        [
+          "henrys (171)"
+        ],
+        [
+          "hertz (27)"
+        ],
+        [
+          "horsepower (51)"
+        ],
+        [
+          "hours (71)"
+        ],
+        [
+          "hundredths_seconds (158)"
+        ],
+        [
+          "imperial_gallons (81)"
+        ],
+        [
+          "imperial_gallons_per_minute (86)"
+        ],
+        [
+          "inches_of_mercury (61)"
+        ],
+        [
+          "inches_of_water (58)"
+        ],
+        [
+          "joule_seconds (183)"
+        ],
+        [
+          "joules (16)"
+        ],
+        [
+          "joules_per_degree_Kelvin (127)"
+        ],
+        [
+          "joules_per_kilogram_degree_Kelvin (128)"
+        ],
+        [
+          "joules_per_kilogram_dry_air (23)"
+        ],
+        [
+          "kilo_btus (147)"
+        ],
+        [
+          "kilo_btus_per_hour (157)"
+        ],
+        [
+          "kilobecquerels (223)"
+        ],
+        [
+          "kilograms_per_cubic_meter (186)"
+        ],
+        [
+          "kilograms_per_hour (44)"
+        ],
+        [
+          "kilograms_per_kilogram (209)"
+        ],
+        [
+          "kilograms_per_minute (43)"
+        ],
+        [
+          "kilograms_per_second (42)"
+        ],
+        [
+          "kilohertz (129)"
+        ],
+        [
+          "kilohms (122)"
+        ],
+        [
+          "kilojoules (17)"
+        ],
+        [
+          "kilojoules_per_degree_Kelvin (151)"
+        ],
+        [
+          "kilojoules_per_kilogram (125)"
+        ],
+        [
+          "kilojoules_per_kilogram_dry_air (149)"
+        ],
+        [
+          "kilometers_per_hour (75)"
+        ],
+        [
+          "kilopascals (54)"
+        ],
+        [
+          "kilovolt_amperes (9)"
+        ],
+        [
+          "kilovolt_amperes_reactive (12)"
+        ],
+        [
+          "kilovolts (6)"
+        ],
+        [
+          "kilowatt_hours (19)"
+        ],
+        [
+          "kilowatt_hours_per_square_foot (138)"
+        ],
+        [
+          "kilowatt_hours_per_square_meter (137)"
+        ],
+        [
+          "kilowatt_hours_reactive (204)"
+        ],
+        [
+          "kilowatts (48)"
+        ],
+        [
+          "liters (82)"
+        ],
+        [
+          "liters_per_hour (136)"
+        ],
+        [
+          "liters_per_minute (88)"
+        ],
+        [
+          "liters_per_second (87)"
+        ],
+        [
+          "mega_btus (148)"
+        ],
+        [
+          "megabecquerels (224)"
+        ],
+        [
+          "megahertz (130)"
+        ],
+        [
+          "megajoules (126)"
+        ],
+        [
+          "megajoules_per_degree_Kelvin (152)"
+        ],
+        [
+          "megajoules_per_kilogram_dry_air (150)"
+        ],
+        [
+          "megajoules_per_square_foot (140)"
+        ],
+        [
+          "megajoules_per_square_meter (139)"
+        ],
+        [
+          "megavolt_amperes (10)"
+        ],
+        [
+          "megavolt_amperes_reactive (13)"
+        ],
+        [
+          "megavolts (7)"
+        ],
+        [
+          "megawatt_hours (146)"
+        ],
+        [
+          "megawatt_hours_reactive (205)"
+        ],
+        [
+          "megawatts (49)"
+        ],
+        [
+          "megohms (123)"
+        ],
+        [
+          "meters_per_hour (164)"
+        ],
+        [
+          "meters_per_minute (163)"
+        ],
+        [
+          "meters_per_second (74)"
+        ],
+        [
+          "micrograms_per_cubic_meter (219)"
+        ],
+        [
+          "micrograms_per_liter (216)"
+        ],
+        [
+          "microgray (227)"
+        ],
+        [
+          "microsiemens (190)"
+        ],
+        [
+          "microsieverts (230)"
+        ],
+        [
+          "microsieverts_per_hour (231)"
+        ],
+        [
+          "miles_per_hour (78)"
+        ],
+        [
+          "milliamperes (2)"
+        ],
+        [
+          "millibars (134)"
+        ],
+        [
+          "milligrams(196)"
+        ],
+        [
+          "kilograms (39)"
+        ],
+        [
+          "milligrams_per_cubic_meter (218)"
+        ],
+        [
+          "milligrams_per_gram (211)"
+        ],
+        [
+          "milligrams_per_kilogram (212)"
+        ],
+        [
+          "milligrams_per_liter (215)"
+        ],
+        [
+          "milligray (226)"
+        ],
+        [
+          "milliliters (197)"
+        ],
+        [
+          "milliliters_per_second (198)"
+        ],
+        [
+          "millimeters_of_mercury (59)"
+        ],
+        [
+          "millimeters_of_water (206)"
+        ],
+        [
+          "millimeters_per_minute (162)"
+        ],
+        [
+          "millimeters_per_second (161)"
+        ],
+        [
+          "milliohms (145)"
+        ],
+        [
+          "milliseconds (159)"
+        ],
+        [
+          "millisiemens (202)"
+        ],
+        [
+          "millisieverts (229)"
+        ],
+        [
+          "millivolts (124)"
+        ],
+        [
+          "milliwatts (132)"
+        ],
+        [
+          "minutes (72)"
+        ],
+        [
+          "minutes_per_degree_kelvin (236)"
+        ],
+        [
+          "months (68)"
+        ],
+        [
+          "nanograms_per_cubic_meter (220)"
+        ],
+        [
+          "nephelometric_turbidity_unit (233)"
+        ],
+        [
+          "newton (153)"
+        ],
+        [
+          "newton_meters (160)"
+        ],
+        [
+          "newton_seconds (187)"
+        ],
+        [
+          "newtons_per_meter (188)"
+        ],
+        [
+          "no_units (95)"
+        ],
+        [
+          "ohm_meters (172)"
+        ],
+        [
+          "ohms (4)"
+        ],
+        [
+          "parts_per_billion (97)"
+        ],
+        [
+          "parts_per_million (96)"
+        ],
+        [
+          "pascals (53)"
+        ],
+        [
+          "per_mille (207)"
+        ],
+        [
+          "per_minute (100)"
+        ],
+        [
+          "per_second (101)"
+        ],
+        [
+          "percent (98)"
+        ],
+        [
+          "percent_obscuration_per_foot (143)"
+        ],
+        [
+          "percent_obscuration_per_meter (144)"
+        ],
+        [
+          "percent_per_second (99)"
+        ],
+        [
+          "pH (234)"
+        ],
+        [
+          "pounds_force_per_square_inch (56)"
+        ],
+        [
+          "pounds_mass_per_hour (46)"
+        ],
+        [
+          "pounds_mass_per_minute (45)"
+        ],
+        [
+          "pounds_mass_per_second (119)"
+        ],
+        [
+          "power_factor (15)"
+        ],
+        [
+          "psi_per_degree_Fahrenheit (102)"
+        ],
+        [
+          "radians (103)"
+        ],
+        [
+          "radians_per_second (184)"
+        ],
+        [
+          "revolutions_per_minute (104)"
+        ],
+        [
+          "seconds (73)"
+        ],
+        [
+          "siemens (173)"
+        ],
+        [
+          "siemens_per_meter (174)"
+        ],
+        [
+          "sieverts (228)"
+        ],
+        [
+          "square_centimeters (116)"
+        ],
+        [
+          "square_feet (1)"
+        ],
+        [
+          "square_inches (115)"
+        ],
+        [
+          "square_meters (0)"
+        ],
+        [
+          "square_meters_per_Newton (185)"
+        ],
+        [
+          "teslas (175)"
+        ],
+        [
+          "therms (21)"
+        ],
+        [
+          "ton_hours (22)"
+        ],
+        [
+          "tons (41)"
+        ],
+        [
+          "grams_per_minute (155)"
+        ],
+        [
+          "tons_per_hour (156)"
+        ],
+        [
+          "tons_refrigeration (52)"
+        ],
+        [
+          "us_gallons (83)"
+        ],
+        [
+          "us_gallons_per_hour (192)"
+        ],
+        [
+          "us_gallons_per_minute (89)"
+        ],
+        [
+          "VAh (239)"
+        ],
+        [
+          "volt_amperes (8)"
+        ],
+        [
+          "volt_amperes_reactive (11)"
+        ],
+        [
+          "volts (5)"
+        ],
+        [
+          "volts_per_degree_Kelvin (176)"
+        ],
+        [
+          "volts_per_meter (177)"
+        ],
+        [
+          "watt_hours (18)"
+        ],
+        [
+          "watt_hours_reactive (203)"
+        ],
+        [
+          "watts (47)"
+        ],
+        [
+          "watts_per_meter_per_degree_Kelvin (189)"
+        ],
+        [
+          "watts_per_square_meter (35)"
+        ],
+        [
+          "luxes (37)"
+        ],
+        [
+          "watts_per_square_meter_degree_kelvin (141)"
+        ],
+        [
+          "webers (178)"
+        ],
+        [
+          "weeks (69)"
+        ],
+        [
+          "years (67)"
+        ]
+      ]
+    },
+    {
+      "name": "Conversions",
+      "headers": [
+        "Idx",
+        "Description",
+        "Type",
+        "Param 1",
+        "Param 2",
+        "Param 3",
+        "Param 4"
+      ],
+      "rows": [
+        [
+          "0",
+          "Limit to 0-100",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "100"
+        ],
+        [
+          "1",
+          "Limit to 0-255",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "255"
+        ],
+        [
+          "2",
+          "Is not 0",
+          "FILTER",
+          "0",
+          "1",
+          "0",
+          "100"
+        ],
+        [
+          "3",
+          "Is higher than 100",
+          "FILTER",
+          "0",
+          "3",
+          "100",
+          "100"
+        ],
+        [
+          "4",
+          "Only positive values",
+          "FILTER",
+          "2",
+          "3",
+          "0",
+          "100"
+        ],
+        [
+          "0",
+          "Celsius to Fahrenheit",
+          "ARITH",
+          "-1",
+          "18",
+          "32",
+          "0"
+        ],
+        [
+          "1",
+          "Fahrenheit to Celsius",
+          "ARITH",
+          "-3",
+          "555",
+          "-17.78",
+          "0"
+        ],
+        [
+          "2",
+          "x10",
+          "ARITH",
+          "1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "/10",
+          "ARITH",
+          "-1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "4",
+          "x100",
+          "ARITH",
+          "2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "5",
+          "/100",
+          "ARITH",
+          "-2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "6",
+          "x1000",
+          "ARITH",
+          "3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "7",
+          "/1000",
+          "ARITH",
+          "-3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "8",
+          "0-100 to 0-255",
+          "SCALE",
+          "0",
+          "100",
+          "0",
+          "255"
+        ],
+        [
+          "9",
+          "0-255 to 0-100",
+          "SCALE",
+          "0",
+          "255",
+          "0",
+          "100"
+        ],
+        [
+          "10",
+          "Conversion 0",
+          "ARITH",
+          "0",
+          "0.1",
+          "0",
+          "0"
+        ]
+      ]
+    }
+  ]
+}
