@@ -1,0 +1,1557 @@
+[
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_1",
+    "registerType": "HoldingRegister",
+    "address": 1,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 1–2)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_2",
+    "registerType": "HoldingRegister",
+    "address": 2,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 3–4)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_3",
+    "registerType": "HoldingRegister",
+    "address": 3,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 5–6)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_4",
+    "registerType": "HoldingRegister",
+    "address": 4,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 7–8)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_5",
+    "registerType": "HoldingRegister",
+    "address": 5,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 9–10)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_6",
+    "registerType": "HoldingRegister",
+    "address": 6,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 11–12)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_7",
+    "registerType": "HoldingRegister",
+    "address": 7,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 13–14)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterName_8",
+    "registerType": "HoldingRegister",
+    "address": 8,
+    "dataType": "Uint16",
+    "description": "Meter Name (ASCII, chars 15–16)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_1",
+    "registerType": "HoldingRegister",
+    "address": 9,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 1–2)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_2",
+    "registerType": "HoldingRegister",
+    "address": 10,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 3–4)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_3",
+    "registerType": "HoldingRegister",
+    "address": 11,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 5–6)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_4",
+    "registerType": "HoldingRegister",
+    "address": 12,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 7–8)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_5",
+    "registerType": "HoldingRegister",
+    "address": 13,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 9–10)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_6",
+    "registerType": "HoldingRegister",
+    "address": 14,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 11–12)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_7",
+    "registerType": "HoldingRegister",
+    "address": 15,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 13–14)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterSerialNumber_8",
+    "registerType": "HoldingRegister",
+    "address": 16,
+    "dataType": "Uint16",
+    "description": "Meter Serial Number (ASCII, chars 15–16)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterType",
+    "registerType": "HoldingRegister",
+    "address": 17,
+    "dataType": "Uint16",
+    "description": "Meter Type (bit-mapped)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "FirmwareVersion_1",
+    "registerType": "HoldingRegister",
+    "address": 18,
+    "dataType": "Uint16",
+    "description": "Firmware Version (ASCII, chars 1–2)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "FirmwareVersion_2",
+    "registerType": "HoldingRegister",
+    "address": 19,
+    "dataType": "Uint16",
+    "description": "Firmware Version (ASCII, chars 3–4)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MapVersion",
+    "registerType": "HoldingRegister",
+    "address": 20,
+    "dataType": "Uint16",
+    "description": "Map Version",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterConfiguration",
+    "registerType": "HoldingRegister",
+    "address": 21,
+    "dataType": "Uint16",
+    "description": "Meter Configuration (bit-mapped: calibration frequency)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "ASICVersion",
+    "registerType": "HoldingRegister",
+    "address": 22,
+    "dataType": "Uint16",
+    "description": "ASIC Version",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_23",
+    "registerType": "HoldingRegister",
+    "address": 23,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_24",
+    "registerType": "HoldingRegister",
+    "address": 24,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_25",
+    "registerType": "HoldingRegister",
+    "address": 25,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_26",
+    "registerType": "HoldingRegister",
+    "address": 26,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_27",
+    "registerType": "HoldingRegister",
+    "address": 27,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_28",
+    "registerType": "HoldingRegister",
+    "address": 28,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_29",
+    "registerType": "HoldingRegister",
+    "address": 29,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_30",
+    "registerType": "HoldingRegister",
+    "address": 30,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_31",
+    "registerType": "HoldingRegister",
+    "address": 31,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_32",
+    "registerType": "HoldingRegister",
+    "address": 32,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_33",
+    "registerType": "HoldingRegister",
+    "address": 33,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_34",
+    "registerType": "HoldingRegister",
+    "address": 34,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_35",
+    "registerType": "HoldingRegister",
+    "address": 35,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_36",
+    "registerType": "HoldingRegister",
+    "address": 36,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_37",
+    "registerType": "HoldingRegister",
+    "address": 37,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_38",
+    "registerType": "HoldingRegister",
+    "address": 38,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Reserved_39",
+    "registerType": "HoldingRegister",
+    "address": 39,
+    "dataType": "Uint16",
+    "description": "Reserved",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_1",
+    "registerType": "HoldingRegister",
+    "address": 40,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 1–2)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_2",
+    "registerType": "HoldingRegister",
+    "address": 41,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 3–4)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_3",
+    "registerType": "HoldingRegister",
+    "address": 42,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 5–6)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_4",
+    "registerType": "HoldingRegister",
+    "address": 43,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 7–8)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_5",
+    "registerType": "HoldingRegister",
+    "address": 44,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 9–10)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_6",
+    "registerType": "HoldingRegister",
+    "address": 45,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 11–12)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_7",
+    "registerType": "HoldingRegister",
+    "address": 46,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 13–14)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "OEMPartNumber_8",
+    "registerType": "HoldingRegister",
+    "address": 47,
+    "dataType": "Uint16",
+    "description": "OEM Part Number (ASCII, chars 15–16)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalWatts_3Ph_6cycle",
+    "registerType": "HoldingRegister",
+    "address": 900,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Watts 3-Ph total (6 cycles)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalVARs_3Ph_6cycle",
+    "registerType": "HoldingRegister",
+    "address": 902,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "VARs 3-Ph total (6 cycles)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalVAs_3Ph_6cycle",
+    "registerType": "HoldingRegister",
+    "address": 904,
+    "dataType": "Float32",
+    "units": "VA",
+    "description": "VAs 3-Ph total (6 cycles)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AN",
+    "registerType": "HoldingRegister",
+    "address": 1000,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-N",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BN",
+    "registerType": "HoldingRegister",
+    "address": 1002,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-N",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CN",
+    "registerType": "HoldingRegister",
+    "address": 1004,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-N",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AB",
+    "registerType": "HoldingRegister",
+    "address": 1006,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-B",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BC",
+    "registerType": "HoldingRegister",
+    "address": 1008,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-C",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CA",
+    "registerType": "HoldingRegister",
+    "address": 1010,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-A",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_A",
+    "registerType": "HoldingRegister",
+    "address": 1012,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps A",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_B",
+    "registerType": "HoldingRegister",
+    "address": 1014,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps B",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_C",
+    "registerType": "HoldingRegister",
+    "address": 1016,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps C",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalWatts_3Ph",
+    "registerType": "HoldingRegister",
+    "address": 1018,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Watts 3-Ph total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalVARs_3Ph",
+    "registerType": "HoldingRegister",
+    "address": 1020,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "VARs 3-Ph total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TotalVAs_3Ph",
+    "registerType": "HoldingRegister",
+    "address": 1022,
+    "dataType": "Float32",
+    "units": "VA",
+    "description": "VAs 3-Ph total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PowerFactor_3Ph_Total",
+    "registerType": "HoldingRegister",
+    "address": 1024,
+    "dataType": "Float32",
+    "description": "Power Factor 3-Ph total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Frequency",
+    "registerType": "HoldingRegister",
+    "address": 1026,
+    "dataType": "Float32",
+    "units": "Hz",
+    "description": "Frequency",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NeutralCurrent",
+    "registerType": "HoldingRegister",
+    "address": 1028,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Neutral Current",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Received",
+    "registerType": "HoldingRegister",
+    "address": 1100,
+    "dataType": "Int32",
+    "units": "Wh",
+    "description": "W-hours received",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Delivered",
+    "registerType": "HoldingRegister",
+    "address": 1102,
+    "dataType": "Int32",
+    "units": "Wh",
+    "description": "W-hours delivered",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Net",
+    "registerType": "HoldingRegister",
+    "address": 1104,
+    "dataType": "Int32",
+    "units": "Wh",
+    "description": "W-hours net",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Total",
+    "registerType": "HoldingRegister",
+    "address": 1106,
+    "dataType": "Int32",
+    "units": "Wh",
+    "description": "W-hours total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Positive",
+    "registerType": "HoldingRegister",
+    "address": 1108,
+    "dataType": "Int32",
+    "units": "VARh",
+    "description": "VAR-hours positive",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Negative",
+    "registerType": "HoldingRegister",
+    "address": 1110,
+    "dataType": "Int32",
+    "units": "VARh",
+    "description": "VAR-hours negative",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Net",
+    "registerType": "HoldingRegister",
+    "address": 1112,
+    "dataType": "Int32",
+    "units": "VARh",
+    "description": "VAR-hours net",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Total",
+    "registerType": "HoldingRegister",
+    "address": 1114,
+    "dataType": "Int32",
+    "units": "VARh",
+    "description": "VAR-hours total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAh_Total",
+    "registerType": "HoldingRegister",
+    "address": 1116,
+    "dataType": "Int32",
+    "units": "VAh",
+    "description": "VA-hours total",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_A_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2000,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps A average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_B_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2002,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps B average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_C_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2004,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps C average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveWatts_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2006,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Positive watts 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveVARs_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2008,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Positive VARs 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeWatts_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2010,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Negative watts 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeVARs_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2012,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Negative VARs 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAs_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2014,
+    "dataType": "Float32",
+    "units": "VA",
+    "description": "VAs 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositivePF_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2016,
+    "dataType": "Float32",
+    "description": "Positive PF 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativePF_3Ph_AverageDemand",
+    "registerType": "HoldingRegister",
+    "address": 2018,
+    "dataType": "Float32",
+    "description": "Negative PF 3-Ph average (demand)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AN_Min",
+    "registerType": "HoldingRegister",
+    "address": 3000,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-N minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BN_Min",
+    "registerType": "HoldingRegister",
+    "address": 3002,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-N minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CN_Min",
+    "registerType": "HoldingRegister",
+    "address": 3004,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-N minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AB_Min",
+    "registerType": "HoldingRegister",
+    "address": 3006,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-B minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BC_Min",
+    "registerType": "HoldingRegister",
+    "address": 3008,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-C minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CA_Min",
+    "registerType": "HoldingRegister",
+    "address": 3010,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-A minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_A_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3012,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps A minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_B_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3014,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps B minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_C_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3016,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps C minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveWatts_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3018,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Positive watts 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveVARs_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3020,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Positive VARs 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeWatts_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3022,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Negative watts 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeVARs_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3024,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Negative VARs 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAs_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3026,
+    "dataType": "Float32",
+    "units": "VA",
+    "description": "VAs 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositivePF_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3028,
+    "dataType": "Float32",
+    "description": "Positive PF 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativePF_3Ph_MinAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3030,
+    "dataType": "Float32",
+    "description": "Negative PF 3-Ph minimum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Frequency_Min",
+    "registerType": "HoldingRegister",
+    "address": 3032,
+    "dataType": "Float32",
+    "units": "Hz",
+    "description": "Frequency minimum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AN_Max",
+    "registerType": "HoldingRegister",
+    "address": 3100,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-N maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BN_Max",
+    "registerType": "HoldingRegister",
+    "address": 3102,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-N maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CN_Max",
+    "registerType": "HoldingRegister",
+    "address": 3104,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-N maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_AB_Max",
+    "registerType": "HoldingRegister",
+    "address": 3106,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts A-B maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_BC_Max",
+    "registerType": "HoldingRegister",
+    "address": 3108,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts B-C maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Voltage_CA_Max",
+    "registerType": "HoldingRegister",
+    "address": 3110,
+    "dataType": "Float32",
+    "units": "V",
+    "description": "Volts C-A maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_A_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3112,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps A maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_B_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3114,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps B maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Current_C_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3116,
+    "dataType": "Float32",
+    "units": "A",
+    "description": "Amps C maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveWatts_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3118,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Positive watts 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositiveVARs_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3120,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Positive VARs 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeWatts_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3122,
+    "dataType": "Float32",
+    "units": "W",
+    "description": "Negative watts 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativeVARs_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3124,
+    "dataType": "Float32",
+    "units": "VAR",
+    "description": "Negative VARs 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAs_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3126,
+    "dataType": "Float32",
+    "units": "VA",
+    "description": "VAs 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PositivePF_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3128,
+    "dataType": "Float32",
+    "description": "Positive PF 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NegativePF_3Ph_MaxAvgDemand",
+    "registerType": "HoldingRegister",
+    "address": 3130,
+    "dataType": "Float32",
+    "description": "Negative PF 3-Ph maximum avg demand",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Frequency_Max",
+    "registerType": "HoldingRegister",
+    "address": 3132,
+    "dataType": "Float32",
+    "units": "Hz",
+    "description": "Frequency maximum",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Current_A",
+    "registerType": "HoldingRegister",
+    "address": 4100,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Phase A current angle (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Current_B",
+    "registerType": "HoldingRegister",
+    "address": 4101,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Phase B current angle (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Current_C",
+    "registerType": "HoldingRegister",
+    "address": 4102,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Phase C current angle (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Volts_AB",
+    "registerType": "HoldingRegister",
+    "address": 4103,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Angle volts A-B (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Volts_BC",
+    "registerType": "HoldingRegister",
+    "address": 4104,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Angle volts B-C (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PhaseAngle_Volts_CA",
+    "registerType": "HoldingRegister",
+    "address": 4105,
+    "dataType": "Int16",
+    "units": "deg",
+    "description": "Angle volts C-A (0.1° units)",
+    "mode": "R",
+    "factor": 10
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "MeterStatus",
+    "registerType": "HoldingRegister",
+    "address": 5000,
+    "dataType": "Uint16",
+    "description": "Meter status (bit-mapped)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TimeSinceReset",
+    "registerType": "HoldingRegister",
+    "address": 5002,
+    "dataType": "Uint32",
+    "units": "ms",
+    "description": "Time since reset (4 ms units)",
+    "mode": "R",
+    "factor": 4
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "ResetMaxMinBlocks",
+    "registerType": "HoldingRegister",
+    "address": 20000,
+    "dataType": "Uint16",
+    "description": "Reset max/min blocks (password)",
+    "mode": "W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "ResetEnergyAccumulators",
+    "registerType": "HoldingRegister",
+    "address": 20001,
+    "dataType": "Uint16",
+    "description": "Reset energy accumulators (password)",
+    "mode": "W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "InitiatePSUpdate",
+    "registerType": "HoldingRegister",
+    "address": 22000,
+    "dataType": "Uint16",
+    "description": "Initiate programmable settings update (password)",
+    "mode": "R/W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "TerminatePSUpdate",
+    "registerType": "HoldingRegister",
+    "address": 22001,
+    "dataType": "Uint16",
+    "description": "Terminate programmable settings update",
+    "mode": "R/W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "CalculatePSChecksum",
+    "registerType": "HoldingRegister",
+    "address": 22002,
+    "dataType": "Uint16",
+    "description": "Calculate programmable settings checksum",
+    "mode": "R/W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PSChecksum",
+    "registerType": "HoldingRegister",
+    "address": 22003,
+    "dataType": "Uint16",
+    "description": "Programmable settings checksum (write saves to EEPROM)",
+    "mode": "R/W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "WriteNewPassword",
+    "registerType": "HoldingRegister",
+    "address": 22004,
+    "dataType": "Uint16",
+    "description": "Write new password (write-only; reads 0)",
+    "mode": "W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "ForceMeterRestart",
+    "registerType": "HoldingRegister",
+    "address": 25000,
+    "dataType": "Uint16",
+    "description": "Force meter restart (password; reads 0)",
+    "mode": "R/W"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "SystemSanityIndicator",
+    "registerType": "HoldingRegister",
+    "address": 40001,
+    "dataType": "Uint16",
+    "description": "System sanity indicator (0=proper operation)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_AN_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40002,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts A-N (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_BN_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40003,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts B-N (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_CN_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40004,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts C-N (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Amps_A_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40005,
+    "dataType": "Uint16",
+    "units": "A",
+    "description": "Amps A (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Amps_B_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40006,
+    "dataType": "Uint16",
+    "units": "A",
+    "description": "Amps B (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Amps_C_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40007,
+    "dataType": "Uint16",
+    "units": "A",
+    "description": "Amps C (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Watts_3Ph_Total_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40008,
+    "dataType": "Uint16",
+    "units": "W",
+    "description": "Watts 3-Ph total (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARs_3Ph_Total_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40009,
+    "dataType": "Uint16",
+    "units": "VAR",
+    "description": "VARs 3-Ph total (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAs_3Ph_Total_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40010,
+    "dataType": "Uint16",
+    "units": "VA",
+    "description": "VAs 3-Ph total (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PowerFactor_3Ph_Total_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40011,
+    "dataType": "Uint16",
+    "description": "Power factor 3-Ph total (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Frequency_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40012,
+    "dataType": "Uint16",
+    "units": "Hz",
+    "description": "Frequency (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_AB_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40013,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts A-B (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_BC_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40014,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts B-C (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Volts_CA_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40015,
+    "dataType": "Uint16",
+    "units": "V",
+    "description": "Volts C-A (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "CTNumerator",
+    "registerType": "HoldingRegister",
+    "address": 40016,
+    "dataType": "Uint16",
+    "description": "CT numerator",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "CTMultiplier",
+    "registerType": "HoldingRegister",
+    "address": 40017,
+    "dataType": "Uint16",
+    "description": "CT multiplier",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "CTDenominator",
+    "registerType": "HoldingRegister",
+    "address": 40018,
+    "dataType": "Uint16",
+    "description": "CT denominator",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PTNumerator",
+    "registerType": "HoldingRegister",
+    "address": 40019,
+    "dataType": "Uint16",
+    "description": "PT numerator",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PTMultiplier",
+    "registerType": "HoldingRegister",
+    "address": 40020,
+    "dataType": "Uint16",
+    "description": "PT multiplier",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "PTDenominator",
+    "registerType": "HoldingRegister",
+    "address": 40021,
+    "dataType": "Uint16",
+    "description": "PT denominator",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Positive",
+    "registerType": "HoldingRegister",
+    "address": 40022,
+    "dataType": "Uint32",
+    "units": "Wh",
+    "description": "W-hours positive",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "Wh_Negative",
+    "registerType": "HoldingRegister",
+    "address": 40024,
+    "dataType": "Uint32",
+    "units": "Wh",
+    "description": "W-hours negative",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Positive_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40026,
+    "dataType": "Uint32",
+    "units": "VARh",
+    "description": "VAR-hours positive",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VARh_Negative_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40028,
+    "dataType": "Uint32",
+    "units": "VARh",
+    "description": "VAR-hours negative",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "VAh_Total_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40030,
+    "dataType": "Uint32",
+    "units": "VAh",
+    "description": "VA-hours",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "NeutralCurrent_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40032,
+    "dataType": "Uint16",
+    "units": "A",
+    "description": "Neutral current (12-bit encoding)",
+    "mode": "R"
+  },
+  {
+    "deviceId": "EPM2200",
+    "signalName": "ResetEnergyAccumulators_12bit",
+    "registerType": "HoldingRegister",
+    "address": 40100,
+    "dataType": "Uint16",
+    "description": "Reset energy accumulators (password; write-only; reads 0)",
+    "mode": "W"
+  }
+]
