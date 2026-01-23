@@ -53,7 +53,16 @@ export function getModbusReadWrite(objectType: string): string {
  * Map Modbus data type to Format code
  * 0: Unsigned, 1: Signed(C2), 2: Signed(C1), 3: Float, 4: BitFields
  */
-export function getModbusFormat(dataType: string, objectType?: string): string {
+export function getModbusFormat(
+  dataType: string,
+  registerType?: string,
+  objectType?: string
+): string {
+  // Coil/DiscreteInput have no format (use '-')
+  if (registerType === 'Coil' || registerType === 'DiscreteInput') {
+    return '-';
+  }
+
   if (dataType.includes('Float') || /^f\d+$/i.test(dataType)) {
     return '3: Float';
   }
@@ -64,4 +73,32 @@ export function getModbusFormat(dataType: string, objectType?: string): string {
   if (objectType === 'BV') return '4: BitFields';
   // BI, BO, altres Uint16 → Unsigned
   return '0: Unsigned';
+}
+
+/**
+ * Calculate Modbus data length based on register type and data type
+ * Returns '1', '16', or '32' as string
+ */
+export function calculateModbusDataLength(
+  registerType: string,
+  dataType: string
+): string {
+  if (registerType === 'Coil' || registerType === 'DiscreteInput') {
+    return '1';
+  }
+  if (/32/.test(dataType)) {
+    return '32';
+  }
+  return '16';
+}
+
+/**
+ * Get byte order for Modbus register
+ * Coil/DiscreteInput have no byte order, registers use Big Endian
+ */
+export function getModbusByteOrder(registerType: string): string {
+  if (registerType === 'Coil' || registerType === 'DiscreteInput') {
+    return '-';
+  }
+  return '0: Big Endian';
 }

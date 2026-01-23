@@ -5,7 +5,12 @@ import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation
 import { detectUnitFromSignalName } from '../../constants/bacnetUnits';
 import { getLastDeviceNumber } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
-import { getModbusFunctions, getModbusFormat } from './utils/modbus';
+import {
+  getModbusFunctions,
+  getModbusFormat,
+  calculateModbusDataLength,
+  getModbusByteOrder,
+} from './utils/modbus';
 import { allocateBACnetInstances } from './utils/allocation';
 import { mapModbusToBACnetObjectType } from './utils/mapping';
 import { createSheetContext, findSignalsSheet } from './utils/common';
@@ -119,27 +124,21 @@ export function generateBACnetFromModbus(
     row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
     row[findCol('Read Func')] = modbusFunctions.read;
     row[findCol('Write Func')] = modbusFunctions.write;
-    const format =
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-        ? EXCEL_VALUES.EMPTY
-        : getModbusFormat(modbusSignal.dataType);
-    let dataLengthValue = '16';
-    if (
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-    ) {
-      dataLengthValue = '1';
-    } else if (format === '3: Float' || /32/.test(modbusSignal.dataType)) {
-      dataLengthValue = '32';
-    }
-    row[findCol('Data Length')] = dataLengthValue;
+
+    // Modbus format, data length, and byte order
+    const format = getModbusFormat(
+      modbusSignal.dataType,
+      modbusSignal.registerType
+    );
+    const dataLength = calculateModbusDataLength(
+      modbusSignal.registerType,
+      modbusSignal.dataType
+    );
+    const byteOrder = getModbusByteOrder(modbusSignal.registerType);
+
+    row[findCol('Data Length')] = dataLength;
     row[findCol('Format')] = format;
-    row[findCol('ByteOrder')] =
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-        ? EXCEL_VALUES.EMPTY
-        : EXCEL_VALUES.BYTE_ORDER_BIG_ENDIAN;
+    row[findCol('ByteOrder')] = byteOrder;
     row[findCol('Address')] = modbusSignal.address;
     row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
     row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
