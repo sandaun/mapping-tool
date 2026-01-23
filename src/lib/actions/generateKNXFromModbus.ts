@@ -21,6 +21,70 @@ import {
 import { createSheetContext, findSignalsSheet } from './utils/common';
 import { filterModbusSignals } from './utils/signal-filtering';
 import { getReadWriteCapabilities, getModbusReadWriteFallback } from './utils/read-write';
+import type { ModbusSignal } from '../deviceSignals';
+
+/**
+ * Populate KNX columns in a row
+ */
+const populateKNXColumns = (
+  row: CellValue[],
+  modbusSignal: ModbusSignal,
+  dpt: string,
+  groupAddress: GroupAddress,
+  flags: { U: boolean; T: boolean; Ri: boolean; W: boolean; R: boolean },
+  nextId: number,
+  findCol: (name: string) => number
+): void => {
+  row[findCol('#')] = nextId;
+  row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+  row[findCol('Description')] = modbusSignal.signalName;
+  row[findCol('DPT')] = dpt;
+  row[findCol('Group Address')] = formatGroupAddress(groupAddress);
+  row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
+  row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
+  row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
+  row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
+  row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
+  row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
+  row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
+};
+
+/**
+ * Populate Modbus Master columns in a row
+ */
+const populateModbusColumns = (
+  row: CellValue[],
+  modbusSignal: ModbusSignal,
+  modbusFunctions: { read: string; write: string },
+  dataLengthStr: string,
+  format: string,
+  newDeviceNum: number,
+  newSlaveId: number,
+  nextId: number,
+  headers: CellValue[],
+  findCol: (name: string) => number
+): void => {
+  // Find second # column
+  const modbusIdCol = headers.findIndex(
+    (h, i) => h === '#' && i > findCol('Priority')
+  );
+  if (modbusIdCol >= 0) row[modbusIdCol] = nextId;
+  
+  row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_B(newDeviceNum);
+  row[findCol('# Slave')] = newSlaveId;
+  row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
+  row[findCol('Read Func')] = modbusFunctions.read;
+  row[findCol('Write Func')] = modbusFunctions.write;
+  row[findCol('Data Length')] = dataLengthStr;
+  row[findCol('Format')] = format;
+  row[findCol('ByteOrder')] = getModbusByteOrder(modbusSignal.registerType);
+  row[findCol('Address')] = modbusSignal.address;
+  row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
+  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+};
 
 /**
  * Generate KNX signals from Modbus device signals.
@@ -150,39 +214,8 @@ export function generateKNXFromModbus(
     // Build row with all required columns
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    // KNX Internal columns
-    row[findCol('#')] = nextId;
-    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-    row[findCol('Description')] = modbusSignal.signalName;
-    row[findCol('DPT')] = dpt;
-    row[findCol('Group Address')] = formatGroupAddress(groupAddress);
-    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
-    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
-    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
-    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
-    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
-    row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
-
-    // Modbus Master External columns (second #)
-    const modbusIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('Priority')
-    );
-    if (modbusIdCol >= 0) row[modbusIdCol] = nextId;
-    row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_B(newDeviceNum);
-    row[findCol('# Slave')] = newSlaveId;
-    row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
-    row[findCol('Read Func')] = modbusFunctions.read;
-    row[findCol('Write Func')] = modbusFunctions.write;
-    row[findCol('Data Length')] = dataLengthStr;
-    row[findCol('Format')] = format;
-    row[findCol('ByteOrder')] = getModbusByteOrder(modbusSignal.registerType);
-    row[findCol('Address')] = modbusSignal.address;
-    row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
-    row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
-    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+    populateKNXColumns(row, modbusSignal, dpt, groupAddress, flags, nextId, findCol);
+    populateModbusColumns(row, modbusSignal, modbusFunctions, dataLengthStr, format, newDeviceNum, newSlaveId, nextId, headers, findCol);
 
     signalsSheet.rows.push(row);
     rowsAdded++;
