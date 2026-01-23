@@ -1,8 +1,7 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
-import type { DeviceSignal, ModbusSignal } from '../deviceSignals';
+import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
-import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumber } from './utils/device';
 import { getModbusFunctions, getModbusFormat } from './utils/modbus';
 import { modbusTypeToKNXDPT } from './utils/mapping';
@@ -14,6 +13,9 @@ import {
   DEFAULT_KNX_PRIORITY,
   type GroupAddress,
 } from './utils/knx';
+import { createSheetContext, findSignalsSheet } from './utils/common';
+import { filterModbusSignals } from './utils/signal-filtering';
+import { getReadWriteCapabilities, getModbusReadWriteFallback } from './utils/read-write';
 
 /**
  * Generate KNX signals from Modbus device signals.
@@ -29,22 +31,14 @@ export function generateKNXFromModbus(
   let rowsAdded = 0;
 
   // Find Signals sheet
-  const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
+  const signalsSheet = findSignalsSheet(rawWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
-  // Find where the actual headers are
-  const headerRowIdx = findHeaderRowIndex(signalsSheet);
-  const headers =
-    headerRowIdx >= 0 ? signalsSheet.rows[headerRowIdx] : signalsSheet.headers;
-
-  // Helper to find column index by exact name
-  const findCol = (name: string): number => {
-    const idx = headers.findIndex((h) => h === name);
-    return idx;
-  };
+  // Create sheet context with headers and helper functions
+  const { headers, headerRowIdx, findCol } = createSheetContext(signalsSheet);
 
   const getNextGroupAddressFromSheet = (): GroupAddress => {
     const colIdx = findCol('Group Address');
@@ -98,31 +92,19 @@ export function generateKNXFromModbus(
     groupAddress = getNextGroupAddressFromSheet();
   }
 
+  // Filter Modbus signals (type-safe, no 'as' assertion)
+  const modbusSignals = filterModbusSignals(deviceSignals);
+
   // Process each Modbus signal
-  for (const sig of deviceSignals) {
-    if (!('registerType' in sig)) continue; // Skip non-Modbus signals
-
-    const modbusSignal = sig as ModbusSignal;
-
+  for (const modbusSignal of modbusSignals) {
     // Determine signal read/write capabilities
     const isCoil = modbusSignal.registerType === 'Coil';
     const isDiscreteInput = modbusSignal.registerType === 'DiscreteInput';
-    const isHoldingRegister = modbusSignal.registerType === 'HoldingRegister';
-    const isInputRegister = modbusSignal.registerType === 'InputRegister';
 
-    // Use mode if available, otherwise fallback to registerType heuristics
-    let isReadable: boolean;
-    let isWritable: boolean;
-
-    if (modbusSignal.mode) {
-      const mode = modbusSignal.mode.toUpperCase();
-      isReadable = mode.includes('R');
-      isWritable = mode.includes('W');
-    } else {
-      // Fallback: use registerType heuristics
-      isReadable = isDiscreteInput || isInputRegister || isHoldingRegister;
-      isWritable = isCoil || isHoldingRegister;
-    }
+    const { isReadable, isWritable } = getReadWriteCapabilities(
+      modbusSignal,
+      () => getModbusReadWriteFallback(modbusSignal.registerType)
+    );
 
     // Map Modbus signal to KNX DPT
     let signalCategory:
