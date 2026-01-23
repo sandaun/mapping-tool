@@ -3,7 +3,12 @@ import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { getLastDeviceNumber } from './utils/device';
-import { getModbusFunctions, getModbusFormat } from './utils/modbus';
+import {
+  getModbusFunctions,
+  getModbusFormat,
+  calculateModbusDataLength,
+  getModbusByteOrder,
+} from './utils/modbus';
 import { modbusTypeToKNXDPT } from './utils/mapping';
 import {
   parseGroupAddress,
@@ -121,20 +126,10 @@ export function generateKNXFromModbus(
       signalCategory = isWritable ? 'AnalogOutput' : 'AnalogInput';
     }
 
-    // Calculate data length based on dataType
-    let dataLength: number;
-    if (
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-    ) {
-      dataLength = 1;
-    } else if (/32/.test(modbusSignal.dataType)) {
-      dataLength = 32; // Uint32, Int32, Float32 → 32 bits
-    } else {
-      dataLength = 16; // Uint16, Int16 → 16 bits
-    }
-
-    const format = getModbusFormat(modbusSignal.dataType);
+    // Calculate data length and format using Modbus utils
+    const dataLengthStr = calculateModbusDataLength(modbusSignal.registerType, modbusSignal.dataType);
+    const dataLength = parseInt(dataLengthStr, 10);
+    const format = getModbusFormat(modbusSignal.dataType, modbusSignal.registerType);
     const dpt = modbusTypeToKNXDPT(
       signalCategory,
       dataLength,
@@ -179,34 +174,9 @@ export function generateKNXFromModbus(
     row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
     row[findCol('Read Func')] = modbusFunctions.read;
     row[findCol('Write Func')] = modbusFunctions.write;
-
-    // Data Length: 1 for Coil/DiscreteInput, 32 for Float32, 16 otherwise
-    let dataLengthValue: string;
-    if (
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-    ) {
-      dataLengthValue = '1';
-    } else if (
-      format === '3: Float' ||
-      /32/.test(modbusSignal.dataType)
-    ) {
-      dataLengthValue = '32'; // Float32 = 32 bits = 2 registers
-    } else {
-      dataLengthValue = '16'; // Int16, Uint16 = 16 bits = 1 register
-    }
-    row[findCol('Data Length')] = dataLengthValue;
-
-    row[findCol('Format')] =
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-        ? EXCEL_VALUES.EMPTY
-        : format;
-    row[findCol('ByteOrder')] =
-      modbusSignal.registerType === 'Coil' ||
-      modbusSignal.registerType === 'DiscreteInput'
-        ? EXCEL_VALUES.EMPTY
-        : EXCEL_VALUES.BYTE_ORDER_BIG_ENDIAN;
+    row[findCol('Data Length')] = dataLengthStr;
+    row[findCol('Format')] = format;
+    row[findCol('ByteOrder')] = getModbusByteOrder(modbusSignal.registerType);
     row[findCol('Address')] = modbusSignal.address;
     row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
     row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
