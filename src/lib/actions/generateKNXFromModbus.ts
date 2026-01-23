@@ -1,5 +1,7 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal, ModbusSignal } from '../deviceSignals';
+import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
+import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumber } from './utils/device';
 import { getModbusFunctions, getModbusFormat } from './utils/modbus';
@@ -12,18 +14,6 @@ import {
   DEFAULT_KNX_PRIORITY,
   type GroupAddress,
 } from './utils/knx';
-
-export type GenerateSignalsResult = {
-  updatedWorkbook: RawWorkbook;
-  rowsAdded: number;
-  warnings: string[];
-};
-
-export interface KNXGenerationPolicy {
-  startGroupAddress?: string; // Default: "0/0/1"
-  deviceNumber?: number; // Auto-detect if not provided
-  slaveId?: number; // Auto-detect if not provided
-}
 
 /**
  * Generate KNX signals from Modbus device signals.
@@ -41,7 +31,7 @@ export function generateKNXFromModbus(
   // Find Signals sheet
   const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
   if (!signalsSheet) {
-    warnings.push("No s'ha trobat el sheet 'Signals'.");
+    warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
@@ -185,16 +175,16 @@ export function generateKNXFromModbus(
 
     // KNX Internal columns
     row[findCol('#')] = nextId;
-    row[findCol('Active')] = 'True';
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
     row[findCol('Description')] = modbusSignal.signalName;
     row[findCol('DPT')] = dpt;
     row[findCol('Group Address')] = formatGroupAddress(groupAddress);
-    row[findCol('Additional Addresses')] = '';
-    row[findCol('U')] = flags.U ? 'U' : '';
-    row[findCol('T')] = flags.T ? 'T' : '';
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : '';
-    row[findCol('W')] = flags.W ? 'W' : '';
-    row[findCol('R')] = flags.R ? 'R' : '';
+    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
+    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
+    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
+    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
+    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
+    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
     row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
 
     // Modbus Master External columns (second #)
@@ -202,9 +192,9 @@ export function generateKNXFromModbus(
       (h, i) => h === '#' && i > findCol('Priority')
     );
     if (modbusIdCol >= 0) row[modbusIdCol] = nextId;
-    row[findCol('Device')] = `RTU // Port B // Device ${newDeviceNum}`;
+    row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_B(newDeviceNum);
     row[findCol('# Slave')] = newSlaveId;
-    row[findCol('Base')] = '0-based';
+    row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
     row[findCol('Read Func')] = modbusFunctions.read;
     row[findCol('Write Func')] = modbusFunctions.write;
 
@@ -228,19 +218,19 @@ export function generateKNXFromModbus(
     row[findCol('Format')] =
       modbusSignal.registerType === 'Coil' ||
       modbusSignal.registerType === 'DiscreteInput'
-        ? '-'
+        ? EXCEL_VALUES.EMPTY
         : format;
     row[findCol('ByteOrder')] =
       modbusSignal.registerType === 'Coil' ||
       modbusSignal.registerType === 'DiscreteInput'
-        ? '-'
-        : '0: Big Endian';
+        ? EXCEL_VALUES.EMPTY
+        : EXCEL_VALUES.BYTE_ORDER_BIG_ENDIAN;
     row[findCol('Address')] = modbusSignal.address;
-    row[findCol('Bit')] = '-';
-    row[findCol('# Bits')] = '-';
-    row[findCol('Deadband')] = '0';
-    row[findCol('Conv. Id')] = '';
-    row[findCol('Conversions')] = '-';
+    row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
+    row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
 
     signalsSheet.rows.push(row);
     rowsAdded++;
