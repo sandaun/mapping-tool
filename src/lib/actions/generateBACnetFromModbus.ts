@@ -1,5 +1,5 @@
-import type { RawWorkbook } from '../excel/raw';
-import type { DeviceSignal } from '../deviceSignals';
+import type { RawWorkbook, CellValue } from '../excel/raw';
+import type { DeviceSignal, ModbusSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { detectUnitFromSignalName } from '../../constants/bacnetUnits';
@@ -19,6 +19,96 @@ import {
   getReadWriteCapabilities,
   getBACnetReadWriteCapabilities,
 } from './utils/read-write';
+
+/**
+ * Populate BACnet Server columns in a row
+ */
+const populateBACnetColumns = (
+  row: CellValue[],
+  modbusSignal: ModbusSignal,
+  objectType: string,
+  instance: number,
+  nextId: number,
+  findCol: (name: string) => number
+): void => {
+  row[findCol('#')] = nextId;
+  row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+  row[findCol('Description')] = '';
+  row[findCol('Name')] = modbusSignal.signalName;
+  row[findCol('Type')] = formatBACnetType(objectType);
+  row[findCol('Instance')] = instance;
+
+  // Auto-detect units from signal name, fallback to defaults
+  let unitCode: number | string;
+  if (objectType.startsWith('B')) {
+    unitCode = '-1'; // Binary: always -1
+  } else if (objectType.startsWith('M')) {
+    unitCode = '-1'; // Multistate: always -1
+  } else {
+    // Analog: try to detect from signal name
+    unitCode = detectUnitFromSignalName(modbusSignal.signalName);
+  }
+  row[findCol('Units')] = unitCode;
+
+  row[findCol('NC')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
+  row[findCol('# States')] = objectType.startsWith('B')
+    ? '2'
+    : objectType.startsWith('M')
+    ? '65535'
+    : EXCEL_VALUES.EMPTY;
+  row[findCol('Rel. Def.')] = EXCEL_VALUES.EMPTY;
+  row[findCol('COV')] = objectType.startsWith('A')
+    ? EXCEL_VALUES.DEFAULT_DEADBAND
+    : EXCEL_VALUES.EMPTY;
+};
+
+/**
+ * Populate Modbus Master columns in a row
+ */
+const populateModbusColumns = (
+  row: CellValue[],
+  modbusSignal: ModbusSignal,
+  modbusFunctions: { read: string; write: string },
+  newDeviceNum: number,
+  newSlaveId: number,
+  nextId: number,
+  headers: CellValue[],
+  findCol: (name: string) => number
+): void => {
+  // Find second # column
+  const modbusIdCol = headers.findIndex(
+    (h, i) => h === '#' && i > findCol('COV')
+  );
+  if (modbusIdCol >= 0) row[modbusIdCol] = nextId;
+
+  row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_A(newDeviceNum);
+  row[findCol('# Slave')] = newSlaveId;
+  row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
+  row[findCol('Read Func')] = modbusFunctions.read;
+  row[findCol('Write Func')] = modbusFunctions.write;
+
+  // Modbus format, data length, and byte order
+  const format = getModbusFormat(
+    modbusSignal.dataType,
+    modbusSignal.registerType
+  );
+  const dataLength = calculateModbusDataLength(
+    modbusSignal.registerType,
+    modbusSignal.dataType
+  );
+  const byteOrder = getModbusByteOrder(modbusSignal.registerType);
+
+  row[findCol('Data Length')] = dataLength;
+  row[findCol('Format')] = format;
+  row[findCol('ByteOrder')] = byteOrder;
+  row[findCol('Address')] = modbusSignal.address;
+  row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
+  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
+  row[findCol('Conv. Id')] = '';
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+};
 
 /**
  * Generate BACnet signals from Modbus device signals.
@@ -62,14 +152,14 @@ export function generateBACnetFromModbus(
   for (const modbusSignal of modbusSignals) {
     const signalId = `${modbusSignal.deviceId}_${modbusSignal.signalName}`;
 
+    // Calculate signal properties
     const objectType = mapModbusToBACnetObjectType(
       modbusSignal.dataType,
       modbusSignal.registerType
     );
     const instance = (instanceAllocation.get(signalId) ?? 1) + baseInstance;
 
-    // Determine if signal is readable/writable
-    // Use mode if available, otherwise fallback to BACnet object type heuristics
+    // Determine read/write capabilities
     const { isReadable, isWritable } = getReadWriteCapabilities(
       modbusSignal,
       () => getBACnetReadWriteCapabilities(objectType)
@@ -84,70 +174,22 @@ export function generateBACnetFromModbus(
     // Build row with all required columns
     const row = createEmptyRow();
 
-    // BACnet columns
-    row[findCol('#')] = nextId++;
-    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-    row[findCol('Description')] = '';
-    row[findCol('Name')] = modbusSignal.signalName;
-    row[findCol('Type')] = formatBACnetType(objectType);
-    row[findCol('Instance')] = instance;
-
-    // Auto-detect units from signal name, fallback to defaults
-    let unitCode: number | string;
-    if (objectType.startsWith('B')) {
-      unitCode = '-1'; // Binary: always -1
-    } else if (objectType.startsWith('M')) {
-      unitCode = '-1'; // Multistate: always -1
-    } else {
-      // Analog: try to detect from signal name
-      unitCode = detectUnitFromSignalName(modbusSignal.signalName);
-    }
-    row[findCol('Units')] = unitCode;
-
-    row[findCol('NC')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
-    row[findCol('# States')] = objectType.startsWith('B')
-      ? '2'
-      : objectType.startsWith('M')
-      ? '65535'
-      : EXCEL_VALUES.EMPTY;
-    row[findCol('Rel. Def.')] = EXCEL_VALUES.EMPTY;
-    row[findCol('COV')] = objectType.startsWith('A') ? EXCEL_VALUES.DEFAULT_DEADBAND : EXCEL_VALUES.EMPTY; // Analog values: 0, Binary/Multistate: -
-
-    // Modbus columns (second #)
-    const modbusIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('COV')
+    // Populate BACnet and Modbus columns
+    populateBACnetColumns(row, modbusSignal, objectType, instance, nextId, findCol);
+    populateModbusColumns(
+      row,
+      modbusSignal,
+      modbusFunctions,
+      newDeviceNum,
+      newSlaveId,
+      nextId,
+      headers,
+      findCol
     );
-    if (modbusIdCol >= 0) row[modbusIdCol] = nextId - 1;
-    row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_A(newDeviceNum);
-    row[findCol('# Slave')] = newSlaveId;
-    row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
-    row[findCol('Read Func')] = modbusFunctions.read;
-    row[findCol('Write Func')] = modbusFunctions.write;
-
-    // Modbus format, data length, and byte order
-    const format = getModbusFormat(
-      modbusSignal.dataType,
-      modbusSignal.registerType
-    );
-    const dataLength = calculateModbusDataLength(
-      modbusSignal.registerType,
-      modbusSignal.dataType
-    );
-    const byteOrder = getModbusByteOrder(modbusSignal.registerType);
-
-    row[findCol('Data Length')] = dataLength;
-    row[findCol('Format')] = format;
-    row[findCol('ByteOrder')] = byteOrder;
-    row[findCol('Address')] = modbusSignal.address;
-    row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
-    row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
-    row[findCol('Conv. Id')] = '';
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
 
     signalsSheet.rows.push(row);
     rowsAdded++;
+    nextId++;
   }
 
   return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
