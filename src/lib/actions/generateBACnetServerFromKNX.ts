@@ -1,8 +1,9 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
-import type { DeviceSignal, KNXSignal } from '../deviceSignals';
+import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES } from '@/constants/generation';
-import { findHeaderRowIndex } from './utils/headers';
+import { findSignalsSheet, createSheetContext } from './utils/common';
+import { filterKNXSignals } from './utils/signal-filtering';
 import { formatDPT } from '../../constants/knxDPTs';
 import { getDefaultKNXFlags, DEFAULT_KNX_PRIORITY } from './utils/knx';
 import { knxDPTToBACnetType, getBACnetFieldsByType } from './utils/mapping';
@@ -25,9 +26,7 @@ export function generateBACnetServerFromKNX(
   let rowsAdded = 0;
 
   // Filter only KNX signals
-  const knxSignals = deviceSignals.filter(
-    (sig): sig is KNXSignal => 'groupAddress' in sig && 'dpt' in sig
-  );
+  const knxSignals = filterKNXSignals(deviceSignals);
 
   if (knxSignals.length === 0) {
     warnings.push(WARNINGS.NO_KNX_SIGNALS);
@@ -35,43 +34,14 @@ export function generateBACnetServerFromKNX(
   }
 
   // Find Signals sheet
-  const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
+  const signalsSheet = findSignalsSheet(rawWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
-  // Find where the actual headers are
-  const headerRowIdx = findHeaderRowIndex(signalsSheet);
-  const headers =
-    headerRowIdx >= 0 ? signalsSheet.rows[headerRowIdx] : signalsSheet.headers;
-
-  // Helper to find column index by exact name
-  const findCol = (name: string): number => {
-    const idx = headers.findIndex((h) => h === name);
-    return idx;
-  };
-
-  const getMaxNumericInColumn = (colName: string): number => {
-    const colIdx = findCol(colName);
-    if (colIdx < 0) return -1;
-
-    let max = -1;
-    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
-    for (let i = startRow; i < signalsSheet.rows.length; i++) {
-      const cell = signalsSheet.rows[i][colIdx];
-      const value =
-        typeof cell === 'number'
-          ? cell
-          : typeof cell === 'string'
-          ? Number(cell)
-          : NaN;
-      if (!Number.isNaN(value)) {
-        max = Math.max(max, value);
-      }
-    }
-    return max;
-  };
+  // Create sheet context
+  const { headers, findCol, getMaxNumericInColumn, headerRowIdx } = createSheetContext(signalsSheet);
 
   // Get the next # value (sequential ID)
   let nextId =
