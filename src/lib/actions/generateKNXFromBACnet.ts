@@ -94,6 +94,49 @@ export function generateKNXFromBACnet(
   // Filter BACnet signals
   const bacnetSignals = filterBACnetSignals(deviceSignals);
 
+  // Helper to populate KNX Internal columns
+  const populateKNXColumns = (
+    row: CellValue[],
+    signalName: string,
+    dpt: string,
+    groupAddr: GroupAddress,
+    flags: ReturnType<typeof getDefaultKNXFlags>,
+    nextId: number
+  ): void => {
+    row[findCol('#')] = nextId;
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+    row[findCol('Description')] = signalName;
+    row[findCol('DPT')] = dpt;
+    row[findCol('Group Address')] = formatGroupAddress(groupAddr);
+    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
+    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
+    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
+    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
+    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
+    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
+    row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
+  };
+
+  // Helper to populate BACnet Client External columns
+  const populateBACnetColumns = (
+    row: CellValue[],
+    objectType: string,
+    instance: number,
+    deviceName: string,
+    nextId: number
+  ): void => {
+    // Find second # column (after Priority)
+    const bacnetIdCol = headers.findIndex(
+      (h, i) => h === '#' && i > findCol('Priority')
+    );
+    if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
+    row[findCol('Device Name')] = deviceName;
+    row[findCol('Type')] = formatBACnetType(objectType);
+    row[findCol('Instance')] = instance;
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conversions')] = EXCEL_VALUES.DASH;
+  };
+
   // Process each BACnet signal
   for (const bacnetSignal of bacnetSignals) {
     // Determine signal read/write capabilities based on BACnet object type
@@ -108,30 +151,12 @@ export function generateKNXFromBACnet(
     // Build row with all required columns
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    // KNX Internal columns
-    row[findCol('#')] = nextId;
-    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-    row[findCol('Description')] = bacnetSignal.signalName;
-    row[findCol('DPT')] = dpt;
-    row[findCol('Group Address')] = formatGroupAddress(groupAddress);
-    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
-    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
-    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
-    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
-    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
-    row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
+    // Populate KNX Internal columns
+    populateKNXColumns(row, bacnetSignal.signalName, dpt, groupAddress, flags, nextId);
 
-    // BACnet Client External columns (second #)
-    const bacnetIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('Priority')
-    );
-    if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
-    row[findCol('Device Name')] = policy.deviceName ?? DEVICE_TEMPLATES.DEVICE(newDeviceNum);
-    row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
-    row[findCol('Instance')] = bacnetSignal.instance;
-    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Conversions')] = EXCEL_VALUES.DASH;
+    // Populate BACnet Client External columns
+    const deviceName = policy.deviceName ?? DEVICE_TEMPLATES.DEVICE(newDeviceNum);
+    populateBACnetColumns(row, bacnetSignal.objectType, bacnetSignal.instance, deviceName, nextId);
 
     signalsSheet.rows.push(row);
     rowsAdded++;
