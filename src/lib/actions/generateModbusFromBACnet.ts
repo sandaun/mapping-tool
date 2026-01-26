@@ -1,13 +1,14 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
-import type { DeviceSignal, BACnetSignal } from '../deviceSignals';
+import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
-import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
 import { getModbusFormat, getModbusReadWrite } from './utils/modbus';
 import { allocateModbusAddresses } from './utils/allocation';
 import { mapBACnetToModbusDataType } from './utils/mapping';
+import { createSheetContext, findSignalsSheet } from './utils/common';
+import { filterBACnetSignals } from './utils/signal-filtering';
 
 /**
  * Generate Modbus signals from BACnet device signals.
@@ -26,43 +27,14 @@ export function generateModbusFromBACnet(
   let rowsAdded = 0;
 
   // Find Signals sheet
-  const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
+  const signalsSheet = findSignalsSheet(rawWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
-  // Find where the actual headers are
-  const headerRowIdx = findHeaderRowIndex(signalsSheet);
-  const headers =
-    headerRowIdx >= 0 ? signalsSheet.rows[headerRowIdx] : signalsSheet.headers;
-
-  // Helper to find column index by exact name
-  const findCol = (name: string): number => {
-    const idx = headers.findIndex((h) => h === name);
-    return idx;
-  };
-
-  const getMaxNumericInColumn = (colName: string): number => {
-    const colIdx = findCol(colName);
-    if (colIdx < 0) return -1;
-
-    let max = -1;
-    const startRow = headerRowIdx >= 0 ? headerRowIdx + 1 : 0;
-    for (let i = startRow; i < signalsSheet.rows.length; i++) {
-      const cell = signalsSheet.rows[i][colIdx];
-      const value =
-        typeof cell === 'number'
-          ? cell
-          : typeof cell === 'string'
-          ? Number(cell)
-          : NaN;
-      if (!Number.isNaN(value)) {
-        max = Math.max(max, value);
-      }
-    }
-    return max;
-  };
+  // Create sheet context with headers and helper functions
+  const { headers, headerRowIdx, findCol, getMaxNumericInColumn } = createSheetContext(signalsSheet);
 
   // Get the next # value (sequential ID)
   let nextId =
@@ -72,15 +44,15 @@ export function generateModbusFromBACnet(
   const lastDeviceNum = getLastDeviceNumberSimple(signalsSheet);
   const newDeviceNum = lastDeviceNum + 1;
 
+  // Filter BACnet signals (type-safe, no 'as' assertion)
+  const bacnetSignals = filterBACnetSignals(deviceSignals);
+
   // Device signals = BACnet → Generate Modbus columns
-  const addressAllocation = allocateModbusAddresses(deviceSignals, policy);
+  const addressAllocation = allocateModbusAddresses(bacnetSignals, policy);
   const lastAddress = getMaxNumericInColumn('Address');
   const baseAddress = lastAddress >= 0 ? lastAddress + 1 : 0;
 
-  for (const sig of deviceSignals) {
-    if (!('objectType' in sig)) continue; // Skip non-BACnet signals
-
-    const bacnetSignal = sig as BACnetSignal;
+  for (const bacnetSignal of bacnetSignals) {
     const signalId = `${bacnetSignal.deviceId}_${bacnetSignal.signalName}`;
 
     const dataType = mapBACnetToModbusDataType(bacnetSignal.objectType);
