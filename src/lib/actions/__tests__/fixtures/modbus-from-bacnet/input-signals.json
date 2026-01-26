@@ -1,0 +1,178 @@
+[
+  {
+    "deviceId": "CBV01",
+    "signalName": "ZoneTemperature",
+    "objectType": "AI",
+    "instance": 1,
+    "units": "°C",
+    "description": "Measured zone (room) temperature"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "DischargeAirTemperature",
+    "objectType": "AI",
+    "instance": 2,
+    "units": "°C",
+    "description": "Measured discharge air temperature"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "Airflow",
+    "objectType": "AI",
+    "instance": 3,
+    "units": "l/s",
+    "description": "Measured primary airflow"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "CO2Level",
+    "objectType": "AI",
+    "instance": 4,
+    "units": "ppm",
+    "description": "Measured CO2 concentration"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "RelativeHumidity",
+    "objectType": "AI",
+    "instance": 5,
+    "units": "%",
+    "description": "Measured relative humidity"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "ZoneTemperatureSetpoint",
+    "objectType": "AV",
+    "instance": 10,
+    "units": "°C",
+    "description": "Zone temperature setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "CoolingSetpoint",
+    "objectType": "AV",
+    "instance": 11,
+    "units": "°C",
+    "description": "Cooling temperature setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "HeatingSetpoint",
+    "objectType": "AV",
+    "instance": 12,
+    "units": "°C",
+    "description": "Heating temperature setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "OccupancyCommand",
+    "objectType": "BV",
+    "instance": 20,
+    "description": "Occupancy state command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "OccupancyStatus",
+    "objectType": "BI",
+    "instance": 21,
+    "description": "Current occupancy status"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "PrimaryAirflowSetpoint",
+    "objectType": "AV",
+    "instance": 30,
+    "units": "l/s",
+    "description": "Primary airflow setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "MinimumAirflowSetpoint",
+    "objectType": "AV",
+    "instance": 31,
+    "units": "l/s",
+    "description": "Minimum airflow setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "MaximumAirflowSetpoint",
+    "objectType": "AV",
+    "instance": 32,
+    "units": "l/s",
+    "description": "Maximum airflow setpoint"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "DamperPosition",
+    "objectType": "AO",
+    "instance": 40,
+    "units": "%",
+    "description": "Damper position command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "DamperPositionFeedback",
+    "objectType": "AI",
+    "instance": 41,
+    "units": "%",
+    "description": "Damper position feedback"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "FanCommand",
+    "objectType": "BO",
+    "instance": 50,
+    "description": "Fan on/off command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "FanSpeedCommand",
+    "objectType": "AO",
+    "instance": 51,
+    "units": "%",
+    "description": "Variable fan speed command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "HeatingValveCommand",
+    "objectType": "AO",
+    "instance": 60,
+    "units": "%",
+    "description": "Modulating heating valve command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "ElectricHeatStage1",
+    "objectType": "BO",
+    "instance": 61,
+    "description": "Electric heat stage 1 command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "ElectricHeatStage2",
+    "objectType": "BO",
+    "instance": 62,
+    "description": "Electric heat stage 2 command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "ElectricHeatStage3",
+    "objectType": "BO",
+    "instance": 63,
+    "description": "Electric heat stage 3 command"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "AlarmStatus",
+    "objectType": "BV",
+    "instance": 70,
+    "description": "Controller alarm status"
+  },
+  {
+    "deviceId": "CBV01",
+    "signalName": "AlarmCode",
+    "objectType": "AV",
+    "instance": 71,
+    "description": "Active alarm code"
+  }
+]

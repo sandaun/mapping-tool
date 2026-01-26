@@ -1,0 +1,24 @@
+deviceId,signalName,objectType,instance,units,description
+CBV01,ZoneTemperature,AI,1,°C,Measured zone (room) temperature
+CBV01,DischargeAirTemperature,AI,2,°C,Measured discharge air temperature
+CBV01,Airflow,AI,3,l/s,Measured primary airflow
+CBV01,CO2Level,AI,4,ppm,Measured CO2 concentration
+CBV01,RelativeHumidity,AI,5,%,Measured relative humidity
+CBV01,ZoneTemperatureSetpoint,AV,10,°C,Zone temperature setpoint
+CBV01,CoolingSetpoint,AV,11,°C,Cooling temperature setpoint
+CBV01,HeatingSetpoint,AV,12,°C,Heating temperature setpoint
+CBV01,OccupancyCommand,BV,20,,Occupancy state command
+CBV01,OccupancyStatus,BI,21,,Current occupancy status
+CBV01,PrimaryAirflowSetpoint,AV,30,l/s,Primary airflow setpoint
+CBV01,MinimumAirflowSetpoint,AV,31,l/s,Minimum airflow setpoint
+CBV01,MaximumAirflowSetpoint,AV,32,l/s,Maximum airflow setpoint
+CBV01,DamperPosition,AO,40,%,Damper position command
+CBV01,DamperPositionFeedback,AI,41,%,Damper position feedback
+CBV01,FanCommand,BO,50,,Fan on/off command
+CBV01,FanSpeedCommand,AO,51,%,Variable fan speed command
+CBV01,HeatingValveCommand,AO,60,%,Modulating heating valve command
+CBV01,ElectricHeatStage1,BO,61,,Electric heat stage 1 command
+CBV01,ElectricHeatStage2,BO,62,,Electric heat stage 2 command
+CBV01,ElectricHeatStage3,BO,63,,Electric heat stage 3 command
+CBV01,AlarmStatus,BV,70,,Controller alarm status
+CBV01,AlarmCode,AV,71,,Active alarm code
