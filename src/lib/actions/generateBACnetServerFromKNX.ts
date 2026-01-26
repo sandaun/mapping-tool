@@ -1,6 +1,6 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
+import type { GenerateSignalsResult, BACnetGenerationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES } from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterKNXSignals } from './utils/signal-filtering';
@@ -20,7 +20,7 @@ import { formatBACnetType } from './utils/bacnet';
 export function generateBACnetServerFromKNX(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: AllocationPolicy = {}
+  policy: BACnetGenerationPolicy = {}
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;

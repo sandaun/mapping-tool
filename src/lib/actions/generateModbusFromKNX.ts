@@ -1,6 +1,6 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
+import type { GenerateSignalsResult, ModbusGenerationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES } from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterKNXSignals } from './utils/signal-filtering';
@@ -22,7 +22,7 @@ import {
 export function generateModbusFromKNX(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: AllocationPolicy = {}
+  policy: ModbusGenerationPolicy = {}
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
