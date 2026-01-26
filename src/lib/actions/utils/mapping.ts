@@ -1,3 +1,5 @@
+import { EXCEL_VALUES } from '@/constants/generation';
+
 /**
  * Map Modbus dataType + registerType → BACnet objectType
  */
@@ -425,11 +427,11 @@ export function knxDPTToBACnetType(dpt: string): string {
   // DPT 14.x (32-bit float) → Analog Value
   if (main === '14') return 'AV';
 
-  // DPT 16.x (string) → Multistate Value
-  if (main === '16') return 'MSV';
+  // DPT 16.x (string) → Analog Value (strings lliures, no estats enumerats)
+  if (main === '16') return 'AV';
 
-  // DPT 20.x (HVAC mode, enum) → Multistate Value
-  if (main === '20') return 'MSV';
+  // DPT 20.x (HVAC mode, enum) → Multi-state Value (estats enumerats)
+  if (main === '20') return 'MV';
 
   // Fallback: Analog Value for unknown types
   return 'AV';
@@ -557,8 +559,8 @@ export function getBACnetFieldsByType(
     case 'A': // Analog (AI, AO, AV)
       return {
         units: knxDPTToBACnetUnits(dpt),
-        states: '-',
-        relDef: type === 'AO' ? '0' : '-',
+        states: EXCEL_VALUES.EMPTY_BACNET,
+        relDef: type === 'AO' ? '0' : EXCEL_VALUES.EMPTY_BACNET,
         cov: '0',
       };
 
@@ -566,24 +568,24 @@ export function getBACnetFieldsByType(
       return {
         units: '-1',
         states: '2',
-        relDef: type === 'BO' ? '0' : '-',
-        cov: '-',
+        relDef: type === 'BO' ? '0' : EXCEL_VALUES.EMPTY_BACNET,
+        cov: EXCEL_VALUES.EMPTY_BACNET,
       };
 
-    case 'MS': // Multistate (MSI, MSO, MSV)
+    case 'M': // Multistate (MI, MO, MV) - CORREGIT: era 'MS'
       return {
         units: '-1',
         states: '65535',
-        relDef: type === 'MSO' ? '1' : '-',
-        cov: '-',
+        relDef: type === 'MO' ? '1' : EXCEL_VALUES.EMPTY_BACNET,
+        cov: EXCEL_VALUES.EMPTY_BACNET,
       };
 
     default:
       return {
-        units: '-',
-        states: '-',
-        relDef: '-',
-        cov: '-',
+        units: EXCEL_VALUES.EMPTY_BACNET,
+        states: EXCEL_VALUES.EMPTY_BACNET,
+        relDef: EXCEL_VALUES.EMPTY_BACNET,
+        cov: EXCEL_VALUES.EMPTY_BACNET,
       };
   }
 }

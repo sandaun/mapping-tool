@@ -25,13 +25,13 @@ const populateModbusColumns = (
 ): void => {
   row[findCol('#')] = nextId;
   row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-  row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY;
+  row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Data Length')] = dataType.includes('32') ? '32' : '16';
   row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
   row[findCol('Address')] = address;
-  row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY;
+  row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Read / Write')] = readWrite;
-  row[findCol('String Length')] = EXCEL_VALUES.EMPTY;
+  row[findCol('String Length')] = EXCEL_VALUES.EMPTY_KNX;
 };
 
 /**
@@ -54,8 +54,8 @@ const populateBACnetColumns = (
   row[findCol('Device Name')] = DEVICE_TEMPLATES.DEVICE(newDeviceNum);
   row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
   row[findCol('Instance')] = bacnetSignal.instance;
-  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
 };
 
 /**

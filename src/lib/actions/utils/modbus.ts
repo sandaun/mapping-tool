@@ -8,29 +8,29 @@ export function getModbusFunctions(
 ): { read: string; write: string } {
   if (registerType === 'Coil') {
     return {
-      read: isReadable ? '1: Read Coils' : '-',
-      write: isWritable ? '5: Write Single Coil' : '-',
+      read: isReadable ? '1: Read Coils' : '',
+      write: isWritable ? '5: Write Single Coil' : '',
     };
   }
 
   if (registerType === 'DiscreteInput') {
     return {
-      read: isReadable ? '2: Read Discrete Inputs' : '-',
-      write: '-',
+      read: isReadable ? '2: Read Discrete Inputs' : '',
+      write: '',
     };
   }
 
   if (registerType === 'InputRegister') {
     return {
-      read: isReadable ? '4: Read Input Registers' : '-',
-      write: '-',
+      read: isReadable ? '4: Read Input Registers' : '',
+      write: '',
     };
   }
 
   // HoldingRegister
   return {
-    read: isReadable ? '3: Read Holding Registers' : '-',
-    write: isWritable ? '6: Write Single Register' : '-',
+    read: isReadable ? '3: Read Holding Registers' : '',
+    write: isWritable ? '6: Write Single Register' : '',
   };
 }
 
@@ -58,9 +58,9 @@ export function getModbusFormat(
   registerType?: string,
   objectType?: string
 ): string {
-  // Coil/DiscreteInput have no format (use '-')
+  // Coil/DiscreteInput have no format (use empty string)
   if (registerType === 'Coil' || registerType === 'DiscreteInput') {
-    return '-';
+    return '';
   }
 
   if (dataType.includes('Float') || /^f\d+$/i.test(dataType)) {
@@ -98,7 +98,7 @@ export function calculateModbusDataLength(
  */
 export function getModbusByteOrder(registerType: string): string {
   if (registerType === 'Coil' || registerType === 'DiscreteInput') {
-    return '-';
+    return '';
   }
   return '0: Big Endian';
 }

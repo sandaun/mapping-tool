@@ -50,17 +50,17 @@ const populateBACnetColumns = (
   }
   row[findCol('Units')] = unitCode;
 
-  row[findCol('NC')] = EXCEL_VALUES.EMPTY;
-  row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
+  row[findCol('NC')] = EXCEL_VALUES.EMPTY_BACNET;
+  row[findCol('Texts')] = EXCEL_VALUES.EMPTY_BACNET;
   row[findCol('# States')] = objectType.startsWith('B')
     ? '2'
     : objectType.startsWith('M')
     ? '65535'
-    : EXCEL_VALUES.EMPTY;
-  row[findCol('Rel. Def.')] = EXCEL_VALUES.EMPTY;
+    : EXCEL_VALUES.EMPTY_BACNET;
+  row[findCol('Rel. Def.')] = EXCEL_VALUES.EMPTY_BACNET;
   row[findCol('COV')] = objectType.startsWith('A')
     ? EXCEL_VALUES.DEFAULT_DEADBAND
-    : EXCEL_VALUES.EMPTY;
+    : EXCEL_VALUES.EMPTY_BACNET;
 };
 
 /**
@@ -103,11 +103,11 @@ const populateModbusColumns = (
   row[findCol('Format')] = format;
   row[findCol('ByteOrder')] = byteOrder;
   row[findCol('Address')] = modbusSignal.address;
-  row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
-  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Bit')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
-  row[findCol('Conv. Id')] = '';
-  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
 };
 
 /**

@@ -70,9 +70,9 @@ export function generateModbusFromKNX(
     row[findCol('Data Length')] = dataLength;
     row[findCol('Format')] = format;
     row[findCol('Address')] = address;
-    row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Bit')] = EXCEL_VALUES.EMPTY_KNX;
     row[findCol('Read / Write')] = readWrite;
-    row[findCol('String Length')] = EXCEL_VALUES.EMPTY;
+    row[findCol('String Length')] = EXCEL_VALUES.EMPTY_KNX;
   };
 
   // Helper to populate KNX External columns
@@ -90,15 +90,15 @@ export function generateModbusFromKNX(
     if (knxIdCol >= 0) row[knxIdCol] = nextId;
     row[findCol('DPT')] = dptFormatted;
     row[findCol('Group Address')] = groupAddress;
-    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
-    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
-    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
-    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
-    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
+    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY_KNX;
     row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
-    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
   };
 
   // Process each KNX signal

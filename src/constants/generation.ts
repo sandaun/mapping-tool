@@ -17,7 +17,8 @@ export const WARNINGS = {
 export const EXCEL_VALUES = {
   // Common values
   ACTIVE_TRUE: 'True',
-  EMPTY: '-',
+  EMPTY_BACNET: '-',  // BACnet empty fields (NC, COV, Rel. Def., etc.)
+  EMPTY_KNX: '',      // KNX empty fields (Additional Addresses, flags, Conv. Id, etc.)
   
   // Modbus specific
   BASE_ZERO: '0-based',

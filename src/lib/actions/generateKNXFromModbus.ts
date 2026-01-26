@@ -40,12 +40,12 @@ const populateKNXColumns = (
   row[findCol('Description')] = modbusSignal.signalName;
   row[findCol('DPT')] = dpt;
   row[findCol('Group Address')] = formatGroupAddress(groupAddress);
-  row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
-  row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
-  row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
-  row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
-  row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
-  row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
+  row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
 };
 
@@ -79,11 +79,11 @@ const populateModbusColumns = (
   row[findCol('Format')] = format;
   row[findCol('ByteOrder')] = getModbusByteOrder(modbusSignal.registerType);
   row[findCol('Address')] = modbusSignal.address;
-  row[findCol('Bit')] = EXCEL_VALUES.EMPTY;
-  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Bit')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
-  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
 };
 
 /**
