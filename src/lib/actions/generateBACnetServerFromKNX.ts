@@ -52,6 +52,56 @@ export function generateBACnetServerFromKNX(
   let bacnetInstance =
     policy.startInstance ?? (lastInstance >= 0 ? lastInstance + 1 : 0);
 
+  // Helper to populate BACnet Server Internal columns
+  const populateBACnetColumns = (
+    row: CellValue[],
+    signalName: string,
+    description: string | undefined,
+    objectType: string,
+    instance: number,
+    bacnetFields: ReturnType<typeof getBACnetFieldsByType>,
+    nextId: number
+  ): void => {
+    row[findCol('#')] = nextId;
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+    row[findCol('Description')] = description || EXCEL_VALUES.EMPTY;
+    row[findCol('Name')] = signalName;
+    row[findCol('Type')] = formatBACnetType(objectType);
+    row[findCol('Instance')] = instance;
+    row[findCol('Units')] = bacnetFields.units;
+    row[findCol('NC')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
+    row[findCol('# States')] = bacnetFields.states;
+    row[findCol('Rel. Def.')] = bacnetFields.relDef;
+    row[findCol('COV')] = bacnetFields.cov;
+  };
+
+  // Helper to populate KNX External columns
+  const populateKNXColumns = (
+    row: CellValue[],
+    dptFormatted: string,
+    groupAddress: string,
+    flags: ReturnType<typeof getDefaultKNXFlags>,
+    nextId: number
+  ): void => {
+    // Find second # column (after COV)
+    const knxIdCol = headers.findIndex(
+      (h, i) => h === '#' && i > findCol('COV')
+    );
+    if (knxIdCol >= 0) row[knxIdCol] = nextId;
+    row[findCol('DPT')] = dptFormatted;
+    row[findCol('Group Address')] = groupAddress;
+    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
+    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
+    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
+    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
+    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
+    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
+    row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+  };
+
   // Process each KNX signal
   for (const knxSignal of knxSignals) {
     // Normalize DPT to include name (e.g., "1.001: switch")
@@ -89,36 +139,11 @@ export function generateBACnetServerFromKNX(
     // Build row with 24 columns
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    // BACnet Server columns (internal protocol)
-    row[findCol('#')] = nextId;
-    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-    row[findCol('Description')] = knxSignal.description || EXCEL_VALUES.EMPTY;
-    row[findCol('Name')] = knxSignal.signalName;
-    row[findCol('Type')] = formatBACnetType(objectType);
-    row[findCol('Instance')] = bacnetInstance;
-    row[findCol('Units')] = bacnetFields.units;
-    row[findCol('NC')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Texts')] = EXCEL_VALUES.EMPTY;
-    row[findCol('# States')] = bacnetFields.states;
-    row[findCol('Rel. Def.')] = bacnetFields.relDef;
-    row[findCol('COV')] = bacnetFields.cov;
+    // Populate BACnet Server Internal columns
+    populateBACnetColumns(row, knxSignal.signalName, knxSignal.description, objectType, bacnetInstance, bacnetFields, nextId);
 
-    // KNX columns (external protocol - from ETS)
-    const knxIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('COV')
-    );
-    if (knxIdCol >= 0) row[knxIdCol] = nextId;
-    row[findCol('DPT')] = dptFormatted;
-    row[findCol('Group Address')] = knxSignal.groupAddress;
-    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
-    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
-    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
-    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
-    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
-    row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
-    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+    // Populate KNX External columns
+    populateKNXColumns(row, dptFormatted, knxSignal.groupAddress, flags, nextId);
 
     signalsSheet.rows.push(row);
     rowsAdded++;
