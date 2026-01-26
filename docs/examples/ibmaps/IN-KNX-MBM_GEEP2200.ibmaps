@@ -1,0 +1,5487 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Platform="2" CreatedBy="IntesisMAPS" OEMCode="0,2" ProjectName="IN-KNX-MBM_GEEP2200.ibmaps" ProjectDescription="Intesis Modbus Master to KNX Gateway" DeviceOrderCode="IN701KNXxxx0000" ToolVersion="5.0.1217.9763" InternalProtocol="KNX" ExternalProtocol="Modbus Master">
+  <Columns>
+    <InternalColumns>
+      <Column Name="#" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Description" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="DPT" SignalsEnabled="True" DiangosticEnabled="True" Width="200" />
+      <Column Name="Group Address" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="Additional Addresses" SignalsEnabled="True" DiangosticEnabled="True" Width="130" />
+      <Column Name="U" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="T" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Ri" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="W" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="R" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Priority" SignalsEnabled="False" DiangosticEnabled="False" Width="70" />
+      <Column Name="Active" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+    </InternalColumns>
+    <ExternalColumns>
+      <Column ProtIndex="1" Name="#" SignalsEnabled="False" DiangosticEnabled="False" Width="55" />
+      <Column ProtIndex="1" Name="Device" SignalsEnabled="True" DiangosticEnabled="True" Width="140" />
+      <Column ProtIndex="1" Name="# Slave" SignalsEnabled="True" DiangosticEnabled="False" Width="70" />
+      <Column ProtIndex="1" Name="Base" SignalsEnabled="True" DiangosticEnabled="False" Width="70" />
+      <Column ProtIndex="1" Name="Read Func" SignalsEnabled="True" DiangosticEnabled="True" Width="150" />
+      <Column ProtIndex="1" Name="Write Func" SignalsEnabled="True" DiangosticEnabled="True" Width="150" />
+      <Column ProtIndex="1" Name="Data Length" SignalsEnabled="True" DiangosticEnabled="False" Width="55" />
+      <Column ProtIndex="1" Name="Format" SignalsEnabled="True" DiangosticEnabled="False" Width="100" />
+      <Column ProtIndex="1" Name="ByteOrder" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+      <Column ProtIndex="1" Name="Address" SignalsEnabled="True" DiangosticEnabled="True" Width="65" />
+      <Column ProtIndex="1" Name="Bit" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column ProtIndex="1" Name="# Bits" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column ProtIndex="1" Name="Deadband" SignalsEnabled="False" DiangosticEnabled="False" Width="70" />
+    </ExternalColumns>
+    <ExtraColumns>
+      <Column Name="Conv. Id" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Conversions" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+    </ExtraColumns>
+  </Columns>
+  <Connection Pwd="admin" isUSB="False" Device="" Port="23" />
+  <Header Description="Intesis Modbus Master to KNX Gateway" Version="1.2.26.0" CompatibilityVersion="0.0.0.0" CreationVersion="1.2.26.0" TimeStamp="-1" Endianess="False" LicenseMode="0" CompatibilityID="4" />
+  <IBOX Name="IN-KNX-MBM" IP="192.168.100.246" NetMask="255.255.255.0" Gateway="" DNS="" DNS2="" DHCP="True" Pwd="" ExtraProtocol="0">
+    <USBConfig GetLogs="True" GetProject="True" SaveProject="True" SaveFirm="True" SponsEnabled="True" CommsEnabled="True" DebugLevel="1" VerboseLevel="1" />
+    <TimeConfiguration Enabled="False" NtpAddress="" TimeZoneIndex="0" NtpUpdateTime="100" SetTimeInDownload="False" />
+    <SecurityConfiguration TCPDisabled="False" UDPDisabled="False" CustomPort="False" Port="23" />
+    <CertUpdateConfig CAUpdateDisabled="False" CAUpdatePeriod="168" CAUpdateUrl="https://api-tools.intesis.com/" />
+    <Conversions>
+      <Conversion Id="0" Description="Limit to 0-100" Type="0" Param1="2" Param2="4" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Limit to 0-255" Type="0" Param1="2" Param2="4" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="Is not 0" Type="0" Param1="0" Param2="1" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Is higher than 100" Type="0" Param1="0" Param2="3" Param3="100" Param4="100" />
+      <Conversion Id="0" Description="Only positive values" Type="0" Param1="2" Param2="3" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Celsius to Fahrenheit" Type="2" Param1="-1" Param2="18" Param3="32" Param4="0" />
+      <Conversion Id="0" Description="Fahrenheit to Celsius" Type="2" Param1="-3" Param2="555" Param3="-17.78" Param4="0" />
+      <Conversion Id="0" Description="x10" Type="2" Param1="1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/10" Type="2" Param1="-1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x100" Type="2" Param1="2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/100" Type="2" Param1="-2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x1000" Type="2" Param1="3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/1000" Type="2" Param1="-3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="0-100 to 0-255" Type="1" Param1="0" Param2="100" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="0-255 to 0-100" Type="1" Param1="0" Param2="255" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Conversion 0" Type="2" Param1="0" Param2="0.1" Param3="0" Param4="0" />
+    </Conversions>
+    <RemapLUTs />
+  </IBOX>
+  <InternalProtocol ProtocolType="KNX">
+    <IndAddress>65535</IndAddress>
+    <Keys Key1="0001" Key2="0002" Key3="0003" />
+    <UseExtendedAddresses>False</UseExtendedAddresses>
+    <KNXObject ID="0">
+      <Description>Comm Error Device 0</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="261" />
+      <SendingAddress Value="100" String="0/0/100" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>0</IdxExternal>
+      <IdxConfig>0</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="1">
+      <Description>Comm Error Device 1</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="261" />
+      <SendingAddress Value="101" String="0/0/101" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>1</IdxExternal>
+      <IdxConfig>1</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="2">
+      <Description>Comm Error Device 2</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="261" />
+      <SendingAddress Value="102" String="0/0/102" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>2</IdxExternal>
+      <IdxConfig>2</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="3">
+      <Description>On_Off_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="1" String="0/0/1" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>3</IdxExternal>
+      <IdxConfig>3</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="4">
+      <Description>On_Off_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="2" String="0/0/2" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>4</IdxExternal>
+      <IdxConfig>4</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="5">
+      <Description>On_Off_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="3" String="0/0/3" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>5</IdxExternal>
+      <IdxConfig>5</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="6">
+      <Description>Temp_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="4" String="0/0/4" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>6</IdxExternal>
+      <IdxConfig>6</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="7">
+      <Description>Temp_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="5" String="0/0/5" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>7</IdxExternal>
+      <IdxConfig>7</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="8">
+      <Description>Temp_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="6" String="0/0/6" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>8</IdxExternal>
+      <IdxConfig>8</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="9">
+      <Description>Counter_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="7" String="0/0/7" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>9</IdxExternal>
+      <IdxConfig>9</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="10">
+      <Description>Counter_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="8" String="0/0/8" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>10</IdxExternal>
+      <IdxConfig>10</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="11">
+      <Description>Counter_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="9" String="0/0/9" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>11</IdxExternal>
+      <IdxConfig>11</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="12">
+      <Description>Comm Error RTU Port B - GE_EPM2200_Meter_a</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="103" String="0/0/103" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>12</IdxExternal>
+      <IdxConfig>12</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="13">
+      <Description>Watts  3-Ph total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="3" String="0/0/3" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>13</IdxExternal>
+      <IdxConfig>13</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="14">
+      <Description>VARs  3-Ph total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="4" String="0/0/4" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>14</IdxExternal>
+      <IdxConfig>14</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="15">
+      <Description>VAs  3-Ph total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="5" String="0/0/5" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>15</IdxExternal>
+      <IdxConfig>15</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="16">
+      <Description>Volts A-N</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="6" String="0/0/6" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>16</IdxExternal>
+      <IdxConfig>16</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="17">
+      <Description>Volts B-N</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="7" String="0/0/7" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>17</IdxExternal>
+      <IdxConfig>17</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="18">
+      <Description>Volts C-N</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="8" String="0/0/8" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>18</IdxExternal>
+      <IdxConfig>18</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="19">
+      <Description>Volts A-B</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="9" String="0/0/9" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>19</IdxExternal>
+      <IdxConfig>19</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="20">
+      <Description>Volts B-C</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="10" String="0/0/10" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>20</IdxExternal>
+      <IdxConfig>20</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="21">
+      <Description>Volts C-A</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="11" String="0/0/11" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>21</IdxExternal>
+      <IdxConfig>21</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="22">
+      <Description>Amps A</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="12" String="0/0/12" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>22</IdxExternal>
+      <IdxConfig>22</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="23">
+      <Description>Amps B</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="13" String="0/0/13" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>23</IdxExternal>
+      <IdxConfig>23</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="24">
+      <Description>Amps C</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="14" String="0/0/14" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>24</IdxExternal>
+      <IdxConfig>24</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="25">
+      <Description>Watts  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="15" String="0/0/15" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>25</IdxExternal>
+      <IdxConfig>25</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="26">
+      <Description>VARs  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="16" String="0/0/16" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>26</IdxExternal>
+      <IdxConfig>26</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="27">
+      <Description>VAs  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="17" String="0/0/17" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>27</IdxExternal>
+      <IdxConfig>27</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="28">
+      <Description>Power Factor  3-Ph total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="18" String="0/0/18" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>28</IdxExternal>
+      <IdxConfig>28</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="29">
+      <Description>Frequency</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3617" />
+      <SendingAddress Value="19" String="0/0/19" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>29</IdxExternal>
+      <IdxConfig>29</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="30">
+      <Description>Neutral Current</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="20" String="0/0/20" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>30</IdxExternal>
+      <IdxConfig>30</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="31">
+      <Description>W-hours  Received</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="21" String="0/0/21" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>31</IdxExternal>
+      <IdxConfig>31</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="32">
+      <Description>W-hours  Delivered</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="22" String="0/0/22" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>32</IdxExternal>
+      <IdxConfig>32</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="33">
+      <Description>W-hours  Net</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="23" String="0/0/23" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>33</IdxExternal>
+      <IdxConfig>33</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="34">
+      <Description>W-hours  Total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="24" String="0/0/24" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>34</IdxExternal>
+      <IdxConfig>34</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="35">
+      <Description>VAR-hours  Positive</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="25" String="0/0/25" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>35</IdxExternal>
+      <IdxConfig>35</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="36">
+      <Description>VAR-hours  Negative</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="26" String="0/0/26" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>36</IdxExternal>
+      <IdxConfig>36</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="37">
+      <Description>VAR-hours  Net</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="27" String="0/0/27" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>37</IdxExternal>
+      <IdxConfig>37</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="38">
+      <Description>VAR-hours  Total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="28" String="0/0/28" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>38</IdxExternal>
+      <IdxConfig>38</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="39">
+      <Description>VA-hours  Total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3583" />
+      <SendingAddress Value="29" String="0/0/29" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>39</IdxExternal>
+      <IdxConfig>39</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="40">
+      <Description>Amps A  Average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="30" String="0/0/30" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>40</IdxExternal>
+      <IdxConfig>40</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="41">
+      <Description>Amps B  Average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="31" String="0/0/31" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>41</IdxExternal>
+      <IdxConfig>41</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="42">
+      <Description>Amps C  Average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="32" String="0/0/32" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>42</IdxExternal>
+      <IdxConfig>42</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="43">
+      <Description>Positive Watts  3-Ph average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="33" String="0/0/33" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>43</IdxExternal>
+      <IdxConfig>43</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="44">
+      <Description>Positive VARs  3-Ph average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="34" String="0/0/34" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>44</IdxExternal>
+      <IdxConfig>44</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="45">
+      <Description>Negative Watts  3-Ph average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="35" String="0/0/35" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>45</IdxExternal>
+      <IdxConfig>45</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="46">
+      <Description>Negative VARs  3-Ph average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="36" String="0/0/36" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>46</IdxExternal>
+      <IdxConfig>46</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="47">
+      <Description>VAs  3-Ph  Average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="37" String="0/0/37" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>47</IdxExternal>
+      <IdxConfig>47</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="48">
+      <Description>Positive PF  3-Ph average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="38" String="0/0/38" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>48</IdxExternal>
+      <IdxConfig>48</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="49">
+      <Description>Negative PF  3-PF average</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="39" String="0/0/39" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>49</IdxExternal>
+      <IdxConfig>49</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="50">
+      <Description>Volts A-N  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="40" String="0/0/40" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>50</IdxExternal>
+      <IdxConfig>50</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="51">
+      <Description>Volts B-N  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="41" String="0/0/41" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>51</IdxExternal>
+      <IdxConfig>51</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="52">
+      <Description>Volts C-N  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="42" String="0/0/42" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>52</IdxExternal>
+      <IdxConfig>52</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="53">
+      <Description>Volts A-B  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="43" String="0/0/43" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>53</IdxExternal>
+      <IdxConfig>53</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="54">
+      <Description>Volts B-C  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="44" String="0/0/44" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>54</IdxExternal>
+      <IdxConfig>54</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="55">
+      <Description>Volts C-A  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="45" String="0/0/45" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>55</IdxExternal>
+      <IdxConfig>55</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="56">
+      <Description>Amps A  Minimum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="46" String="0/0/46" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>56</IdxExternal>
+      <IdxConfig>56</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="57">
+      <Description>Amps B  Minimum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="47" String="0/0/47" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>57</IdxExternal>
+      <IdxConfig>57</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="58">
+      <Description>Amps C  Minimum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="48" String="0/0/48" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>58</IdxExternal>
+      <IdxConfig>58</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="59">
+      <Description>Positive Watts  3-Ph Minimum Ave</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="49" String="0/0/49" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>59</IdxExternal>
+      <IdxConfig>59</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="60">
+      <Description>Positive VARs  3-Ph Minimum Aver</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="50" String="0/0/50" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>60</IdxExternal>
+      <IdxConfig>60</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="61">
+      <Description>Negative Watts  3-Ph Minimum Ave</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="51" String="0/0/51" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>61</IdxExternal>
+      <IdxConfig>61</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="62">
+      <Description>Negative VARs  3-Ph Minimum Aver</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="52" String="0/0/52" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>62</IdxExternal>
+      <IdxConfig>62</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="63">
+      <Description>VAs  3-Ph  Minimum Avg Demand </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="53" String="0/0/53" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>63</IdxExternal>
+      <IdxConfig>63</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="64">
+      <Description>Positive Power Factor 3-Ph  Mini</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="54" String="0/0/54" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>64</IdxExternal>
+      <IdxConfig>64</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="65">
+      <Description>Negative Power Factor 3-Ph  Mini</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="55" String="0/0/55" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>65</IdxExternal>
+      <IdxConfig>65</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="66">
+      <Description>Frequency  Minimum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3617" />
+      <SendingAddress Value="56" String="0/0/56" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>66</IdxExternal>
+      <IdxConfig>66</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="67">
+      <Description>Volts A-N  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="57" String="0/0/57" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>67</IdxExternal>
+      <IdxConfig>67</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="68">
+      <Description>Volts B-N  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="58" String="0/0/58" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>68</IdxExternal>
+      <IdxConfig>68</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="69">
+      <Description>Volts C-N  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="59" String="0/0/59" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>69</IdxExternal>
+      <IdxConfig>69</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="70">
+      <Description>Volts A-B  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="60" String="0/0/60" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>70</IdxExternal>
+      <IdxConfig>70</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="71">
+      <Description>Volts B-C  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="61" String="0/0/61" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>71</IdxExternal>
+      <IdxConfig>71</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="72">
+      <Description>Volts C-A  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="62" String="0/0/62" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>72</IdxExternal>
+      <IdxConfig>72</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="73">
+      <Description>Amps A  Maximum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="63" String="0/0/63" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>73</IdxExternal>
+      <IdxConfig>73</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="74">
+      <Description>Amps B  Maximum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="64" String="0/0/64" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>74</IdxExternal>
+      <IdxConfig>74</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="75">
+      <Description>Amps C  Maximum Avg demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="65" String="0/0/65" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>75</IdxExternal>
+      <IdxConfig>75</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="76">
+      <Description>Positive Watts  3-Ph Maximum Avg</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="66" String="0/0/66" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>76</IdxExternal>
+      <IdxConfig>76</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="77">
+      <Description>Positive VARs  3-Ph Maximum Avg </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="67" String="0/0/67" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>77</IdxExternal>
+      <IdxConfig>77</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="78">
+      <Description>Negative Watts  3-Ph Maximum Avg</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="68" String="0/0/68" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>78</IdxExternal>
+      <IdxConfig>78</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="79">
+      <Description>Negative VARs  3-Ph Maximum Avg </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="69" String="0/0/69" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>79</IdxExternal>
+      <IdxConfig>79</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="80">
+      <Description>VAs  3-Ph  Maximum Avg Demand</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3839" />
+      <SendingAddress Value="70" String="0/0/70" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>80</IdxExternal>
+      <IdxConfig>80</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="81">
+      <Description>Positive Power Factor 3-Ph  Maxi</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="71" String="0/0/71" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>81</IdxExternal>
+      <IdxConfig>81</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="82">
+      <Description>Negative Power Factor 3-Ph  Maxi</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="72" String="0/0/72" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>82</IdxExternal>
+      <IdxConfig>82</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="83">
+      <Description>Frequency  Maximum</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3617" />
+      <SendingAddress Value="73" String="0/0/73" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>83</IdxExternal>
+      <IdxConfig>83</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="84">
+      <Description>Phase A Current</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="74" String="0/0/74" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>84</IdxExternal>
+      <IdxConfig>84</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="85">
+      <Description>Phase B Current</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="75" String="0/0/75" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>85</IdxExternal>
+      <IdxConfig>85</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="86">
+      <Description>Phase C Current</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="76" String="0/0/76" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>86</IdxExternal>
+      <IdxConfig>86</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="87">
+      <Description>Angle  Volts A-B</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="77" String="0/0/77" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>87</IdxExternal>
+      <IdxConfig>87</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="88">
+      <Description>Angle  Volts B-C</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="78" String="0/0/78" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>88</IdxExternal>
+      <IdxConfig>88</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="89">
+      <Description>Angle  Volts C-A</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3639" />
+      <SendingAddress Value="79" String="0/0/79" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>89</IdxExternal>
+      <IdxConfig>89</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="90">
+      <Description>Meter Status</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="80" String="0/0/80" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>90</IdxExternal>
+      <IdxConfig>90</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="91">
+      <Description>Time Since Reset</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3327" />
+      <SendingAddress Value="81" String="0/0/81" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>91</IdxExternal>
+      <IdxConfig>91</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="92">
+      <Description>System Sanity Indicator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="82" String="0/0/82" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>92</IdxExternal>
+      <IdxConfig>92</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="93">
+      <Description>Volts A-N *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="83" String="0/0/83" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>93</IdxExternal>
+      <IdxConfig>93</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="94">
+      <Description>Volts B-N *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="84" String="0/0/84" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>94</IdxExternal>
+      <IdxConfig>94</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="95">
+      <Description>Volts C-N *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="85" String="0/0/85" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>95</IdxExternal>
+      <IdxConfig>95</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="96">
+      <Description>Amps A *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="86" String="0/0/86" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>96</IdxExternal>
+      <IdxConfig>96</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="97">
+      <Description>Amps B *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="87" String="0/0/87" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>97</IdxExternal>
+      <IdxConfig>97</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="98">
+      <Description>Amps C *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="88" String="0/0/88" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>98</IdxExternal>
+      <IdxConfig>98</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="99">
+      <Description>Watts  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3640" />
+      <SendingAddress Value="89" String="0/0/89" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>99</IdxExternal>
+      <IdxConfig>99</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="100">
+      <Description>VARs  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="90" String="0/0/90" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>100</IdxExternal>
+      <IdxConfig>100</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="101">
+      <Description>VAs  3-Ph total *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="91" String="0/0/91" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>101</IdxExternal>
+      <IdxConfig>101</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="102">
+      <Description>Power Factor  3-Ph Total</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3641" />
+      <SendingAddress Value="92" String="0/0/92" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>102</IdxExternal>
+      <IdxConfig>102</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="103">
+      <Description>Frequency  *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3617" />
+      <SendingAddress Value="93" String="0/0/93" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>103</IdxExternal>
+      <IdxConfig>103</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="104">
+      <Description>Volts A-B *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="94" String="0/0/94" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>104</IdxExternal>
+      <IdxConfig>104</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="105">
+      <Description>Volts B-C *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="95" String="0/0/95" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>105</IdxExternal>
+      <IdxConfig>105</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="106">
+      <Description>Volts C-A *</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3612" />
+      <SendingAddress Value="96" String="0/0/96" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>106</IdxExternal>
+      <IdxConfig>106</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="107">
+      <Description>CT numerator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="97" String="0/0/97" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>107</IdxExternal>
+      <IdxConfig>107</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="108">
+      <Description>CT multiplier</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="98" String="0/0/98" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>108</IdxExternal>
+      <IdxConfig>108</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="109">
+      <Description>CT denominator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="99" String="0/0/99" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>109</IdxExternal>
+      <IdxConfig>109</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="110">
+      <Description>PT numerator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="100" String="0/0/100" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>110</IdxExternal>
+      <IdxConfig>110</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="111">
+      <Description>PT multiplier</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="101" String="0/0/101" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>111</IdxExternal>
+      <IdxConfig>111</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="112">
+      <Description>PT denominator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="102" String="0/0/102" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>112</IdxExternal>
+      <IdxConfig>112</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="113">
+      <Description>W-hours  Positive</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3338" />
+      <SendingAddress Value="103" String="0/0/103" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>113</IdxExternal>
+      <IdxConfig>113</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="114">
+      <Description>W-hours  Negative</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3338" />
+      <SendingAddress Value="104" String="0/0/104" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>114</IdxExternal>
+      <IdxConfig>114</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="115">
+      <Description>VAR-hours  Positive</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3327" />
+      <SendingAddress Value="105" String="0/0/105" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>115</IdxExternal>
+      <IdxConfig>115</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="116">
+      <Description>VAR-hours  Negative</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3327" />
+      <SendingAddress Value="106" String="0/0/106" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>116</IdxExternal>
+      <IdxConfig>116</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="117">
+      <Description>VA-hours</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3338" />
+      <SendingAddress Value="107" String="0/0/107" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>117</IdxExternal>
+      <IdxConfig>117</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="118">
+      <Description>Neutral Current</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="3603" />
+      <SendingAddress Value="108" String="0/0/108" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>118</IdxExternal>
+      <IdxConfig>118</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="119">
+      <Description>Reset Energy Accumulator</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="109" String="0/0/109" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>119</IdxExternal>
+      <IdxConfig>119</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="120">
+      <Description>Meter Name ASCII 1 and 2</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="110" String="0/0/110" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>120</IdxExternal>
+      <IdxConfig>120</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="121">
+      <Description>Meter Name ASCII 3 and 4</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="111" String="0/0/111" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>121</IdxExternal>
+      <IdxConfig>121</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="122">
+      <Description>Meter Name ASCII 5 and 6</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="112" String="0/0/112" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>122</IdxExternal>
+      <IdxConfig>122</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="123">
+      <Description>Meter Name ASCII 7 and 8</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="113" String="0/0/113" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>123</IdxExternal>
+      <IdxConfig>123</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="124">
+      <Description>Meter Name ASCII 9 and 10</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="114" String="0/0/114" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>124</IdxExternal>
+      <IdxConfig>124</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="125">
+      <Description>Meter Name ASCII 11 and 12</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="115" String="0/0/115" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>125</IdxExternal>
+      <IdxConfig>125</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="126">
+      <Description>Meter Name ASCII 13 and 14</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="116" String="0/0/116" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>126</IdxExternal>
+      <IdxConfig>126</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="127">
+      <Description>Meter Name ASCII 15 and 16</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="117" String="0/0/117" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>127</IdxExternal>
+      <IdxConfig>127</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="128">
+      <Description>Meter Serial Number ASCII 1 and </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="118" String="0/0/118" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>128</IdxExternal>
+      <IdxConfig>128</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="129">
+      <Description>Meter Serial Number ASCII 3 and </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="119" String="0/0/119" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>129</IdxExternal>
+      <IdxConfig>129</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="130">
+      <Description>Meter Serial Number ASCII 5 and </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="120" String="0/0/120" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>130</IdxExternal>
+      <IdxConfig>130</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="131">
+      <Description>Meter Serial Number ASCII 7 and </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="121" String="0/0/121" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>131</IdxExternal>
+      <IdxConfig>131</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="132">
+      <Description>Meter Serial Number ASCII 9 and </Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="122" String="0/0/122" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>132</IdxExternal>
+      <IdxConfig>132</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="133">
+      <Description>Meter Serial Number ASCII 11 and</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="123" String="0/0/123" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>133</IdxExternal>
+      <IdxConfig>133</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="134">
+      <Description>Meter Serial Number ASCII 13 and</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="124" String="0/0/124" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>134</IdxExternal>
+      <IdxConfig>134</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="135">
+      <Description>Meter Serial Number ASCII 15 and</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="125" String="0/0/125" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>135</IdxExternal>
+      <IdxConfig>135</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="136">
+      <Description>Meter Type</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="126" String="0/0/126" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>136</IdxExternal>
+      <IdxConfig>136</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="137">
+      <Description>Firmware Version ASCII 1 and 2</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="127" String="0/0/127" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>137</IdxExternal>
+      <IdxConfig>137</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="138">
+      <Description>Firmware Version ASCII 3 and 4</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="128" String="0/0/128" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>138</IdxExternal>
+      <IdxConfig>138</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="139">
+      <Description>Map Version</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="129" String="0/0/129" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>139</IdxExternal>
+      <IdxConfig>139</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="140">
+      <Description>Meter Configuration</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="130" String="0/0/130" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>140</IdxExternal>
+      <IdxConfig>140</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="141">
+      <Description>ASIC Version</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="131" String="0/0/131" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>141</IdxExternal>
+      <IdxConfig>141</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="142">
+      <Description>OEM Part Number ASCII 1 and 2</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="132" String="0/0/132" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>142</IdxExternal>
+      <IdxConfig>142</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="143">
+      <Description>OEM Part Number ASCII 3 and 4</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="133" String="0/0/133" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>143</IdxExternal>
+      <IdxConfig>143</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="144">
+      <Description>OEM Part Number ASCII 5 and 6</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="134" String="0/0/134" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>144</IdxExternal>
+      <IdxConfig>144</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="145">
+      <Description>OEM Part Number ASCII 7 and 8</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="135" String="0/0/135" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>145</IdxExternal>
+      <IdxConfig>145</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="146">
+      <Description>OEM Part Number ASCII 9 and 10</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="136" String="0/0/136" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>146</IdxExternal>
+      <IdxConfig>146</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="147">
+      <Description>OEM Part Number ASCII 11 and 12</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="137" String="0/0/137" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>147</IdxExternal>
+      <IdxConfig>147</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="148">
+      <Description>OEM Part Number ASCII 13 and 14</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="138" String="0/0/138" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>148</IdxExternal>
+      <IdxConfig>148</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="149">
+      <Description>OEM Part Number ASCII 15 and 16</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2047" />
+      <SendingAddress Value="139" String="0/0/139" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>149</IdxExternal>
+      <IdxConfig>149</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </KNXObject>
+  </InternalProtocol>
+  <ExternalProtocol ProtocolType="Modbus Master">
+    <Enabled>True</Enabled>
+    <Media>0</Media>
+    <Deadband>0</Deadband>
+    <PollRecords Enabled="False" UseMissingReg="False" MaxRegisters="100" />
+    <RtuNodes>
+      <RtuNode Baudrate="9600" DataBits="8" Parity="0" StopBits="1" TimeInterFrame="60" PhysicalPort="0" PollAfterWrite="False" PollReadSignal="False">
+        <Device Index="0" Name="Device 0" Manufacturer="" SlaveNum="10" BaseRegister="0" Timeout="1000" Enabled="True" />
+        <Device Index="1" Name="Device 1" Manufacturer="" SlaveNum="11" BaseRegister="0" Timeout="1000" Enabled="True" />
+        <Device Index="2" Name="Device 2" Manufacturer="" SlaveNum="12" BaseRegister="0" Timeout="1000" Enabled="True" />
+        <Device Index="3" Name="GE_EPM2200_Meter_a" Manufacturer="GE" SlaveNum="1" BaseRegister="0" Timeout="1000" Enabled="True" />
+      </RtuNode>
+    </RtuNodes>
+    <TCPNodes />
+    <Signals>
+      <Signal ID="0">
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="1">
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="2">
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="3">
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="4">
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>5</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="5">
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>1</ReadFunc>
+        <WriteFunc>5</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="6">
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="7">
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>6</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="8">
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>6</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="9">
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="10">
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>16</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="11">
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>16</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>4</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="12">
+        <idxConfig>12</idxConfig>
+        <idxExternal>12</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>255</ReadFunc>
+        <WriteFunc>255</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="13">
+        <idxConfig>13</idxConfig>
+        <idxExternal>13</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>900</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="14">
+        <idxConfig>14</idxConfig>
+        <idxExternal>14</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>902</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="15">
+        <idxConfig>15</idxConfig>
+        <idxExternal>15</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>904</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="16">
+        <idxConfig>16</idxConfig>
+        <idxExternal>16</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1000</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="17">
+        <idxConfig>17</idxConfig>
+        <idxExternal>17</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1002</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="18">
+        <idxConfig>18</idxConfig>
+        <idxExternal>18</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1004</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="19">
+        <idxConfig>19</idxConfig>
+        <idxExternal>19</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1006</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="20">
+        <idxConfig>20</idxConfig>
+        <idxExternal>20</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1008</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="21">
+        <idxConfig>21</idxConfig>
+        <idxExternal>21</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1010</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="22">
+        <idxConfig>22</idxConfig>
+        <idxExternal>22</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1012</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="23">
+        <idxConfig>23</idxConfig>
+        <idxExternal>23</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1014</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="24">
+        <idxConfig>24</idxConfig>
+        <idxExternal>24</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1016</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="25">
+        <idxConfig>25</idxConfig>
+        <idxExternal>25</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1018</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="26">
+        <idxConfig>26</idxConfig>
+        <idxExternal>26</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1020</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="27">
+        <idxConfig>27</idxConfig>
+        <idxExternal>27</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1022</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="28">
+        <idxConfig>28</idxConfig>
+        <idxExternal>28</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1024</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="29">
+        <idxConfig>29</idxConfig>
+        <idxExternal>29</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1026</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="30">
+        <idxConfig>30</idxConfig>
+        <idxExternal>30</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1028</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="31">
+        <idxConfig>31</idxConfig>
+        <idxExternal>31</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1100</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="32">
+        <idxConfig>32</idxConfig>
+        <idxExternal>32</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1102</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="33">
+        <idxConfig>33</idxConfig>
+        <idxExternal>33</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1104</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="34">
+        <idxConfig>34</idxConfig>
+        <idxExternal>34</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1106</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="35">
+        <idxConfig>35</idxConfig>
+        <idxExternal>35</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1108</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="36">
+        <idxConfig>36</idxConfig>
+        <idxExternal>36</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1110</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="37">
+        <idxConfig>37</idxConfig>
+        <idxExternal>37</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1112</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="38">
+        <idxConfig>38</idxConfig>
+        <idxExternal>38</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1114</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="39">
+        <idxConfig>39</idxConfig>
+        <idxExternal>39</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1116</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="40">
+        <idxConfig>40</idxConfig>
+        <idxExternal>40</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2000</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="41">
+        <idxConfig>41</idxConfig>
+        <idxExternal>41</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2002</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="42">
+        <idxConfig>42</idxConfig>
+        <idxExternal>42</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2004</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="43">
+        <idxConfig>43</idxConfig>
+        <idxExternal>43</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2006</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="44">
+        <idxConfig>44</idxConfig>
+        <idxExternal>44</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2008</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="45">
+        <idxConfig>45</idxConfig>
+        <idxExternal>45</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2010</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="46">
+        <idxConfig>46</idxConfig>
+        <idxExternal>46</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2012</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="47">
+        <idxConfig>47</idxConfig>
+        <idxExternal>47</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2014</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="48">
+        <idxConfig>48</idxConfig>
+        <idxExternal>48</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2016</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="49">
+        <idxConfig>49</idxConfig>
+        <idxExternal>49</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2018</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="50">
+        <idxConfig>50</idxConfig>
+        <idxExternal>50</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3000</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="51">
+        <idxConfig>51</idxConfig>
+        <idxExternal>51</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3002</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="52">
+        <idxConfig>52</idxConfig>
+        <idxExternal>52</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3004</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="53">
+        <idxConfig>53</idxConfig>
+        <idxExternal>53</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3006</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="54">
+        <idxConfig>54</idxConfig>
+        <idxExternal>54</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3008</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="55">
+        <idxConfig>55</idxConfig>
+        <idxExternal>55</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3010</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="56">
+        <idxConfig>56</idxConfig>
+        <idxExternal>56</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3012</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="57">
+        <idxConfig>57</idxConfig>
+        <idxExternal>57</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3014</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="58">
+        <idxConfig>58</idxConfig>
+        <idxExternal>58</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3016</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="59">
+        <idxConfig>59</idxConfig>
+        <idxExternal>59</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3018</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="60">
+        <idxConfig>60</idxConfig>
+        <idxExternal>60</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3020</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="61">
+        <idxConfig>61</idxConfig>
+        <idxExternal>61</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3022</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="62">
+        <idxConfig>62</idxConfig>
+        <idxExternal>62</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3024</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="63">
+        <idxConfig>63</idxConfig>
+        <idxExternal>63</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3026</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="64">
+        <idxConfig>64</idxConfig>
+        <idxExternal>64</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3028</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="65">
+        <idxConfig>65</idxConfig>
+        <idxExternal>65</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3030</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="66">
+        <idxConfig>66</idxConfig>
+        <idxExternal>66</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3032</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="67">
+        <idxConfig>67</idxConfig>
+        <idxExternal>67</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3100</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="68">
+        <idxConfig>68</idxConfig>
+        <idxExternal>68</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3102</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="69">
+        <idxConfig>69</idxConfig>
+        <idxExternal>69</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3104</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="70">
+        <idxConfig>70</idxConfig>
+        <idxExternal>70</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3106</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="71">
+        <idxConfig>71</idxConfig>
+        <idxExternal>71</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3108</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="72">
+        <idxConfig>72</idxConfig>
+        <idxExternal>72</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3110</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="73">
+        <idxConfig>73</idxConfig>
+        <idxExternal>73</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3112</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="74">
+        <idxConfig>74</idxConfig>
+        <idxExternal>74</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3114</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="75">
+        <idxConfig>75</idxConfig>
+        <idxExternal>75</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3116</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="76">
+        <idxConfig>76</idxConfig>
+        <idxExternal>76</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3118</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="77">
+        <idxConfig>77</idxConfig>
+        <idxExternal>77</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3120</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="78">
+        <idxConfig>78</idxConfig>
+        <idxExternal>78</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3122</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="79">
+        <idxConfig>79</idxConfig>
+        <idxExternal>79</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3124</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="80">
+        <idxConfig>80</idxConfig>
+        <idxExternal>80</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3126</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="81">
+        <idxConfig>81</idxConfig>
+        <idxExternal>81</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3128</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="82">
+        <idxConfig>82</idxConfig>
+        <idxExternal>82</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3130</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="83">
+        <idxConfig>83</idxConfig>
+        <idxExternal>83</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3132</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="84">
+        <idxConfig>84</idxConfig>
+        <idxExternal>84</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4100</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="85">
+        <idxConfig>85</idxConfig>
+        <idxExternal>85</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4101</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="86">
+        <idxConfig>86</idxConfig>
+        <idxExternal>86</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4102</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="87">
+        <idxConfig>87</idxConfig>
+        <idxExternal>87</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4103</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="88">
+        <idxConfig>88</idxConfig>
+        <idxExternal>88</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4104</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="89">
+        <idxConfig>89</idxConfig>
+        <idxExternal>89</idxExternal>
+        <IdxOperations>10,0</IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>1</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4105</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="90">
+        <idxConfig>90</idxConfig>
+        <idxExternal>90</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>5000</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="91">
+        <idxConfig>91</idxConfig>
+        <idxExternal>91</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>5002</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="92">
+        <idxConfig>92</idxConfig>
+        <idxExternal>92</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40001</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="93">
+        <idxConfig>93</idxConfig>
+        <idxExternal>93</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40002</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="94">
+        <idxConfig>94</idxConfig>
+        <idxExternal>94</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40003</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="95">
+        <idxConfig>95</idxConfig>
+        <idxExternal>95</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40004</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="96">
+        <idxConfig>96</idxConfig>
+        <idxExternal>96</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40005</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="97">
+        <idxConfig>97</idxConfig>
+        <idxExternal>97</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40006</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="98">
+        <idxConfig>98</idxConfig>
+        <idxExternal>98</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40007</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="99">
+        <idxConfig>99</idxConfig>
+        <idxExternal>99</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40008</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="100">
+        <idxConfig>100</idxConfig>
+        <idxExternal>100</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40009</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="101">
+        <idxConfig>101</idxConfig>
+        <idxExternal>101</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40010</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="102">
+        <idxConfig>102</idxConfig>
+        <idxExternal>102</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40011</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="103">
+        <idxConfig>103</idxConfig>
+        <idxExternal>103</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40012</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="104">
+        <idxConfig>104</idxConfig>
+        <idxExternal>104</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40013</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="105">
+        <idxConfig>105</idxConfig>
+        <idxExternal>105</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40014</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="106">
+        <idxConfig>106</idxConfig>
+        <idxExternal>106</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40015</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="107">
+        <idxConfig>107</idxConfig>
+        <idxExternal>107</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40016</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="108">
+        <idxConfig>108</idxConfig>
+        <idxExternal>108</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40017</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="109">
+        <idxConfig>109</idxConfig>
+        <idxExternal>109</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40018</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="110">
+        <idxConfig>110</idxConfig>
+        <idxExternal>110</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40019</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="111">
+        <idxConfig>111</idxConfig>
+        <idxExternal>111</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40020</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="112">
+        <idxConfig>112</idxConfig>
+        <idxExternal>112</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40021</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="113">
+        <idxConfig>113</idxConfig>
+        <idxExternal>113</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40022</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="114">
+        <idxConfig>114</idxConfig>
+        <idxExternal>114</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40024</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="115">
+        <idxConfig>115</idxConfig>
+        <idxExternal>115</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40026</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="116">
+        <idxConfig>116</idxConfig>
+        <idxExternal>116</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40028</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="117">
+        <idxConfig>117</idxConfig>
+        <idxExternal>117</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40030</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="118">
+        <idxConfig>118</idxConfig>
+        <idxExternal>118</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40032</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="119">
+        <idxConfig>119</idxConfig>
+        <idxExternal>119</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>6</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40100</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="120">
+        <idxConfig>120</idxConfig>
+        <idxExternal>120</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="121">
+        <idxConfig>121</idxConfig>
+        <idxExternal>121</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="122">
+        <idxConfig>122</idxConfig>
+        <idxExternal>122</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>3</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="123">
+        <idxConfig>123</idxConfig>
+        <idxExternal>123</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>4</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="124">
+        <idxConfig>124</idxConfig>
+        <idxExternal>124</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>5</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="125">
+        <idxConfig>125</idxConfig>
+        <idxExternal>125</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>6</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="126">
+        <idxConfig>126</idxConfig>
+        <idxExternal>126</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>7</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="127">
+        <idxConfig>127</idxConfig>
+        <idxExternal>127</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>8</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="128">
+        <idxConfig>128</idxConfig>
+        <idxExternal>128</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>9</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="129">
+        <idxConfig>129</idxConfig>
+        <idxExternal>129</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>10</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="130">
+        <idxConfig>130</idxConfig>
+        <idxExternal>130</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>11</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="131">
+        <idxConfig>131</idxConfig>
+        <idxExternal>131</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>12</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="132">
+        <idxConfig>132</idxConfig>
+        <idxExternal>132</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>13</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="133">
+        <idxConfig>133</idxConfig>
+        <idxExternal>133</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>14</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="134">
+        <idxConfig>134</idxConfig>
+        <idxExternal>134</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>15</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="135">
+        <idxConfig>135</idxConfig>
+        <idxExternal>135</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>16</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="136">
+        <idxConfig>136</idxConfig>
+        <idxExternal>136</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>17</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="137">
+        <idxConfig>137</idxConfig>
+        <idxExternal>137</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>18</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="138">
+        <idxConfig>138</idxConfig>
+        <idxExternal>138</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>19</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="139">
+        <idxConfig>139</idxConfig>
+        <idxExternal>139</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>20</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="140">
+        <idxConfig>140</idxConfig>
+        <idxExternal>140</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>21</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="141">
+        <idxConfig>141</idxConfig>
+        <idxExternal>141</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>22</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="142">
+        <idxConfig>142</idxConfig>
+        <idxExternal>142</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>40</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="143">
+        <idxConfig>143</idxConfig>
+        <idxExternal>143</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>41</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="144">
+        <idxConfig>144</idxConfig>
+        <idxExternal>144</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>42</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="145">
+        <idxConfig>145</idxConfig>
+        <idxExternal>145</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>43</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="146">
+        <idxConfig>146</idxConfig>
+        <idxExternal>146</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>44</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="147">
+        <idxConfig>147</idxConfig>
+        <idxExternal>147</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>45</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="148">
+        <idxConfig>148</idxConfig>
+        <idxExternal>148</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>46</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="149">
+        <idxConfig>149</idxConfig>
+        <idxExternal>149</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>3</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>-1</NumOfBits>
+        <Address>47</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+    </Signals>
+  </ExternalProtocol>
+</Project>

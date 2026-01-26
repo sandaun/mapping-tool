@@ -1,0 +1,1248 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Platform="2" CreatedBy="IntesisMAPS" OEMCode="0" ProjectName="IN-MBS-BAC_signals.ibmaps" ProjectDescription="Intesis BACnet Client to Modbus Slave Gateway" DeviceOrderCode="IN700485xxx0000" ToolVersion="5.0.1217.9763" InternalProtocol="Modbus Slave" ExternalProtocol="BACnet Client">
+  <Columns>
+    <InternalColumns>
+      <Column Name="#" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Description" SignalsEnabled="True" DiangosticEnabled="True" Width="250" />
+      <Column Name="Data Length" SignalsEnabled="True" DiangosticEnabled="False" Width="55" />
+      <Column Name="Format" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="Address" SignalsEnabled="True" DiangosticEnabled="True" Width="65" />
+      <Column Name="Bit" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column Name="Read / Write" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="String Length" SignalsEnabled="False" DiangosticEnabled="False" Width="55" />
+      <Column Name="Active" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+    </InternalColumns>
+    <ExternalColumns>
+      <Column ProtIndex="7" Name="#" SignalsEnabled="False" DiangosticEnabled="False" Width="25" />
+      <Column ProtIndex="7" Name="Device Name" SignalsEnabled="True" DiangosticEnabled="True" Width="120" />
+      <Column ProtIndex="7" Name="Type" SignalsEnabled="True" DiangosticEnabled="True" Width="70" />
+      <Column ProtIndex="7" Name="Instance" SignalsEnabled="True" DiangosticEnabled="True" Width="60" />
+    </ExternalColumns>
+    <ExtraColumns>
+      <Column Name="Conv. Id" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Conversions" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+    </ExtraColumns>
+  </Columns>
+  <Connection Pwd="admin" isUSB="False" Device="" Port="23" />
+  <Header Description="Intesis BACnet Client to Modbus Slave Gateway" Version="1.2.26.0" CompatibilityVersion="0.0.0.0" CreationVersion="1.2.26.0" TimeStamp="-1" Endianess="False" LicenseMode="0" CompatibilityID="19" />
+  <IBOX Name="IN-MBS-BAC" IP="192.168.100.246" NetMask="255.255.255.0" Gateway="" DNS="" DNS2="" DHCP="True" Pwd="" ExtraProtocol="0">
+    <USBConfig GetLogs="True" GetProject="True" SaveProject="True" SaveFirm="True" SponsEnabled="True" CommsEnabled="True" DebugLevel="1" VerboseLevel="1" />
+    <TimeConfiguration Enabled="False" NtpAddress="" TimeZoneIndex="0" NtpUpdateTime="100" SetTimeInDownload="False" />
+    <SecurityConfiguration TCPDisabled="False" UDPDisabled="False" CustomPort="False" Port="23" />
+    <CertUpdateConfig CAUpdateDisabled="False" CAUpdatePeriod="168" CAUpdateUrl="https://api-tools.intesis.com/" />
+    <Conversions>
+      <Conversion Id="0" Description="Limit to 0-100" Type="0" Param1="2" Param2="4" Param3="0" Param4="100" />
+      <Conversion Id="1" Description="Limit to 0-255" Type="0" Param1="2" Param2="4" Param3="0" Param4="255" />
+      <Conversion Id="2" Description="Is not 0" Type="0" Param1="0" Param2="1" Param3="0" Param4="100" />
+      <Conversion Id="3" Description="Is higher than 100" Type="0" Param1="0" Param2="3" Param3="100" Param4="100" />
+      <Conversion Id="4" Description="Only positive values" Type="0" Param1="2" Param2="3" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Celsius to Fahrenheit" Type="2" Param1="-1" Param2="18" Param3="32" Param4="0" />
+      <Conversion Id="1" Description="Fahrenheit to Celsius" Type="2" Param1="-3" Param2="555" Param3="-17.78" Param4="0" />
+      <Conversion Id="2" Description="x10" Type="2" Param1="1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="3" Description="/10" Type="2" Param1="-1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="4" Description="x100" Type="2" Param1="2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="5" Description="/100" Type="2" Param1="-2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="6" Description="x1000" Type="2" Param1="3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="7" Description="/1000" Type="2" Param1="-3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="8" Description="0-100 to 0-255" Type="1" Param1="0" Param2="100" Param3="0" Param4="255" />
+      <Conversion Id="9" Description="0-255 to 0-100" Type="1" Param1="0" Param2="255" Param3="0" Param4="100" />
+    </Conversions>
+    <RemapLUTs />
+  </IBOX>
+  <InternalProtocol ProtocolType="Modbus Slave">
+    <Media>0</Media>
+    <ByteOrder>0</ByteOrder>
+    <UpdateCOV>True</UpdateCOV>
+    <AddressMode>0</AddressMode>
+    <TempSetpoint>0</TempSetpoint>
+    <FormatExtra>0</FormatExtra>
+    <CommErrorTout>180</CommErrorTout>
+    <RegisterBase>0</RegisterBase>
+    <RTUConfig ConnectionType="1" Baudrate="9600" DataBits="8" Parity="0" StopBits="1" SlaveNumber="1" />
+    <TCPConfig Port="502" KeepAlive="10" />
+    <TemperatureSensor Enabled="False" />
+    <SlaveAddressMode>0</SlaveAddressMode>
+    <Signals>
+      <Signal ID="0">
+        <isEnabled>True</isEnabled>
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Comm Error</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>0</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="True" Fixed="True" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="1">
+        <isEnabled>True</isEnabled>
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Comm Error</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>1</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="True" Fixed="True" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="2">
+        <isEnabled>True</isEnabled>
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Comm Error</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>2</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="True" Fixed="True" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="3">
+        <isEnabled>True</isEnabled>
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Comm Error</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>13</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="True" Fixed="True" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="4">
+        <isEnabled>True</isEnabled>
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_Read</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>3</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="5">
+        <isEnabled>True</isEnabled>
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_Write</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>4</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="6">
+        <isEnabled>True</isEnabled>
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_ReadWrite</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>5</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="7">
+        <isEnabled>True</isEnabled>
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_0</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>0</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="8">
+        <isEnabled>True</isEnabled>
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_1</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>1</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="9">
+        <isEnabled>True</isEnabled>
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_2</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>2</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="10">
+        <isEnabled>True</isEnabled>
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_Read</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>7</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="11">
+        <isEnabled>True</isEnabled>
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_Write</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>9</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="12">
+        <isEnabled>True</isEnabled>
+        <idxConfig>12</idxConfig>
+        <idxExternal>12</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_ReadWrite</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>11</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="13">
+        <isEnabled>True</isEnabled>
+        <idxConfig>13</idxConfig>
+        <idxExternal>13</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Measured zone (room) temperature</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>12</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="14">
+        <isEnabled>True</isEnabled>
+        <idxConfig>14</idxConfig>
+        <idxExternal>14</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Measured discharge air temperature</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>13</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="15">
+        <isEnabled>True</isEnabled>
+        <idxConfig>15</idxConfig>
+        <idxExternal>15</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Measured primary airflow</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>14</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="16">
+        <isEnabled>True</isEnabled>
+        <idxConfig>16</idxConfig>
+        <idxExternal>16</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Measured CO2 concentration</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>15</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="17">
+        <isEnabled>True</isEnabled>
+        <idxConfig>17</idxConfig>
+        <idxExternal>17</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Measured relative humidity</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>16</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="18">
+        <isEnabled>True</isEnabled>
+        <idxConfig>18</idxConfig>
+        <idxExternal>18</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Zone temperature setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>17</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="19">
+        <isEnabled>True</isEnabled>
+        <idxConfig>19</idxConfig>
+        <idxExternal>19</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Cooling temperature setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>18</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="20">
+        <isEnabled>True</isEnabled>
+        <idxConfig>20</idxConfig>
+        <idxExternal>20</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Heating temperature setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>19</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="21">
+        <isEnabled>True</isEnabled>
+        <idxConfig>21</idxConfig>
+        <idxExternal>21</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Occupancy state command</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>0</Bit>
+        <Address>20</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="22">
+        <isEnabled>True</isEnabled>
+        <idxConfig>22</idxConfig>
+        <idxExternal>22</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Current occupancy status</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>21</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="23">
+        <isEnabled>True</isEnabled>
+        <idxConfig>23</idxConfig>
+        <idxExternal>23</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Primary airflow setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>22</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="24">
+        <isEnabled>True</isEnabled>
+        <idxConfig>24</idxConfig>
+        <idxExternal>24</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Minimum airflow setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>23</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="25">
+        <isEnabled>True</isEnabled>
+        <idxConfig>25</idxConfig>
+        <idxExternal>25</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Maximum airflow setpoint</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>24</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="26">
+        <isEnabled>True</isEnabled>
+        <idxConfig>26</idxConfig>
+        <idxExternal>26</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Damper position command</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>25</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="27">
+        <isEnabled>True</isEnabled>
+        <idxConfig>27</idxConfig>
+        <idxExternal>27</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Damper position feedback</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>26</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="28">
+        <isEnabled>True</isEnabled>
+        <idxConfig>28</idxConfig>
+        <idxExternal>28</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Fan on/off command</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>27</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="29">
+        <isEnabled>True</isEnabled>
+        <idxConfig>29</idxConfig>
+        <idxExternal>29</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Variable fan speed command</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>28</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="30">
+        <isEnabled>True</isEnabled>
+        <idxConfig>30</idxConfig>
+        <idxExternal>30</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Modulating heating valve command</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>29</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="31">
+        <isEnabled>True</isEnabled>
+        <idxConfig>31</idxConfig>
+        <idxExternal>31</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Electric heat stage 1 command</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>30</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="32">
+        <isEnabled>True</isEnabled>
+        <idxConfig>32</idxConfig>
+        <idxExternal>32</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Electric heat stage 2 command</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>31</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="33">
+        <isEnabled>True</isEnabled>
+        <idxConfig>33</idxConfig>
+        <idxExternal>33</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Electric heat stage 3 command</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>32</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="34">
+        <isEnabled>True</isEnabled>
+        <idxConfig>34</idxConfig>
+        <idxExternal>34</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Controller alarm status</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>0</Bit>
+        <Address>33</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+      <Signal ID="35">
+        <isEnabled>True</isEnabled>
+        <idxConfig>35</idxConfig>
+        <idxExternal>35</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Active alarm code</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>34</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>-1</ProtocolIndex>
+      </Signal>
+    </Signals>
+  </InternalProtocol>
+  <ExternalProtocol ProtocolType="BACnet Client">
+    <DevName>Device IN-MBS-BAC</DevName>
+    <Media>1</Media>
+    <Password Disabled="False"></Password>
+    <DevInstance>246</DevInstance>
+    <SequentialComms>False</SequentialComms>
+    <BACnetIP>
+      <UDPPort>47808</UDPPort>
+      <ForeignDevice>False</ForeignDevice>
+      <BBMDIP>192.168.100.247</BBMDIP>
+      <RegistrationTTL>300</RegistrationTTL>
+      <BBMD>False</BBMD>
+      <BDTTables>
+        <BDTObject Enabled="True" IP="192.168.100.246" Port="47808" Mask="255.255.255.255" Description="BBMD-1" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-2" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-3" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-4" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-5" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-6" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-7" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-8" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-9" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-10" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-11" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-12" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-13" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-14" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-15" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-16" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-17" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-18" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-19" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-20" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-21" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-22" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-23" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-24" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-25" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-26" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-27" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-28" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-29" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-30" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-31" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-32" FixedIp="False" />
+      </BDTTables>
+    </BACnetIP>
+    <BACnetMSTP>
+      <MaxMasters>127</MaxMasters>
+      <MaxInfoFrames>10</MaxInfoFrames>
+      <MACAddress>1</MACAddress>
+      <Baudrate>0</Baudrate>
+      <PfmTimeout>60</PfmTimeout>
+      <TpTimeout>60</TpTimeout>
+    </BACnetMSTP>
+    <BACnetDevices>
+      <BACnetDevice Index="0" Enabled="True" Name="Device 0" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="0" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+      <BACnetDevice Index="1" Enabled="True" Name="Device 1" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="1" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+      <BACnetDevice Index="2" Enabled="True" Name="Device 2" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="2" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+      <BACnetDevice Index="3" Enabled="True" Name="Device 3" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="3" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="0" TimeInterFrame="0" />
+    </BACnetDevices>
+    <Objects>
+      <Object ID="0">
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="1">
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="2">
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="3">
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="4">
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>13</BACType>
+        <BACInstance>0</BACInstance>
+        <ObjectID>54525952</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="5">
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>14</BACType>
+        <BACInstance>1</BACInstance>
+        <ObjectID>58720257</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="6">
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>19</BACType>
+        <BACInstance>2</BACInstance>
+        <ObjectID>79691778</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="7">
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>3</BACInstance>
+        <ObjectID>20971523</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="8">
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>4</BACInstance>
+        <ObjectID>20971524</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="9">
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>5</BACInstance>
+        <ObjectID>20971525</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="10">
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>6</BACInstance>
+        <ObjectID>6</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="11">
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>1</BACType>
+        <BACInstance>7</BACInstance>
+        <ObjectID>4194311</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="12">
+        <idxConfig>12</idxConfig>
+        <idxExternal>12</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>8</BACInstance>
+        <ObjectID>8388616</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="13">
+        <idxConfig>13</idxConfig>
+        <idxExternal>13</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>1</BACInstance>
+        <ObjectID>1</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="14">
+        <idxConfig>14</idxConfig>
+        <idxExternal>14</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>2</BACInstance>
+        <ObjectID>2</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="15">
+        <idxConfig>15</idxConfig>
+        <idxExternal>15</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>3</BACInstance>
+        <ObjectID>3</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="16">
+        <idxConfig>16</idxConfig>
+        <idxExternal>16</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>4</BACInstance>
+        <ObjectID>4</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="17">
+        <idxConfig>17</idxConfig>
+        <idxExternal>17</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>5</BACInstance>
+        <ObjectID>5</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="18">
+        <idxConfig>18</idxConfig>
+        <idxExternal>18</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>10</BACInstance>
+        <ObjectID>8388618</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="19">
+        <idxConfig>19</idxConfig>
+        <idxExternal>19</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>11</BACInstance>
+        <ObjectID>8388619</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="20">
+        <idxConfig>20</idxConfig>
+        <idxExternal>20</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>12</BACInstance>
+        <ObjectID>8388620</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="21">
+        <idxConfig>21</idxConfig>
+        <idxExternal>21</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>20</BACInstance>
+        <ObjectID>20971540</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="22">
+        <idxConfig>22</idxConfig>
+        <idxExternal>22</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>21</BACInstance>
+        <ObjectID>12582933</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="23">
+        <idxConfig>23</idxConfig>
+        <idxExternal>23</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>30</BACInstance>
+        <ObjectID>8388638</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="24">
+        <idxConfig>24</idxConfig>
+        <idxExternal>24</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>31</BACInstance>
+        <ObjectID>8388639</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="25">
+        <idxConfig>25</idxConfig>
+        <idxExternal>25</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>32</BACInstance>
+        <ObjectID>8388640</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="26">
+        <idxConfig>26</idxConfig>
+        <idxExternal>26</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>1</BACType>
+        <BACInstance>40</BACInstance>
+        <ObjectID>4194344</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="27">
+        <idxConfig>27</idxConfig>
+        <idxExternal>27</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>41</BACInstance>
+        <ObjectID>41</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="28">
+        <idxConfig>28</idxConfig>
+        <idxExternal>28</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>4</BACType>
+        <BACInstance>50</BACInstance>
+        <ObjectID>16777266</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="29">
+        <idxConfig>29</idxConfig>
+        <idxExternal>29</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>1</BACType>
+        <BACInstance>51</BACInstance>
+        <ObjectID>4194355</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="30">
+        <idxConfig>30</idxConfig>
+        <idxExternal>30</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>1</BACType>
+        <BACInstance>60</BACInstance>
+        <ObjectID>4194364</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="31">
+        <idxConfig>31</idxConfig>
+        <idxExternal>31</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>4</BACType>
+        <BACInstance>61</BACInstance>
+        <ObjectID>16777277</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="32">
+        <idxConfig>32</idxConfig>
+        <idxExternal>32</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>4</BACType>
+        <BACInstance>62</BACInstance>
+        <ObjectID>16777278</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="33">
+        <idxConfig>33</idxConfig>
+        <idxExternal>33</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>4</BACType>
+        <BACInstance>63</BACInstance>
+        <ObjectID>16777279</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="34">
+        <idxConfig>34</idxConfig>
+        <idxExternal>34</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>70</BACInstance>
+        <ObjectID>20971590</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="35">
+        <idxConfig>35</idxConfig>
+        <idxExternal>35</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>71</BACInstance>
+        <ObjectID>8388679</ObjectID>
+        <DeviceIndex>3</DeviceIndex>
+        <Param>85</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+    </Objects>
+  </ExternalProtocol>
+</Project>

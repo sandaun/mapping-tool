@@ -1,0 +1,483 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Platform="2" CreatedBy="IntesisMAPS" OEMCode="0,2" ProjectName="IN-KNX-BAC.ibmaps" ProjectDescription="Intesis BACnet Client to KNX Gateway" DeviceOrderCode="IN701KNXxxx0000" ToolVersion="5.0.1217.9763" InternalProtocol="KNX" ExternalProtocol="BACnet Client">
+  <Columns>
+    <InternalColumns>
+      <Column Name="#" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Description" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="DPT" SignalsEnabled="True" DiangosticEnabled="True" Width="200" />
+      <Column Name="Group Address" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="Additional Addresses" SignalsEnabled="True" DiangosticEnabled="True" Width="130" />
+      <Column Name="U" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="T" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Ri" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="W" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="R" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Priority" SignalsEnabled="False" DiangosticEnabled="False" Width="70" />
+      <Column Name="Active" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+    </InternalColumns>
+    <ExternalColumns>
+      <Column ProtIndex="7" Name="#" SignalsEnabled="False" DiangosticEnabled="False" Width="25" />
+      <Column ProtIndex="7" Name="Device Name" SignalsEnabled="True" DiangosticEnabled="True" Width="120" />
+      <Column ProtIndex="7" Name="Type" SignalsEnabled="True" DiangosticEnabled="True" Width="70" />
+      <Column ProtIndex="7" Name="Instance" SignalsEnabled="True" DiangosticEnabled="True" Width="60" />
+    </ExternalColumns>
+    <ExtraColumns>
+      <Column Name="Conv. Id" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Conversions" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+    </ExtraColumns>
+  </Columns>
+  <Connection Pwd="admin" isUSB="False" Device="" Port="23" />
+  <Header Description="Intesis BACnet Client to KNX Gateway" Version="1.2.26.0" CompatibilityVersion="0.0.0.0" CreationVersion="1.2.26.0" TimeStamp="-1" Endianess="False" LicenseMode="0" CompatibilityID="16" />
+  <IBOX Name="IN-KNX-BAC" IP="192.168.100.246" NetMask="255.255.255.0" Gateway="" DNS="" DNS2="" DHCP="True" Pwd="" ExtraProtocol="0">
+    <USBConfig GetLogs="True" GetProject="True" SaveProject="True" SaveFirm="True" SponsEnabled="True" CommsEnabled="True" DebugLevel="1" VerboseLevel="1" />
+    <TimeConfiguration Enabled="False" NtpAddress="" TimeZoneIndex="0" NtpUpdateTime="100" SetTimeInDownload="False" />
+    <SecurityConfiguration TCPDisabled="False" UDPDisabled="False" CustomPort="False" Port="23" />
+    <CertUpdateConfig CAUpdateDisabled="False" CAUpdatePeriod="168" CAUpdateUrl="https://api-tools.intesis.com/" />
+    <Conversions>
+      <Conversion Id="0" Description="Limit to 0-100" Type="0" Param1="2" Param2="4" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Limit to 0-255" Type="0" Param1="2" Param2="4" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="Is not 0" Type="0" Param1="0" Param2="1" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Is higher than 100" Type="0" Param1="0" Param2="3" Param3="100" Param4="100" />
+      <Conversion Id="0" Description="Only positive values" Type="0" Param1="2" Param2="3" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Celsius to Fahrenheit" Type="2" Param1="-1" Param2="18" Param3="32" Param4="0" />
+      <Conversion Id="0" Description="Fahrenheit to Celsius" Type="2" Param1="-3" Param2="555" Param3="-17.78" Param4="0" />
+      <Conversion Id="0" Description="x10" Type="2" Param1="1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/10" Type="2" Param1="-1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x100" Type="2" Param1="2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/100" Type="2" Param1="-2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x1000" Type="2" Param1="3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/1000" Type="2" Param1="-3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="0-100 to 0-255" Type="1" Param1="0" Param2="100" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="0-255 to 0-100" Type="1" Param1="0" Param2="255" Param3="0" Param4="100" />
+    </Conversions>
+    <RemapLUTs />
+  </IBOX>
+  <InternalProtocol ProtocolType="KNX">
+    <IndAddress>65535</IndAddress>
+    <Keys Key1="0001" Key2="0002" Key3="0003" />
+    <UseExtendedAddresses>False</UseExtendedAddresses>
+    <KNXObject ID="0">
+      <Description>Comm Error</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="100" String="0/0/100" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>0</IdxExternal>
+      <IdxConfig>0</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="1">
+      <Description>Comm Error</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="101" String="0/0/101" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>1</IdxExternal>
+      <IdxConfig>1</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="2">
+      <Description>Comm Error</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="102" String="0/0/102" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>2</IdxExternal>
+      <IdxConfig>2</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="3">
+      <Description>On_Off_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="1" String="0/0/1" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>3</IdxExternal>
+      <IdxConfig>3</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="4">
+      <Description>On_Off_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="2" String="0/0/2" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>4</IdxExternal>
+      <IdxConfig>4</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="5">
+      <Description>On_Off_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="3" String="0/0/3" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>5</IdxExternal>
+      <IdxConfig>5</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="6">
+      <Description>Temp_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="4" String="0/0/4" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>6</IdxExternal>
+      <IdxConfig>6</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="7">
+      <Description>Temp_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="5" String="0/0/5" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>7</IdxExternal>
+      <IdxConfig>7</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="8">
+      <Description>Temp_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="6" String="0/0/6" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>8</IdxExternal>
+      <IdxConfig>8</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="9">
+      <Description>Counter_R</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="7" String="0/0/7" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>9</IdxExternal>
+      <IdxConfig>9</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="10">
+      <Description>Counter_W</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="8" String="0/0/8" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>10</IdxExternal>
+      <IdxConfig>10</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="11">
+      <Description>Counter_RW</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="9" String="0/0/9" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>11</IdxExternal>
+      <IdxConfig>11</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+  </InternalProtocol>
+  <ExternalProtocol ProtocolType="BACnet Client">
+    <DevName>Device IN-KNX-BAC</DevName>
+    <Media>1</Media>
+    <Password Disabled="False"></Password>
+    <DevInstance>246</DevInstance>
+    <SequentialComms>False</SequentialComms>
+    <BACnetIP>
+      <UDPPort>47808</UDPPort>
+      <ForeignDevice>False</ForeignDevice>
+      <BBMDIP>192.168.100.247</BBMDIP>
+      <RegistrationTTL>300</RegistrationTTL>
+      <BBMD>False</BBMD>
+      <BDTTables>
+        <BDTObject Enabled="True" IP="192.168.100.246" Port="47808" Mask="255.255.255.255" Description="BBMD-1" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-2" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-3" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-4" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-5" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-6" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-7" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-8" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-9" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-10" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-11" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-12" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-13" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-14" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-15" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-16" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-17" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-18" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-19" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-20" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-21" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-22" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-23" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-24" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-25" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-26" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-27" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-28" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-29" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-30" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-31" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-32" FixedIp="False" />
+      </BDTTables>
+    </BACnetIP>
+    <BACnetMSTP>
+      <MaxMasters>127</MaxMasters>
+      <MaxInfoFrames>10</MaxInfoFrames>
+      <MACAddress>1</MACAddress>
+      <Baudrate>0</Baudrate>
+      <PfmTimeout>60</PfmTimeout>
+      <TpTimeout>60</TpTimeout>
+    </BACnetMSTP>
+    <BACnetDevices>
+      <BACnetDevice Index="0" Enabled="True" Name="Device 0" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="0" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+      <BACnetDevice Index="1" Enabled="True" Name="Device 1" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="1" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+      <BACnetDevice Index="2" Enabled="True" Name="Device 2" RecType="0" NetNumber="0" MSTPAddress="0" OtherAddress="ff" ObjInstance="2" Ip="192.168.100.10" Port="47808" ReadType="0" WritePriority="0" ReadProperty="85" EnableRDPVSpec="False" LifeTime="30" KeepAlive="1" TimeInterFrame="0" />
+    </BACnetDevices>
+    <Objects>
+      <Object ID="0">
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="1">
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="2">
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>-1</BACInstance>
+        <ObjectID>0</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="True" Fixed="True" General="False" />
+      </Object>
+      <Object ID="3">
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>3</BACType>
+        <BACInstance>0</BACInstance>
+        <ObjectID>12582912</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="4">
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>4</BACType>
+        <BACInstance>1</BACInstance>
+        <ObjectID>16777217</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="5">
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>5</BACType>
+        <BACInstance>2</BACInstance>
+        <ObjectID>20971522</ObjectID>
+        <DeviceIndex>0</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="6">
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>0</BACType>
+        <BACInstance>3</BACInstance>
+        <ObjectID>3</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="7">
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>1</BACType>
+        <BACInstance>4</BACInstance>
+        <ObjectID>4194308</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="8">
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>2</BACType>
+        <BACInstance>5</BACInstance>
+        <ObjectID>8388613</ObjectID>
+        <DeviceIndex>1</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="9">
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>13</BACType>
+        <BACInstance>6</BACInstance>
+        <ObjectID>54525958</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="10">
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>14</BACType>
+        <BACInstance>7</BACInstance>
+        <ObjectID>58720263</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+      <Object ID="11">
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <BACType>19</BACType>
+        <BACInstance>8</BACInstance>
+        <ObjectID>79691784</ObjectID>
+        <DeviceIndex>2</DeviceIndex>
+        <Param>0</Param>
+        <Active>False</Active>
+        <Virtual Status="False" Fixed="False" General="False" />
+      </Object>
+    </Objects>
+  </ExternalProtocol>
+</Project>
