@@ -9,6 +9,54 @@ import { allocateModbusAddresses } from './utils/allocation';
 import { mapBACnetToModbusDataType } from './utils/mapping';
 import { createSheetContext, findSignalsSheet } from './utils/common';
 import { filterBACnetSignals } from './utils/signal-filtering';
+import type { BACnetSignal } from '../deviceSignals';
+
+/**
+ * Populate Modbus Slave columns in a row
+ */
+const populateModbusColumns = (
+  row: CellValue[],
+  bacnetSignal: BACnetSignal,
+  dataType: string,
+  address: number,
+  readWrite: string,
+  nextId: number,
+  findCol: (name: string) => number
+): void => {
+  row[findCol('#')] = nextId;
+  row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+  row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY;
+  row[findCol('Data Length')] = dataType.includes('32') ? '32' : '16';
+  row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
+  row[findCol('Address')] = address;
+  row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY;
+  row[findCol('Read / Write')] = readWrite;
+  row[findCol('String Length')] = EXCEL_VALUES.EMPTY;
+};
+
+/**
+ * Populate BACnet Client columns in a row
+ */
+const populateBACnetColumns = (
+  row: CellValue[],
+  bacnetSignal: BACnetSignal,
+  newDeviceNum: number,
+  nextId: number,
+  headers: CellValue[],
+  findCol: (name: string) => number
+): void => {
+  // Find second # column
+  const bacnetIdCol = headers.findIndex(
+    (h, i) => h === '#' && i > findCol('String Length')
+  );
+  if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
+  
+  row[findCol('Device Name')] = DEVICE_TEMPLATES.DEVICE(newDeviceNum);
+  row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
+  row[findCol('Instance')] = bacnetSignal.instance;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+};
 
 /**
  * Generate Modbus signals from BACnet device signals.
@@ -65,27 +113,8 @@ export function generateModbusFromBACnet(
     // Build row with 15 columns (Modbus Slave template structure)
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    // Modbus columns (internal protocol - Modbus Slave exposes these)
-    row[findCol('#')] = nextId;
-    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-    row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY;
-    row[findCol('Data Length')] = dataType.includes('32') ? '32' : '16';
-    row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
-    row[findCol('Address')] = address;
-    row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY;
-    row[findCol('Read / Write')] = readWrite;
-    row[findCol('String Length')] = EXCEL_VALUES.EMPTY;
-
-    // BACnet columns (external protocol - BACnet Client reads these)
-    const bacnetIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('String Length')
-    );
-    if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
-    row[findCol('Device Name')] = DEVICE_TEMPLATES.DEVICE(newDeviceNum);
-    row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
-    row[findCol('Instance')] = bacnetSignal.instance;
-    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
+    populateModbusColumns(row, bacnetSignal, dataType, address, readWrite, nextId, findCol);
+    populateBACnetColumns(row, bacnetSignal, newDeviceNum, nextId, headers, findCol);
 
     signalsSheet.rows.push(row);
     rowsAdded++;
