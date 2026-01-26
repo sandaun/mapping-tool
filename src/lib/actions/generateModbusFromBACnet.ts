@@ -1,20 +1,13 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal, BACnetSignal } from '../deviceSignals';
+import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
+import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
 import { getModbusFormat, getModbusReadWrite } from './utils/modbus';
-import {
-  allocateModbusAddresses,
-  type AllocationPolicy,
-} from './utils/allocation';
+import { allocateModbusAddresses } from './utils/allocation';
 import { mapBACnetToModbusDataType } from './utils/mapping';
-
-export type GenerateSignalsResult = {
-  updatedWorkbook: RawWorkbook;
-  rowsAdded: number;
-  warnings: string[];
-};
 
 /**
  * Generate Modbus signals from BACnet device signals.
@@ -35,7 +28,7 @@ export function generateModbusFromBACnet(
   // Find Signals sheet
   const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
   if (!signalsSheet) {
-    warnings.push("No s'ha trobat el sheet 'Signals'.");
+    warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
@@ -102,25 +95,25 @@ export function generateModbusFromBACnet(
 
     // Modbus columns (internal protocol - Modbus Slave exposes these)
     row[findCol('#')] = nextId;
-    row[findCol('Active')] = 'True';
-    row[findCol('Description')] = bacnetSignal.description || '';
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
+    row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY;
     row[findCol('Data Length')] = dataType.includes('32') ? '32' : '16';
     row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
     row[findCol('Address')] = address;
-    row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : '-';
+    row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY;
     row[findCol('Read / Write')] = readWrite;
-    row[findCol('String Length')] = '-';
+    row[findCol('String Length')] = EXCEL_VALUES.EMPTY;
 
     // BACnet columns (external protocol - BACnet Client reads these)
     const bacnetIdCol = headers.findIndex(
       (h, i) => h === '#' && i > findCol('String Length')
     );
     if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
-    row[findCol('Device Name')] = `Device ${newDeviceNum}`;
+    row[findCol('Device Name')] = DEVICE_TEMPLATES.DEVICE(newDeviceNum);
     row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
     row[findCol('Instance')] = bacnetSignal.instance;
-    row[findCol('Conv. Id')] = '';
-    row[findCol('Conversions')] = '-';
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY;
 
     signalsSheet.rows.push(row);
     rowsAdded++;
