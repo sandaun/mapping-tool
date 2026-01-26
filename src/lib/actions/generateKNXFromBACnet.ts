@@ -1,5 +1,7 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal, BACnetSignal } from '../deviceSignals';
+import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
+import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { findHeaderRowIndex } from './utils/headers';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { bacnetTypeToKNXDPT } from './utils/mapping';
@@ -12,17 +14,6 @@ import {
   DEFAULT_KNX_PRIORITY,
   type GroupAddress,
 } from './utils/knx';
-
-export type GenerateSignalsResult = {
-  updatedWorkbook: RawWorkbook;
-  rowsAdded: number;
-  warnings: string[];
-};
-
-export interface KNXGenerationPolicy {
-  startGroupAddress?: string; // Default: "0/0/1"
-  deviceName?: string; // Default: "Device 0"
-}
 
 /**
  * Generate KNX signals from BACnet device signals.
@@ -40,7 +31,7 @@ export function generateKNXFromBACnet(
   // Find Signals sheet
   const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
   if (!signalsSheet) {
-    warnings.push("No s'ha trobat el sheet 'Signals'.");
+    warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
@@ -133,16 +124,16 @@ export function generateKNXFromBACnet(
 
     // KNX Internal columns
     row[findCol('#')] = nextId;
-    row[findCol('Active')] = 'True';
+    row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
     row[findCol('Description')] = bacnetSignal.signalName;
     row[findCol('DPT')] = dpt;
     row[findCol('Group Address')] = formatGroupAddress(groupAddress);
-    row[findCol('Additional Addresses')] = '';
-    row[findCol('U')] = flags.U ? 'U' : '';
-    row[findCol('T')] = flags.T ? 'T' : '';
-    row[findCol('Ri')] = flags.Ri ? 'Ri' : '';
-    row[findCol('W')] = flags.W ? 'W' : '';
-    row[findCol('R')] = flags.R ? 'R' : '';
+    row[findCol('Additional Addresses')] = EXCEL_VALUES.EMPTY;
+    row[findCol('U')] = flags.U ? 'U' : EXCEL_VALUES.EMPTY;
+    row[findCol('T')] = flags.T ? 'T' : EXCEL_VALUES.EMPTY;
+    row[findCol('Ri')] = flags.Ri ? 'Ri' : EXCEL_VALUES.EMPTY;
+    row[findCol('W')] = flags.W ? 'W' : EXCEL_VALUES.EMPTY;
+    row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY;
     row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
 
     // BACnet Client External columns (second #)
@@ -150,11 +141,11 @@ export function generateKNXFromBACnet(
       (h, i) => h === '#' && i > findCol('Priority')
     );
     if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
-    row[findCol('Device Name')] = policy.deviceName ?? `Device ${newDeviceNum}`;
+    row[findCol('Device Name')] = policy.deviceName ?? DEVICE_TEMPLATES.DEVICE(newDeviceNum);
     row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
     row[findCol('Instance')] = bacnetSignal.instance;
-    row[findCol('Conv. Id')] = '';
-    row[findCol('Conversions')] = '-';
+    row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY;
+    row[findCol('Conversions')] = EXCEL_VALUES.DASH;
 
     signalsSheet.rows.push(row);
     rowsAdded++;
