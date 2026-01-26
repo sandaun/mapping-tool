@@ -4,6 +4,7 @@ import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterBACnetSignals } from './utils/signal-filtering';
+import { getBACnetReadWriteCapabilities } from './utils/read-write';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { bacnetTypeToKNXDPT } from './utils/mapping';
 import { formatBACnetType } from './utils/bacnet';
@@ -95,16 +96,8 @@ export function generateKNXFromBACnet(
 
   // Process each BACnet signal
   for (const bacnetSignal of bacnetSignals) {
-
     // Determine signal read/write capabilities based on BACnet object type
-    // INPUT (AI, BI, MI): només READ
-    // OUTPUT (AO, BO, MO): només WRITE
-    // VALUE (AV, BV, MV): READ + WRITE
-    const isInput = bacnetSignal.objectType.endsWith('I');
-    const isOutput = bacnetSignal.objectType.endsWith('O');
-    const isValue = bacnetSignal.objectType.endsWith('V');
-    const isReadable = isInput || isValue;
-    const isWritable = isOutput || isValue;
+    const { isReadable, isWritable } = getBACnetReadWriteCapabilities(bacnetSignal.objectType);
 
     // Map BACnet signal to KNX DPT
     const dpt = bacnetTypeToKNXDPT(bacnetSignal.objectType, bacnetSignal.units);
