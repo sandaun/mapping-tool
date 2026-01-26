@@ -1,0 +1,3344 @@
+{
+  "sheets": [
+    {
+      "name": "Signals",
+      "headers": [
+        "Intesis MAPS Excel signals file",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "rows": [
+        [
+          "PROJECT_NAME",
+          "Project1",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Intesis MAPS Version",
+          "1.2.23.0",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Internal Protocol",
+          "BACnet Server",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "External Protocol",
+          "KNX",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Timestamp",
+          46031,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "#",
+          "Active",
+          "Description",
+          "Name",
+          "Type",
+          "Instance",
+          "Units",
+          "NC",
+          "Texts",
+          "# States",
+          "Rel. Def.",
+          "COV",
+          "#",
+          "DPT",
+          "Group Address",
+          "Additional Addresses",
+          "U",
+          "T",
+          "Ri",
+          "W",
+          "R",
+          "Priority",
+          "Conv. Id",
+          "Conversions"
+        ],
+        [
+          "1",
+          "True",
+          "",
+          "AI-0",
+          "0: AI",
+          "0",
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          "1",
+          "9.001: temperature (ºC)",
+          "0/0/1",
+          "0/0/10",
+          "U",
+          "  ",
+          "  ",
+          "W",
+          "  ",
+          "3: Low",
+          "DIRECTION[<]:INDEXES[-;-;0;-]",
+          "Enabled"
+        ],
+        [
+          "2",
+          "True",
+          "",
+          "AO-0",
+          "1: AO",
+          "0",
+          "62",
+          "-",
+          "-",
+          "-",
+          "0",
+          "0",
+          "2",
+          "9.001: temperature (ºC)",
+          "0/0/2",
+          "",
+          "  ",
+          "T",
+          "  ",
+          "  ",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "3",
+          "True",
+          "",
+          "AV-0",
+          "2: AV",
+          "0",
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          "3",
+          "9.001: temperature (ºC)",
+          "0/0/3",
+          "0/0/10,0/0/11",
+          "U",
+          "T",
+          "  ",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "4",
+          "True",
+          "",
+          "BI-0",
+          "3: BI",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          "4",
+          "1.001: switch",
+          "0/0/4",
+          "0/0/20",
+          "U",
+          "  ",
+          "  ",
+          "W",
+          "  ",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "5",
+          "True",
+          "",
+          "BO-0",
+          "4: BO",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "2",
+          "0",
+          "-",
+          "5",
+          "1.001: switch",
+          "0/0/5",
+          "",
+          "  ",
+          "T",
+          "  ",
+          "  ",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "6",
+          "True",
+          "",
+          "BV-0",
+          "5: BV",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          "6",
+          "1.001: switch",
+          "0/0/6",
+          "0/0/20,0/0/21",
+          "U",
+          "T",
+          "  ",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "7",
+          "True",
+          "",
+          "MI-0",
+          "13: MI",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          "7",
+          "5.010: counter pulses (0..255)",
+          "0/0/7",
+          "0/0/30",
+          "U",
+          "  ",
+          "  ",
+          "W",
+          "  ",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "8",
+          "True",
+          "",
+          "MO-0",
+          "14: MO",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "1",
+          "-",
+          "8",
+          "5.010: counter pulses (0..255)",
+          "0/0/8",
+          "",
+          "  ",
+          "T",
+          "  ",
+          "  ",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          "9",
+          "True",
+          "",
+          "MV-0",
+          "19: MV",
+          "0",
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          "9",
+          "5.010: counter pulses (0..255)",
+          "0/0/9",
+          "0/0/30,0/0/31",
+          "U",
+          "T",
+          "  ",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          10,
+          "True",
+          "",
+          "Sala Sostre On/Off",
+          "5: BV",
+          1,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          10,
+          "1.001: switch",
+          "2/1/0",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          11,
+          "True",
+          "",
+          "Sala Sostre Regular",
+          "5: BV",
+          2,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          11,
+          "3.x: (4-bit. 3-bit controlled)",
+          "2/1/1",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          12,
+          "True",
+          "",
+          "Sala Sostre Valor",
+          "2: AV",
+          3,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          12,
+          "5.001: percentage (0..100%)",
+          "2/1/2",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          13,
+          "True",
+          "",
+          "Sala Sostre Status On/Off",
+          "5: BV",
+          4,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          13,
+          "1.011: state",
+          "2/1/3",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          14,
+          "True",
+          "",
+          "Sala Sostre Status Valor",
+          "2: AV",
+          5,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          14,
+          "5.001: percentage (0..100%)",
+          "2/1/4",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          15,
+          "True",
+          "",
+          "Sala Sostre Overtemperature",
+          "5: BV",
+          6,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          15,
+          "1.005: alarm",
+          "2/1/5",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          16,
+          "True",
+          "",
+          "Sala Sostre Overload / Short Circuit",
+          "5: BV",
+          7,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          16,
+          "1.005: alarm",
+          "2/1/6",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          17,
+          "True",
+          "",
+          "Sala Sostre Power Error",
+          "5: BV",
+          8,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          17,
+          "1.005: alarm",
+          "2/1/7",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          18,
+          "True",
+          "",
+          "Sala Sostre Load Failure",
+          "5: BV",
+          9,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          18,
+          "1.005: alarm",
+          "2/1/8",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          19,
+          "True",
+          "",
+          "Menjador Sostre On/Off",
+          "5: BV",
+          10,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          19,
+          "1.001: switch",
+          "2/1/20",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          20,
+          "True",
+          "",
+          "Menjador Sostre Regular",
+          "5: BV",
+          11,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          20,
+          "3.x: (4-bit. 3-bit controlled)",
+          "2/1/21",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          21,
+          "True",
+          "",
+          "Menjador Sostre Valor",
+          "2: AV",
+          12,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          21,
+          "5.001: percentage (0..100%)",
+          "2/1/22",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          22,
+          "True",
+          "",
+          "Menjador Sostre Status On/Off",
+          "5: BV",
+          13,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          22,
+          "1.011: state",
+          "2/1/23",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          23,
+          "True",
+          "",
+          "Menjador Sostre Status Valor",
+          "2: AV",
+          14,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          23,
+          "5.001: percentage (0..100%)",
+          "2/1/24",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          24,
+          "True",
+          "",
+          "Menjador Sostre Overtemperature",
+          "5: BV",
+          15,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          24,
+          "1.005: alarm",
+          "2/1/25",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          25,
+          "True",
+          "",
+          "Menjador Sostre Overload / Short Circuit",
+          "5: BV",
+          16,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          25,
+          "1.005: alarm",
+          "2/1/26",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          26,
+          "True",
+          "",
+          "Menjador Sostre Power Error",
+          "5: BV",
+          17,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          26,
+          "1.005: alarm",
+          "2/1/27",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          27,
+          "True",
+          "",
+          "Menjador Sostre Load Failure",
+          "5: BV",
+          18,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          27,
+          "1.005: alarm",
+          "2/1/28",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          28,
+          "True",
+          "",
+          "Cuina Sostre On/Off",
+          "5: BV",
+          19,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          28,
+          "1.001: switch",
+          "2/2/0",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          29,
+          "True",
+          "",
+          "Cuina Sostre Regular",
+          "5: BV",
+          20,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          29,
+          "3.x: (4-bit. 3-bit controlled)",
+          "2/2/1",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          30,
+          "True",
+          "",
+          "Cuina Sostre Valor",
+          "2: AV",
+          21,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          30,
+          "5.001: percentage (0..100%)",
+          "2/2/2",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          31,
+          "True",
+          "",
+          "Cuina Sostre Status On/Off",
+          "5: BV",
+          22,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          31,
+          "1.011: state",
+          "2/2/3",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          32,
+          "True",
+          "",
+          "Cuina Sostre Status Valor",
+          "2: AV",
+          23,
+          "98",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          32,
+          "5.001: percentage (0..100%)",
+          "2/2/4",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          33,
+          "True",
+          "",
+          "Cuina Sostre Overtemperature",
+          "5: BV",
+          24,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          33,
+          "1.005: alarm",
+          "2/2/5",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          34,
+          "True",
+          "",
+          "Cuina Sostre Overload / Short Circuit",
+          "5: BV",
+          25,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          34,
+          "1.005: alarm",
+          "2/2/6",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          35,
+          "True",
+          "",
+          "Cuina Sostre Power Error",
+          "5: BV",
+          26,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          35,
+          "1.005: alarm",
+          "2/2/7",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          36,
+          "True",
+          "",
+          "Cuina Sostre Load Failure",
+          "5: BV",
+          27,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          36,
+          "1.005: alarm",
+          "2/2/8",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          37,
+          "True",
+          "",
+          "Cuina L�mpades Sostre On/Off",
+          "5: BV",
+          28,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          37,
+          "1.001: switch",
+          "2/2/20",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          38,
+          "True",
+          "",
+          "Cuina L�mpades Sostre On/Off Status",
+          "5: BV",
+          29,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          38,
+          "1.001: switch",
+          "2/2/21",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          39,
+          "True",
+          "",
+          "Cuina Llum Aig�era On/Off",
+          "5: BV",
+          30,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          39,
+          "1.001: switch",
+          "2/2/40",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          40,
+          "True",
+          "",
+          "Cuina Llum Aig�era On/Off Status",
+          "5: BV",
+          31,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          40,
+          "1.001: switch",
+          "2/2/41",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          41,
+          "True",
+          "",
+          "Cuina Llum Encimera On/Off",
+          "5: BV",
+          32,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          41,
+          "1.001: switch",
+          "2/2/60",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          42,
+          "True",
+          "",
+          "Cuina Llum Encimera On/Off Status",
+          "5: BV",
+          33,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          42,
+          "1.001: switch",
+          "2/2/61",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          43,
+          "True",
+          "",
+          "Galeria Sostre On/Off",
+          "5: BV",
+          34,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          43,
+          "1.001: switch",
+          "2/2/80",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          44,
+          "True",
+          "",
+          "Galeria Sostre On/Off Status",
+          "5: BV",
+          35,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          44,
+          "1.001: switch",
+          "2/2/81",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          45,
+          "True",
+          "",
+          "Tota Vivenda Pujar/Baixar",
+          "5: BV",
+          36,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          45,
+          "1.008: up/down",
+          "3/0/0",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          46,
+          "True",
+          "",
+          "Zona Interior Pujar/Baixar",
+          "5: BV",
+          37,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          46,
+          "1.008: up/down",
+          "3/0/1",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          47,
+          "True",
+          "",
+          "Zona Exterior Pujar/Baixar",
+          "5: BV",
+          38,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          47,
+          "1.008: up/down",
+          "3/0/2",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          48,
+          "True",
+          "",
+          "AC On/Off",
+          "5: BV",
+          39,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          48,
+          "1.001: switch",
+          "5/1/0",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          49,
+          "True",
+          "",
+          "AC Mode",
+          "MSV",
+          40,
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          49,
+          "20.105: HVAC ContrMode",
+          "5/1/1",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          50,
+          "True",
+          "",
+          "AC Velocitat Ventilador",
+          "2: AV",
+          41,
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          50,
+          "5.010: counter pulses (0..255)",
+          "5/1/2",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          51,
+          "True",
+          "",
+          "AC Ventilador Manual/Auto",
+          "5: BV",
+          42,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          51,
+          "1.002: boolean",
+          "5/1/3",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          52,
+          "True",
+          "",
+          "AC Velocitat Ventilador -/+",
+          "5: BV",
+          43,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          52,
+          "1.007: step",
+          "5/1/4",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          53,
+          "True",
+          "",
+          "AC Temperatura Consigna",
+          "2: AV",
+          44,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          53,
+          "9.001: temperature (°C)",
+          "5/1/5",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          54,
+          "True",
+          "",
+          "AC On/Off Status",
+          "5: BV",
+          45,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          54,
+          "1.001: switch",
+          "5/1/20",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          55,
+          "True",
+          "",
+          "AC Mode Status",
+          "MSV",
+          46,
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          55,
+          "20.105: HVAC ContrMode",
+          "5/1/21",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          56,
+          "True",
+          "",
+          "AC Velocitat Ventilador Status",
+          "2: AV",
+          47,
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          56,
+          "5.010: counter pulses (0..255)",
+          "5/1/22",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          57,
+          "True",
+          "",
+          "AC Ventilador Manual/Auto Status",
+          "5: BV",
+          48,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          57,
+          "1.002: boolean",
+          "5/1/23",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          58,
+          "True",
+          "",
+          "AC Velocitat Ventilador Text",
+          "MSV",
+          49,
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          58,
+          "16.001",
+          "5/1/24",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          59,
+          "True",
+          "",
+          "AC Temperatura Consigna Status",
+          "2: AV",
+          50,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          59,
+          "9.001: temperature (°C)",
+          "5/1/25",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          60,
+          "True",
+          "",
+          "AC Temperatura Retorn Status",
+          "2: AV",
+          51,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          60,
+          "9.001: temperature (°C)",
+          "5/1/26",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          61,
+          "True",
+          "",
+          "AC Error/Alarma",
+          "5: BV",
+          52,
+          "-1",
+          "-",
+          "-",
+          "2",
+          "-",
+          "-",
+          61,
+          "1.005: alarm",
+          "5/1/27",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          62,
+          "True",
+          "",
+          "AC Error Code",
+          "2: AV",
+          53,
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          62,
+          "7.001: pulses",
+          "5/1/28",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          63,
+          "True",
+          "",
+          "AC Error Code Text",
+          "MSV",
+          54,
+          "-1",
+          "-",
+          "-",
+          "65535",
+          "-",
+          "-",
+          63,
+          "16.001",
+          "5/1/29",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          64,
+          "True",
+          "",
+          "AC Temp. Consigna Status Falsejat",
+          "2: AV",
+          55,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          64,
+          "9.001: temperature (°C)",
+          "5/1/30",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          65,
+          "True",
+          "",
+          "Pantalla Temperatura Interna",
+          "2: AV",
+          56,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          65,
+          "9.001: temperature (°C)",
+          "5/1/40",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          66,
+          "True",
+          "",
+          "Pantalla AC Velocitat Vent. Logic",
+          "2: AV",
+          57,
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          66,
+          "5.010: counter pulses (0..255)",
+          "5/1/41",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          67,
+          "True",
+          "",
+          "Pantalla AC Velocitat Vent. Status Logic",
+          "2: AV",
+          58,
+          "95",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          67,
+          "5.010: counter pulses (0..255)",
+          "5/1/42",
+          "",
+          "U",
+          "T",
+          "",
+          "",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          68,
+          "True",
+          "",
+          "Temp. Columna",
+          "2: AV",
+          59,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          68,
+          "9.001: temperature (°C)",
+          "5/1/60",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ],
+        [
+          69,
+          "True",
+          "",
+          "Temp. Moble TV",
+          "2: AV",
+          60,
+          "62",
+          "-",
+          "-",
+          "-",
+          "-",
+          "0",
+          69,
+          "9.001: temperature (°C)",
+          "5/1/61",
+          "",
+          "U",
+          "T",
+          "",
+          "W",
+          "R",
+          "3: Low",
+          "",
+          "-"
+        ]
+      ]
+    },
+    {
+      "name": "BACnet Server",
+      "headers": [
+        "Units"
+      ],
+      "rows": [
+        [
+          "-"
+        ],
+        [
+          "ampere_square_meters (169)"
+        ],
+        [
+          "amperes (3)"
+        ],
+        [
+          "amperes_per_meter (167)"
+        ],
+        [
+          "amperes_per_square_meter (168)"
+        ],
+        [
+          "bars (55)"
+        ],
+        [
+          "becquerels (222)"
+        ],
+        [
+          "btus (20)"
+        ],
+        [
+          "btus_per_hour (50)"
+        ],
+        [
+          "btus_per_pound (117)"
+        ],
+        [
+          "btus_per_pound_dry_air (24)"
+        ],
+        [
+          "centimeters(118)"
+        ],
+        [
+          "meters (31)"
+        ],
+        [
+          "centimeters_of_mercury (60)"
+        ],
+        [
+          "centimeters_of_water (57)"
+        ],
+        [
+          "cubic_feet (79)"
+        ],
+        [
+          "cubic_feet_per_hour (191)"
+        ],
+        [
+          "cubic_feet_per_minute (84)"
+        ],
+        [
+          "cubic_feet_per_second (142)"
+        ],
+        [
+          "cubic_meters (80)"
+        ],
+        [
+          "cubic_meters_per_hour (135)"
+        ],
+        [
+          "cubic_meters_per_minute (165)"
+        ],
+        [
+          "cubic_meters_per_second (85)"
+        ],
+        [
+          "currency1 (105)"
+        ],
+        [
+          "currency10 (114)"
+        ],
+        [
+          "currency2 (106)"
+        ],
+        [
+          "currency3 (107)"
+        ],
+        [
+          "currency4 (108)"
+        ],
+        [
+          "currency5 (109)"
+        ],
+        [
+          "currency6 (110)"
+        ],
+        [
+          "currency7 (111)"
+        ],
+        [
+          "currency8 (112)"
+        ],
+        [
+          "currency9 (113)"
+        ],
+        [
+          "cycles_per_hour (25)"
+        ],
+        [
+          "cycles_per_minute (26)"
+        ],
+        [
+          "days (70)"
+        ],
+        [
+          "decibels (199)"
+        ],
+        [
+          "decibels_a (232)"
+        ],
+        [
+          "decibels_millivolt (200)"
+        ],
+        [
+          "decibels_volt (201)"
+        ],
+        [
+          "degree_days_Celsius (65)"
+        ],
+        [
+          "degree_days_Fahrenheit (66)"
+        ],
+        [
+          "degrees_angular (90)"
+        ],
+        [
+          "degrees_Celsius (62)"
+        ],
+        [
+          "degrees_Celsius_per_hour (91)"
+        ],
+        [
+          "degrees_Celsius_per_minute (92)"
+        ],
+        [
+          "degrees_Fahrenheit (64)"
+        ],
+        [
+          "degrees_Fahrenheit_per_hour (93)"
+        ],
+        [
+          "degrees_Fahrenheit_per_minute (94)"
+        ],
+        [
+          "degrees_Kelvin (63)"
+        ],
+        [
+          "degrees_Kelvin_per_hour (181)"
+        ],
+        [
+          "degrees_Kelvin_per_minute (182)"
+        ],
+        [
+          "degrees_phase (14)"
+        ],
+        [
+          "delta_degrees_Fahrenheit (120)"
+        ],
+        [
+          "delta_degrees_Kelvin (121)"
+        ],
+        [
+          "farads (170)"
+        ],
+        [
+          "feet(33)"
+        ],
+        [
+          "candelas_per_square_meter (180)"
+        ],
+        [
+          "feet_per_minute (77)"
+        ],
+        [
+          "feet_per_second (76)"
+        ],
+        [
+          "grams_of_water_per_kilogram_dry_air(28)"
+        ],
+        [
+          "micrometers (194)"
+        ],
+        [
+          "grams_per_cubic_centimeter (221)"
+        ],
+        [
+          "grams_per_cubic_meter (217)"
+        ],
+        [
+          "grams_per_gram (208)"
+        ],
+        [
+          "grams_per_kilogram (210)"
+        ],
+        [
+          "grams_per_liter (214)"
+        ],
+        [
+          "grams_per_milliliter (213)"
+        ],
+        [
+          "grams_per_square_meter (235)"
+        ],
+        [
+          "gray (225)"
+        ],
+        [
+          "hectopascals (133)"
+        ],
+        [
+          "henrys (171)"
+        ],
+        [
+          "hertz (27)"
+        ],
+        [
+          "horsepower (51)"
+        ],
+        [
+          "hours (71)"
+        ],
+        [
+          "hundredths_seconds (158)"
+        ],
+        [
+          "imperial_gallons (81)"
+        ],
+        [
+          "imperial_gallons_per_minute (86)"
+        ],
+        [
+          "inches_of_mercury (61)"
+        ],
+        [
+          "inches_of_water (58)"
+        ],
+        [
+          "joule_seconds (183)"
+        ],
+        [
+          "joules (16)"
+        ],
+        [
+          "joules_per_degree_Kelvin (127)"
+        ],
+        [
+          "joules_per_kilogram_degree_Kelvin (128)"
+        ],
+        [
+          "joules_per_kilogram_dry_air (23)"
+        ],
+        [
+          "kilo_btus (147)"
+        ],
+        [
+          "kilo_btus_per_hour (157)"
+        ],
+        [
+          "kilobecquerels (223)"
+        ],
+        [
+          "kilograms_per_cubic_meter (186)"
+        ],
+        [
+          "kilograms_per_hour (44)"
+        ],
+        [
+          "kilograms_per_kilogram (209)"
+        ],
+        [
+          "kilograms_per_minute (43)"
+        ],
+        [
+          "kilograms_per_second (42)"
+        ],
+        [
+          "kilohertz (129)"
+        ],
+        [
+          "kilohms (122)"
+        ],
+        [
+          "kilojoules (17)"
+        ],
+        [
+          "kilojoules_per_degree_Kelvin (151)"
+        ],
+        [
+          "kilojoules_per_kilogram (125)"
+        ],
+        [
+          "kilojoules_per_kilogram_dry_air (149)"
+        ],
+        [
+          "kilometers_per_hour (75)"
+        ],
+        [
+          "kilopascals (54)"
+        ],
+        [
+          "kilovolt_amperes (9)"
+        ],
+        [
+          "kilovolt_amperes_reactive (12)"
+        ],
+        [
+          "kilovolts (6)"
+        ],
+        [
+          "kilowatt_hours (19)"
+        ],
+        [
+          "kilowatt_hours_per_square_foot (138)"
+        ],
+        [
+          "kilowatt_hours_per_square_meter (137)"
+        ],
+        [
+          "kilowatt_hours_reactive (204)"
+        ],
+        [
+          "kilowatts (48)"
+        ],
+        [
+          "liters (82)"
+        ],
+        [
+          "liters_per_hour (136)"
+        ],
+        [
+          "liters_per_minute (88)"
+        ],
+        [
+          "liters_per_second (87)"
+        ],
+        [
+          "mega_btus (148)"
+        ],
+        [
+          "megabecquerels (224)"
+        ],
+        [
+          "megahertz (130)"
+        ],
+        [
+          "megajoules (126)"
+        ],
+        [
+          "megajoules_per_degree_Kelvin (152)"
+        ],
+        [
+          "megajoules_per_kilogram_dry_air (150)"
+        ],
+        [
+          "megajoules_per_square_foot (140)"
+        ],
+        [
+          "megajoules_per_square_meter (139)"
+        ],
+        [
+          "megavolt_amperes (10)"
+        ],
+        [
+          "megavolt_amperes_reactive (13)"
+        ],
+        [
+          "megavolts (7)"
+        ],
+        [
+          "megawatt_hours (146)"
+        ],
+        [
+          "megawatt_hours_reactive (205)"
+        ],
+        [
+          "megawatts (49)"
+        ],
+        [
+          "megohms (123)"
+        ],
+        [
+          "meters_per_hour (164)"
+        ],
+        [
+          "meters_per_minute (163)"
+        ],
+        [
+          "meters_per_second (74)"
+        ],
+        [
+          "micrograms_per_cubic_meter (219)"
+        ],
+        [
+          "micrograms_per_liter (216)"
+        ],
+        [
+          "microgray (227)"
+        ],
+        [
+          "microsiemens (190)"
+        ],
+        [
+          "microsieverts (230)"
+        ],
+        [
+          "microsieverts_per_hour (231)"
+        ],
+        [
+          "miles_per_hour (78)"
+        ],
+        [
+          "milliamperes (2)"
+        ],
+        [
+          "millibars (134)"
+        ],
+        [
+          "milligrams(196)"
+        ],
+        [
+          "kilograms (39)"
+        ],
+        [
+          "milligrams_per_cubic_meter (218)"
+        ],
+        [
+          "milligrams_per_gram (211)"
+        ],
+        [
+          "milligrams_per_kilogram (212)"
+        ],
+        [
+          "milligrams_per_liter (215)"
+        ],
+        [
+          "milligray (226)"
+        ],
+        [
+          "milliliters (197)"
+        ],
+        [
+          "milliliters_per_second (198)"
+        ],
+        [
+          "millimeters_of_mercury (59)"
+        ],
+        [
+          "millimeters_of_water (206)"
+        ],
+        [
+          "millimeters_per_minute (162)"
+        ],
+        [
+          "millimeters_per_second (161)"
+        ],
+        [
+          "milliohms (145)"
+        ],
+        [
+          "milliseconds (159)"
+        ],
+        [
+          "millisiemens (202)"
+        ],
+        [
+          "millisieverts (229)"
+        ],
+        [
+          "millivolts (124)"
+        ],
+        [
+          "milliwatts (132)"
+        ],
+        [
+          "minutes (72)"
+        ],
+        [
+          "minutes_per_degree_kelvin (236)"
+        ],
+        [
+          "months (68)"
+        ],
+        [
+          "nanograms_per_cubic_meter (220)"
+        ],
+        [
+          "nephelometric_turbidity_unit (233)"
+        ],
+        [
+          "newton (153)"
+        ],
+        [
+          "newton_meters (160)"
+        ],
+        [
+          "newton_seconds (187)"
+        ],
+        [
+          "newtons_per_meter (188)"
+        ],
+        [
+          "no_units (95)"
+        ],
+        [
+          "ohm_meters (172)"
+        ],
+        [
+          "ohms (4)"
+        ],
+        [
+          "parts_per_billion (97)"
+        ],
+        [
+          "parts_per_million (96)"
+        ],
+        [
+          "pascals (53)"
+        ],
+        [
+          "per_mille (207)"
+        ],
+        [
+          "per_minute (100)"
+        ],
+        [
+          "per_second (101)"
+        ],
+        [
+          "percent (98)"
+        ],
+        [
+          "percent_obscuration_per_foot (143)"
+        ],
+        [
+          "percent_obscuration_per_meter (144)"
+        ],
+        [
+          "percent_per_second (99)"
+        ],
+        [
+          "pH (234)"
+        ],
+        [
+          "pounds_force_per_square_inch (56)"
+        ],
+        [
+          "pounds_mass_per_hour (46)"
+        ],
+        [
+          "pounds_mass_per_minute (45)"
+        ],
+        [
+          "pounds_mass_per_second (119)"
+        ],
+        [
+          "power_factor (15)"
+        ],
+        [
+          "psi_per_degree_Fahrenheit (102)"
+        ],
+        [
+          "radians (103)"
+        ],
+        [
+          "radians_per_second (184)"
+        ],
+        [
+          "revolutions_per_minute (104)"
+        ],
+        [
+          "seconds (73)"
+        ],
+        [
+          "siemens (173)"
+        ],
+        [
+          "siemens_per_meter (174)"
+        ],
+        [
+          "sieverts (228)"
+        ],
+        [
+          "square_centimeters (116)"
+        ],
+        [
+          "square_feet (1)"
+        ],
+        [
+          "square_inches (115)"
+        ],
+        [
+          "square_meters (0)"
+        ],
+        [
+          "square_meters_per_Newton (185)"
+        ],
+        [
+          "teslas (175)"
+        ],
+        [
+          "therms (21)"
+        ],
+        [
+          "ton_hours (22)"
+        ],
+        [
+          "tons (41)"
+        ],
+        [
+          "grams_per_minute (155)"
+        ],
+        [
+          "tons_per_hour (156)"
+        ],
+        [
+          "tons_refrigeration (52)"
+        ],
+        [
+          "us_gallons (83)"
+        ],
+        [
+          "us_gallons_per_hour (192)"
+        ],
+        [
+          "us_gallons_per_minute (89)"
+        ],
+        [
+          "VAh (239)"
+        ],
+        [
+          "volt_amperes (8)"
+        ],
+        [
+          "volt_amperes_reactive (11)"
+        ],
+        [
+          "volts (5)"
+        ],
+        [
+          "volts_per_degree_Kelvin (176)"
+        ],
+        [
+          "volts_per_meter (177)"
+        ],
+        [
+          "watt_hours (18)"
+        ],
+        [
+          "watt_hours_reactive (203)"
+        ],
+        [
+          "watts (47)"
+        ],
+        [
+          "watts_per_meter_per_degree_Kelvin (189)"
+        ],
+        [
+          "watts_per_square_meter (35)"
+        ],
+        [
+          "luxes (37)"
+        ],
+        [
+          "watts_per_square_meter_degree_kelvin (141)"
+        ],
+        [
+          "webers (178)"
+        ],
+        [
+          "weeks (69)"
+        ],
+        [
+          "years (67)"
+        ]
+      ]
+    },
+    {
+      "name": "KNX",
+      "headers": [
+        "DPT"
+      ],
+      "rows": [
+        [
+          "1.x: (1-bit)"
+        ],
+        [
+          "1.001: switch"
+        ],
+        [
+          "1.002: boolean"
+        ],
+        [
+          "1.003: enable"
+        ],
+        [
+          "1.004: ramp"
+        ],
+        [
+          "1.005: alarm"
+        ],
+        [
+          "1.006: binary value"
+        ],
+        [
+          "1.007: step"
+        ],
+        [
+          "1.008: up/down"
+        ],
+        [
+          "1.009: open/close"
+        ],
+        [
+          "1.010: start/stop"
+        ],
+        [
+          "1.011: state"
+        ],
+        [
+          "1.012: invert"
+        ],
+        [
+          "1.013: dim send style"
+        ],
+        [
+          "1.014: input source"
+        ],
+        [
+          "1.015: reset"
+        ],
+        [
+          "1.018: ocuppancy"
+        ],
+        [
+          "1.019: window/door"
+        ],
+        [
+          "1.021: logical function"
+        ],
+        [
+          "1.022: scene"
+        ],
+        [
+          "1.100: cooling/heating"
+        ],
+        [
+          "2.x: (2-bit, 1-bit controlled)"
+        ],
+        [
+          "3.x: (4-bit, 3-bit controlled)"
+        ],
+        [
+          "4.x: (8-bit, Character)"
+        ],
+        [
+          "4.001: character (ASCII)"
+        ],
+        [
+          "4.002: character (ISO 8859-1)"
+        ],
+        [
+          "5.x: (8-bit, Unsigned Value)"
+        ],
+        [
+          "5.001: percentage (0..100%)"
+        ],
+        [
+          "5.003: angle (degrees)"
+        ],
+        [
+          "5.004: percentage (0..255%)"
+        ],
+        [
+          "5.006: tariff (0..255)"
+        ],
+        [
+          "5.010: counter pulses (0..255)"
+        ],
+        [
+          "6.x: (8-bit, Signed Value)"
+        ],
+        [
+          "6.001: percentage (-128..127%)"
+        ],
+        [
+          "6.010: counter pulses (-128..127)"
+        ],
+        [
+          "7.x: (2-byte, Unsigned Value)"
+        ],
+        [
+          "7.001: pulses"
+        ],
+        [
+          "7.002: time (10 ms)"
+        ],
+        [
+          "7.005: time (s)"
+        ],
+        [
+          "7.006: time (min)"
+        ],
+        [
+          "7.007: time (h)"
+        ],
+        [
+          "7.011: length (mm)"
+        ],
+        [
+          "7.012: current (mA)"
+        ],
+        [
+          "7.013: brightness (lux)"
+        ],
+        [
+          "8.x: (2-byte, Signed Value)"
+        ],
+        [
+          "8.001: pulses difference"
+        ],
+        [
+          "8.002: time lag (ms)"
+        ],
+        [
+          "8.005: time lag (s)"
+        ],
+        [
+          "8.006: time lag (min)"
+        ],
+        [
+          "8.007: time lag (h)"
+        ],
+        [
+          "8.010: percentage difference (%)"
+        ],
+        [
+          "8.011: rotation angle (º)"
+        ],
+        [
+          "9.x: (2-byte, Float Value)"
+        ],
+        [
+          "9.001: temperature (ºC)"
+        ],
+        [
+          "9.002: temperature difference (ºK)"
+        ],
+        [
+          "9.003: kelvin/hour (ºK/h)"
+        ],
+        [
+          "9.004: lux (Lux)"
+        ],
+        [
+          "9.005: speed (m/s)"
+        ],
+        [
+          "9.006: pressure (Pa)"
+        ],
+        [
+          "9.007: percentage (%)"
+        ],
+        [
+          "9.008: parts/million (ppm)"
+        ],
+        [
+          "9.010: time (s)"
+        ],
+        [
+          "9.011: time (ms)"
+        ],
+        [
+          "9.020: voltage (mV)"
+        ],
+        [
+          "9.021: current (mA)"
+        ],
+        [
+          "9.022: power density (W/m2)"
+        ],
+        [
+          "9.023: kelvin/percent (K/%)"
+        ],
+        [
+          "9.024: power (kW)"
+        ],
+        [
+          "9.025: volumne flow (l/h)"
+        ],
+        [
+          "9.026: rain amount (l/m2)"
+        ],
+        [
+          "9.027: temperature (ºF)"
+        ],
+        [
+          "9.028: wind speed (km/h)"
+        ],
+        [
+          "10.x: (Time)"
+        ],
+        [
+          "11.x: (Date)"
+        ],
+        [
+          "12.x: (4-byte, Unsigned Value)"
+        ],
+        [
+          "12.001: counter pulses (unsigned)"
+        ],
+        [
+          "13.x: (4-byte, Signed Value)"
+        ],
+        [
+          "13.001: counter pulses (signed)"
+        ],
+        [
+          "13.002: flow rate (m3/h)"
+        ],
+        [
+          "13.010: active energy (Wh)"
+        ],
+        [
+          "13.011: apparent energy (VAh)"
+        ],
+        [
+          "13.012: reactive energy (VARh)"
+        ],
+        [
+          "13.013: active energy (kWh)"
+        ],
+        [
+          "13.014: apparent energy (kVAh)"
+        ],
+        [
+          "13.015: reactive energy (kvARh)"
+        ],
+        [
+          "13.100: time lag (s)"
+        ],
+        [
+          "14.x: (4-byte, Float Value)"
+        ],
+        [
+          "14.000: acceleration (m/s2)"
+        ],
+        [
+          "14.001: angular acceleration (rad/s2)"
+        ],
+        [
+          "14.002: activation energy (J/mol)"
+        ],
+        [
+          "14.003: radioactive activity (J/mol)"
+        ],
+        [
+          "14.004: amount of substance (mol)"
+        ],
+        [
+          "14.005: amplitude"
+        ],
+        [
+          "14.006: angle (radiant)"
+        ],
+        [
+          "14.007: angle (degree)"
+        ],
+        [
+          "14.008: angular momentum (Js)"
+        ],
+        [
+          "14.009: angular velocity (rad/s)"
+        ],
+        [
+          "14.010: area (m*m)"
+        ],
+        [
+          "14.011: capacitance (F)"
+        ],
+        [
+          "14.012: flux density (C/m2)"
+        ],
+        [
+          "14.013: charge density (C/m3)"
+        ],
+        [
+          "14.014: compressibility (m2/N)"
+        ],
+        [
+          "14.015: conductance (S)"
+        ],
+        [
+          "14.016: conductivity (S/m)"
+        ],
+        [
+          "14.017: density (kg/m3)"
+        ],
+        [
+          "14.018: electric charge (C)"
+        ],
+        [
+          "14.019: electric current (A)"
+        ],
+        [
+          "14.020: electric current density (A/m2)"
+        ],
+        [
+          "14.021: electric dipole moment (Cm)"
+        ],
+        [
+          "14.022: electric displacement (C/m2)"
+        ],
+        [
+          "14.023: electric field strength (V/m)"
+        ],
+        [
+          "14.024: electric flux (C)"
+        ],
+        [
+          "14.025: electric flux density (C/m2)"
+        ],
+        [
+          "14.026: electric polarization (C/m2)"
+        ],
+        [
+          "14.027: electric potential (V)"
+        ],
+        [
+          "14.028: electric potential difference (V)"
+        ],
+        [
+          "14.029: electromagnetic moment (Am2)"
+        ],
+        [
+          "14.030: electromotive force (V)"
+        ],
+        [
+          "14.031: energy (J)"
+        ],
+        [
+          "14.032: force (N)"
+        ],
+        [
+          "14.033: frequency (Hz)"
+        ],
+        [
+          "14.034: angular frequency (rad/s)"
+        ],
+        [
+          "14.035: heat capacity (J/K)"
+        ],
+        [
+          "14.036: heat flow rate (W)"
+        ],
+        [
+          "14.037: heat quantity"
+        ],
+        [
+          "14.038: impedance"
+        ],
+        [
+          "14.039: length (m)"
+        ],
+        [
+          "14.040: light quantity (J)"
+        ],
+        [
+          "14.041: luminance (cd/m2)"
+        ],
+        [
+          "14.042: luminous flux (lm)"
+        ],
+        [
+          "14.043: luminous intesity (cd)"
+        ],
+        [
+          "14.044: magnetic field strength (A/m)"
+        ],
+        [
+          "14.045: magnetic flux (Wb)"
+        ],
+        [
+          "14.046: magnetic flux density (T)"
+        ],
+        [
+          "14.047: magnetic moment (Am2)"
+        ],
+        [
+          "14.048: magnetic polarization (T)"
+        ],
+        [
+          "14.049: magnetization (A/m)"
+        ],
+        [
+          "14.050: magnetomotive force (A)"
+        ],
+        [
+          "14.051: mass (kg)"
+        ],
+        [
+          "14.052: mass flux (kg/s)"
+        ],
+        [
+          "14.053: momentum (N/s)"
+        ],
+        [
+          "14.054: phase angle (rad)"
+        ],
+        [
+          "14.055: phase angle (º)"
+        ],
+        [
+          "14.056: power (W)"
+        ],
+        [
+          "14.057: power factor (cos)"
+        ],
+        [
+          "14.058: pressure (Pa)"
+        ],
+        [
+          "14.059: reactance (ohms)"
+        ],
+        [
+          "14.060: resistance (ohms)"
+        ],
+        [
+          "14.061: resistivity (ohms·m)"
+        ],
+        [
+          "14.062: self inductance (H)"
+        ],
+        [
+          "14.063: solid angle (H)"
+        ],
+        [
+          "14.064: sound intensity (W/m2)"
+        ],
+        [
+          "14.065: speed (m/s)"
+        ],
+        [
+          "14.066: stress (Pa)"
+        ],
+        [
+          "14.067: surface tension (N/m)"
+        ],
+        [
+          "14.068: temperature (ºC)"
+        ],
+        [
+          "14.069: temperature absolute (ºC)"
+        ],
+        [
+          "14.070: temperature difference (ºK)"
+        ],
+        [
+          "14.071: thermal capacity (J/K)"
+        ],
+        [
+          "14.072: thermal conductivity (W/mK)"
+        ],
+        [
+          "14.073: thermoelectric power (V/K)"
+        ],
+        [
+          "14.074: time (s)"
+        ],
+        [
+          "14.075: torque (Nm)"
+        ],
+        [
+          "14.076: volume (m3)"
+        ],
+        [
+          "14.077: volume flux (m3/s)"
+        ],
+        [
+          "14.078: weight (N)"
+        ],
+        [
+          "14.079: work (J)"
+        ],
+        [
+          "20.x: (1-byte)"
+        ],
+        [
+          "20.102: HVAC mode"
+        ],
+        [
+          "20.105: HVAC ContrMode"
+        ],
+        [
+          "23.x: (2-bit Set)"
+        ],
+        [
+          "232.x: (3-Byte color RGB)"
+        ]
+      ]
+    },
+    {
+      "name": "Conversions",
+      "headers": [
+        "Idx",
+        "Description",
+        "Type",
+        "Param 1",
+        "Param 2",
+        "Param 3",
+        "Param 4"
+      ],
+      "rows": [
+        [
+          "0",
+          "Limit to 0-100",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "100"
+        ],
+        [
+          "1",
+          "Limit to 0-255",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "255"
+        ],
+        [
+          "2",
+          "Is not 0",
+          "FILTER",
+          "0",
+          "1",
+          "0",
+          "100"
+        ],
+        [
+          "3",
+          "Is higher than 100",
+          "FILTER",
+          "0",
+          "3",
+          "100",
+          "100"
+        ],
+        [
+          "4",
+          "Only positive values",
+          "FILTER",
+          "2",
+          "3",
+          "0",
+          "100"
+        ],
+        [
+          "0",
+          "Celsius to Fahrenheit",
+          "ARITH",
+          "-1",
+          "18",
+          "32",
+          "0"
+        ],
+        [
+          "1",
+          "Fahrenheit to Celsius",
+          "ARITH",
+          "-3",
+          "555",
+          "-17.78",
+          "0"
+        ],
+        [
+          "2",
+          "x10",
+          "ARITH",
+          "1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "/10",
+          "ARITH",
+          "-1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "4",
+          "x100",
+          "ARITH",
+          "2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "5",
+          "/100",
+          "ARITH",
+          "-2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "6",
+          "x1000",
+          "ARITH",
+          "3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "7",
+          "/1000",
+          "ARITH",
+          "-3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "8",
+          "0-100 to 0-255",
+          "SCALE",
+          "0",
+          "100",
+          "0",
+          "255"
+        ],
+        [
+          "9",
+          "0-255 to 0-100",
+          "SCALE",
+          "0",
+          "255",
+          "0",
+          "100"
+        ]
+      ]
+    }
+  ]
+}
