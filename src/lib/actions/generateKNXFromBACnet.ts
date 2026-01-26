@@ -1,8 +1,9 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
-import type { DeviceSignal, BACnetSignal } from '../deviceSignals';
+import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
-import { findHeaderRowIndex } from './utils/headers';
+import { findSignalsSheet, createSheetContext } from './utils/common';
+import { filterBACnetSignals } from './utils/signal-filtering';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { bacnetTypeToKNXDPT } from './utils/mapping';
 import { formatBACnetType } from './utils/bacnet';
@@ -29,22 +30,14 @@ export function generateKNXFromBACnet(
   let rowsAdded = 0;
 
   // Find Signals sheet
-  const signalsSheet = rawWorkbook.sheets.find((s) => s.name === 'Signals');
+  const signalsSheet = findSignalsSheet(rawWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
     return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
   }
 
-  // Find where the actual headers are
-  const headerRowIdx = findHeaderRowIndex(signalsSheet);
-  const headers =
-    headerRowIdx >= 0 ? signalsSheet.rows[headerRowIdx] : signalsSheet.headers;
-
-  // Helper to find column index by exact name
-  const findCol = (name: string): number => {
-    const idx = headers.findIndex((h) => h === name);
-    return idx;
-  };
+  // Create sheet context
+  const { headers, headerRowIdx, findCol } = createSheetContext(signalsSheet);
 
   const getNextGroupAddressFromSheet = (): GroupAddress => {
     const colIdx = findCol('Group Address');
@@ -97,11 +90,11 @@ export function generateKNXFromBACnet(
   const lastDeviceNum = getLastDeviceNumberSimple(signalsSheet);
   const newDeviceNum = lastDeviceNum + 1;
 
-  // Process each BACnet signal
-  for (const sig of deviceSignals) {
-    if (!('objectType' in sig)) continue; // Skip non-BACnet signals
+  // Filter BACnet signals
+  const bacnetSignals = filterBACnetSignals(deviceSignals);
 
-    const bacnetSignal = sig as BACnetSignal;
+  // Process each BACnet signal
+  for (const bacnetSignal of bacnetSignals) {
 
     // Determine signal read/write capabilities based on BACnet object type
     // INPUT (AI, BI, MI): només READ
