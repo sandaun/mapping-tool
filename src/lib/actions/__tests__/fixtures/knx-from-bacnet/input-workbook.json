@@ -1,0 +1,298 @@
+{
+  "sheets": [
+    {
+      "name": "Signals",
+      "headers": [
+        "Intesis MAPS Excel signals file",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "rows": [
+        [
+          "PROJECT_NAME",
+          "Project1",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Intesis MAPS Version",
+          "1.2.23.0",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Internal Protocol",
+          "KNX",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "External Protocol",
+          "BACnet Client",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Timestamp",
+          46031,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "#",
+          "Active",
+          "Description",
+          "DPT",
+          "Group Address",
+          "Additional Addresses",
+          "U",
+          "T",
+          "Ri",
+          "W",
+          "R",
+          "Priority",
+          "#",
+          "Device Name",
+          "Type",
+          "Instance",
+          "Conv. Id",
+          "Conversions"
+        ]
+      ]
+    },
+    {
+      "name": "Conversions",
+      "headers": [
+        "Idx",
+        "Description",
+        "Type",
+        "Param 1",
+        "Param 2",
+        "Param 3",
+        "Param 4"
+      ],
+      "rows": [
+        [
+          "0",
+          "Limit to 0-100",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "100"
+        ],
+        [
+          "1",
+          "Limit to 0-255",
+          "FILTER",
+          "2",
+          "4",
+          "0",
+          "255"
+        ],
+        [
+          "2",
+          "Is not 0",
+          "FILTER",
+          "0",
+          "1",
+          "0",
+          "100"
+        ],
+        [
+          "3",
+          "Is higher than 100",
+          "FILTER",
+          "0",
+          "3",
+          "100",
+          "100"
+        ],
+        [
+          "4",
+          "Only positive values",
+          "FILTER",
+          "2",
+          "3",
+          "0",
+          "100"
+        ],
+        [
+          "0",
+          "Celsius to Fahrenheit",
+          "ARITH",
+          "-1",
+          "18",
+          "32",
+          "0"
+        ],
+        [
+          "1",
+          "Fahrenheit to Celsius",
+          "ARITH",
+          "-3",
+          "555",
+          "-17.78",
+          "0"
+        ],
+        [
+          "2",
+          "x10",
+          "ARITH",
+          "1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "/10",
+          "ARITH",
+          "-1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "4",
+          "x100",
+          "ARITH",
+          "2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "5",
+          "/100",
+          "ARITH",
+          "-2",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "6",
+          "x1000",
+          "ARITH",
+          "3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "7",
+          "/1000",
+          "ARITH",
+          "-3",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "8",
+          "0-100 to 0-255",
+          "SCALE",
+          "0",
+          "100",
+          "0",
+          "255"
+        ],
+        [
+          "9",
+          "0-255 to 0-100",
+          "SCALE",
+          "0",
+          "255",
+          "0",
+          "100"
+        ]
+      ]
+    }
+  ]
+}
