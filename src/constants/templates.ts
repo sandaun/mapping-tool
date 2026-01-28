@@ -4,8 +4,8 @@ export const TEMPLATES = [
   {
     id: 'bacnet-server__modbus-master',
     label: 'BACnet Server → Modbus Master',
-    href: '/templates/bacnet-server-to-modbus-master.xlsx',
-    expectedSheets: ['Signals', 'BACnet Server', 'Conversions'],
+    href: '/templates/IN-BAC-MBM.ibmaps',
+    expectedSheets: [], // Not used for .ibmaps parsing
     promptText: `Convert the following Modbus device register map into CSV format with these exact columns:
 
 deviceId,signalName,registerType,address,dataType,units,description

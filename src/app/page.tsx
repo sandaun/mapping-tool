@@ -26,6 +26,7 @@ export default function Home() {
     busy,
     importArrayBufferAsFile,
     exportWorkbook,
+    originalIbmaps,
   } = useFileImport();
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<
@@ -213,6 +214,7 @@ export default function Home() {
             onExport={handleExport}
             busy={busy}
             pendingExport={pendingExport}
+            originalIbmaps={originalIbmaps} // Pass originalIbmaps
           />
         )}
       </main>
