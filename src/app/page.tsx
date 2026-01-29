@@ -8,6 +8,7 @@ import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
 import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
 import { generateBACnetServerFromKNX } from '@/lib/actions/generateBACnetServerFromKNX';
 import { generateModbusFromKNX } from '@/lib/actions/generateModbusFromKNX';
+import { applyOverridesToWorkbook } from '@/lib/overrides';
 import { useFileImport } from '@/hooks/useFileImport';
 import { TEMPLATES } from '@/constants/templates';
 import { TemplateSelector } from '@/components/TemplateSelector';
@@ -16,6 +17,8 @@ import { DeviceSignalsSection } from '@/components/DeviceSignalsSection';
 import { ResultsSection } from '@/components/ResultsSection';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
 import { Header } from '@/components/Header';
+import type { Override } from '@/types/overrides';
+import type { RawWorkbook } from '@/lib/excel/raw';
 
 export default function Home() {
   const {
@@ -158,9 +161,39 @@ export default function Home() {
     }
   }
 
-  function handleExport() {
-    exportWorkbook();
-    setPendingExport(null);
+  async function handleExport(overrides: Override[]) {
+    if (!raw) return;
+
+    try {
+      // Apply overrides to workbook before exporting
+      const workbookToExport = applyOverridesToWorkbook(raw, overrides, selectedTemplateId);
+      
+      // Export the modified workbook
+      const res = await fetch('/api/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(workbookToExport),
+      });
+
+      if (!res.ok) {
+        throw new Error('Error exportant.');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'export.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      
+      setPendingExport(null);
+    } catch (e) {
+      console.error('Export error:', e);
+      // Error will be shown via the error state if needed
+    }
   }
 
   return (
@@ -213,6 +246,7 @@ export default function Home() {
             onExport={handleExport}
             busy={busy}
             pendingExport={pendingExport}
+            templateId={selectedTemplateId}
           />
         )}
       </main>
