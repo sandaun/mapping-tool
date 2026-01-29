@@ -50,8 +50,8 @@ export function TemplateSelector({
               disabled={busy}
               className={
                 isActive
-                  ? 'px-4 py-2 text-xs font-semibold rounded-lg border border-primary bg-primary/5 text-primary shadow-sm dark:bg-primary/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                  : 'px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  ? 'px-4 py-2 text-xs font-semibold rounded-md border border-primary bg-primary/5 text-primary shadow-sm dark:bg-primary/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  : 'px-4 py-2 text-xs font-semibold rounded-md border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
               }
             >
               {template.label}
@@ -64,7 +64,7 @@ export function TemplateSelector({
           type="button"
           onClick={handleCustomClick}
           disabled={busy}
-          className="px-4 py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed gap-2 inline-flex items-center"
+          className="px-4 py-2 text-xs font-semibold rounded-md border border-slate-200 bg-white text-slate-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed gap-2 inline-flex items-center"
         >
           📁 Custom
         </button>
