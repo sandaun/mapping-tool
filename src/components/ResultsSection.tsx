@@ -63,6 +63,18 @@ export function ResultsSection({
           </p>
         </div>
 
+        {pendingExport && (
+          <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
+            {/* TODO: remove this */}
+            {/* <p className="font-medium text-blue-900 dark:text-blue-100">
+              Export ready
+            </p> */}
+            <p className="text-blue-700 dark:text-blue-300">
+              {pendingExport.signalsCount} signals will be exported
+            </p>
+          </div>
+        )}
+
         <div className="flex gap-2">
           <Button
             onClick={() => setIsDialogOpen(true)}
@@ -81,27 +93,15 @@ export function ResultsSection({
             {busy ? 'Exporting...' : 'Export Template'}
           </Button>
         </div>
-
-        {pendingExport && (
-          <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
-            <p className="font-medium text-blue-900 dark:text-blue-100">
-              Export ready
-            </p>
-            <p className="text-blue-700 dark:text-blue-300">
-              {pendingExport.signalsCount} signals will be written to{' '}
-              {pendingExport.targetSheet}
-            </p>
-          </div>
-        )}
-
-        <details className="rounded-lg border border-border bg-muted/50 p-3">
+        {/* TODO: remove this */}
+        {/* <details className="rounded-lg border border-border bg-muted/50 p-3">
           <summary className="cursor-pointer text-sm font-medium text-foreground">
             View RAW JSON
           </summary>
           <pre className="mt-3 max-h-120 overflow-auto text-xs leading-5 text-muted-foreground">
             {JSON.stringify(raw, null, 2)}
           </pre>
-        </details>
+        </details> */}
       </div>
 
       <SignalsPreviewDialog
