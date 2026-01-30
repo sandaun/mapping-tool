@@ -54,24 +54,24 @@ export function SignalsPreviewDialog({
         <DialogFooter className="gap-2">
           {overrides.length > 0 && (
             <Button
-              variant="outline"
-              className="text-xs text-red-400 border-red-400 bg-red-400/10 hover:text-red-400 hover:bg-red-400/15 dark:bg-red-400/15 dark:hover:border-red-400 dark:hover:bg-red-400/15"
+              variant="danger"
+              className="text-xs"
               onClick={onReset}
             >
               Reset Changes ({overrides.length})
             </Button>
           )}
           <Button
-            variant="outline"
-            className="text-slate-500 border-slate-500 hover:text-slate-500 hover:bg-slate-200 dark:text-slate-300 dark:border-slate-600 font-semibold text-xs hover:dark:border-slate-300 hover:dark:text-slate-300"
+            variant="neutral"
+            className="text-xs"
             onClick={() => onOpenChange(false)}
           >
             Close
           </Button>
           <Button
             onClick={onExport}
-            variant="outline"
-            className="border-secondary bg-secondary/10 text-xs text-secondary hover:border-secondary/60 hover:bg-secondary/15 hover:text-secondary dark:bg-secondary/15 dark:hover:bg-secondary/20"
+            variant="secondary-action"
+            className="text-xs"
           >
             Export Template
           </Button>

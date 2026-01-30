@@ -50,9 +50,8 @@ export function DeviceSignalsSection({
         <Button
           type="button"
           onClick={onCopyPrompt}
-          variant="outline"
-          className="mt-3 text-slate-500 border-slate-500 hover:text-slate-500 hover:bg-slate-200 dark:text-slate-300 dark:border-slate-600 font-semibold text-xs hover:dark:border-slate-300 hover:dark:text-slate-300"
-
+          variant="neutral"
+          className="mt-3 text-xs"
         >
           Copy Prompt
         </Button>
@@ -79,11 +78,10 @@ export function DeviceSignalsSection({
           {/* Botons */}
           <div className="flex items-center gap-3">
             <Button
-              type="button"
               onClick={onParseCSV}
               disabled={!csvInput.trim() || busy}
-              variant="outline"              
-              className="border-primary bg-primary/5 text-xs text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary dark:bg-primary/10 dark:hover:bg-primary/15"
+              variant="primary-action"
+              className="text-xs"
             >
               Parse Signals
             </Button>
@@ -91,8 +89,8 @@ export function DeviceSignalsSection({
               type="button"
               onClick={onGenerateSignals}
               disabled={!isParsed || busy}
-              variant="outline"
-              className="border-secondary text-xs bg-secondary/10 text-secondary hover:border-secondary/60 hover:bg-secondary/15 hover:text-secondary dark:bg-secondary/15 dark:hover:bg-secondary/20"
+              variant="secondary-action"
+              className="text-xs"
             >
               Generate Signals
             </Button>
@@ -100,8 +98,8 @@ export function DeviceSignalsSection({
               type="button"
               onClick={onClearSignals}
               disabled={!canClear || busy}
-              variant="outline"
-              className="text-slate-500 border-slate-500 hover:text-slate-500 hover:bg-slate-200 dark:text-slate-300 dark:border-slate-600 font-semibold text-xs hover:dark:border-slate-300 hover:dark:text-slate-300"
+              variant="neutral"
+              className="text-xs"
             >
               Clear
             </Button>

@@ -74,17 +74,17 @@ export function ResultsSection({
         <div className="flex gap-2">
           <Button
             onClick={() => setIsDialogOpen(true)}
-            variant="outline"
+            variant="neutral"
             disabled={busy}
-            className="text-slate-500 border-slate-500 hover:text-slate-500 hover:bg-slate-200 dark:text-slate-300 dark:border-slate-600 font-semibold text-xs hover:dark:border-slate-300 hover:dark:text-slate-300"
+            className="text-xs"
           >
             Preview & Edit Signals
           </Button>
           <Button
             onClick={handleExport}
             disabled={busy}
-            variant="outline"
-            className="border-secondary bg-secondary/10 text-xs text-secondary hover:border-secondary/60 hover:bg-secondary/15 hover:text-secondary dark:bg-secondary/15 dark:hover:bg-secondary/20"
+            variant="secondary-action"
+            className="text-xs"
           >
             {busy ? 'Exporting...' : 'Export Template'}
           </Button>
