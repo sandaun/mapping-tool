@@ -1,24 +1,37 @@
 import { EXCEL_VALUES } from '@/constants/generation';
 
 /**
- * Map Modbus dataType + registerType → BACnet objectType
+ * Map Modbus dataType + registerType + read/write capabilities → BACnet objectType
+ * Determines both the base type (A/B/M) and the suffix (I/O/V) based on capabilities
  */
 export function mapModbusToBACnetObjectType(
   dataType: string,
-  registerType: string
+  registerType: string,
+  isReadable: boolean,
+  isWritable: boolean,
 ): string {
-  // Coils i DiscreteInput → Binary
+  // Determine base type (A = Analog, B = Binary, M = Multistate)
+  let baseType: string;
+
   if (registerType === 'Coil' || registerType === 'DiscreteInput') {
-    return 'BI';
+    baseType = 'B'; // Binary
+  } else if (dataType.includes('Float') || dataType.includes('Int')) {
+    baseType = 'A'; // Analog
+  } else {
+    baseType = 'A'; // Fallback to Analog
   }
 
-  // HoldingRegister / InputRegister segons dataType
-  if (dataType.includes('Float') || dataType.includes('Int')) {
-    return 'AI'; // Analog Input
+  // Determine suffix based on read/write capabilities
+  let suffix: string;
+  if (isReadable && isWritable) {
+    suffix = 'V'; // Value (read-write)
+  } else if (isWritable) {
+    suffix = 'O'; // Output (write-only)
+  } else {
+    suffix = 'I'; // Input (read-only or default)
   }
 
-  // Fallback
-  return 'AV'; // Analog Value
+  return baseType + suffix;
 }
 
 /**
@@ -75,7 +88,7 @@ export function modbusTypeToKNXDPT(
     | 'Multistate',
   dataLength: number,
   modbusDataType: string,
-  units?: string
+  units?: string,
 ): string {
   // Digital Input/Output → DPT 1.001 (Switch)
   if (signalCategory === 'DigitalInput' || signalCategory === 'DigitalOutput') {
@@ -185,7 +198,10 @@ export function modbusTypeToKNXDPT(
   // PRIORITY 2: Type-based fallback (generic)
   if (signalCategory === 'AnalogInput' || signalCategory === 'AnalogOutput') {
     // Uint32 (4-byte unsigned integer) → DPT 12.001
-    if (modbusDataType.includes('Uint32') || modbusDataType.includes('UInt32')) {
+    if (
+      modbusDataType.includes('Uint32') ||
+      modbusDataType.includes('UInt32')
+    ) {
       return '12.001: counter pulses (unsigned)';
     }
 
@@ -205,7 +221,10 @@ export function modbusTypeToKNXDPT(
     }
 
     // Uint16 (2-byte unsigned integer)
-    if (modbusDataType.includes('Uint16') || modbusDataType.includes('UInt16')) {
+    if (
+      modbusDataType.includes('Uint16') ||
+      modbusDataType.includes('UInt16')
+    ) {
       return '7.001: pulses';
     }
 
@@ -546,7 +565,7 @@ export function knxDPTToBACnetUnits(dpt: string): string {
  */
 export function getBACnetFieldsByType(
   type: string,
-  dpt: string
+  dpt: string,
 ): {
   units: string;
   states: string;

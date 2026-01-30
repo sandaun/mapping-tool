@@ -4,33 +4,33 @@
 export function getModbusFunctions(
   registerType: string,
   isReadable: boolean,
-  isWritable: boolean
+  isWritable: boolean,
 ): { read: string; write: string } {
   if (registerType === 'Coil') {
     return {
-      read: isReadable ? '1: Read Coils' : '',
-      write: isWritable ? '5: Write Single Coil' : '',
+      read: isReadable ? '1: Read Coils' : '-',
+      write: isWritable ? '5: Write Single Coil' : '-',
     };
   }
 
   if (registerType === 'DiscreteInput') {
     return {
-      read: isReadable ? '2: Read Discrete Inputs' : '',
-      write: '',
+      read: isReadable ? '2: Read Discrete Inputs' : '-',
+      write: '-',
     };
   }
 
   if (registerType === 'InputRegister') {
     return {
-      read: isReadable ? '4: Read Input Registers' : '',
-      write: '',
+      read: isReadable ? '4: Read Input Registers' : '-',
+      write: '-',
     };
   }
 
   // HoldingRegister
   return {
-    read: isReadable ? '3: Read Holding Registers' : '',
-    write: isWritable ? '6: Write Single Register' : '',
+    read: isReadable ? '3: Read Holding Registers' : '-',
+    write: isWritable ? '6: Write Single Register' : '-',
   };
 }
 
@@ -56,7 +56,7 @@ export function getModbusReadWrite(objectType: string): string {
 export function getModbusFormat(
   dataType: string,
   registerType?: string,
-  objectType?: string
+  objectType?: string,
 ): string {
   // Coil/DiscreteInput have no format (use empty string)
   if (registerType === 'Coil' || registerType === 'DiscreteInput') {
@@ -81,7 +81,7 @@ export function getModbusFormat(
  */
 export function calculateModbusDataLength(
   registerType: string,
-  dataType: string
+  dataType: string,
 ): string {
   if (registerType === 'Coil' || registerType === 'DiscreteInput') {
     return '1';

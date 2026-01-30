@@ -1,7 +1,14 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
-import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
+import type {
+  GenerateSignalsResult,
+  KNXGenerationPolicy,
+} from '@/types/actions';
+import {
+  WARNINGS,
+  EXCEL_VALUES,
+  DEVICE_TEMPLATES,
+} from '@/constants/generation';
 import { getLastDeviceNumber } from './utils/device';
 import {
   getModbusFunctions,
@@ -20,7 +27,10 @@ import {
 } from './utils/knx';
 import { createSheetContext, findSignalsSheet } from './utils/common';
 import { filterModbusSignals } from './utils/signal-filtering';
-import { getReadWriteCapabilities, getModbusReadWriteFallback } from './utils/read-write';
+import {
+  getReadWriteCapabilities,
+  getModbusReadWriteFallback,
+} from './utils/read-write';
 import type { ModbusSignal } from '../deviceSignals';
 
 /**
@@ -33,7 +43,7 @@ const populateKNXColumns = (
   groupAddress: GroupAddress,
   flags: { U: boolean; T: boolean; Ri: boolean; W: boolean; R: boolean },
   nextId: number,
-  findCol: (name: string) => number
+  findCol: (name: string) => number,
 ): void => {
   row[findCol('#')] = nextId;
   row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
@@ -62,14 +72,14 @@ const populateModbusColumns = (
   newSlaveId: number,
   nextId: number,
   headers: CellValue[],
-  findCol: (name: string) => number
+  findCol: (name: string) => number,
 ): void => {
   // Find second # column
   const modbusIdCol = headers.findIndex(
-    (h, i) => h === '#' && i > findCol('Priority')
+    (h, i) => h === '#' && i > findCol('Priority'),
   );
   if (modbusIdCol >= 0) row[modbusIdCol] = nextId;
-  
+
   row[findCol('Device')] = DEVICE_TEMPLATES.RTU_PORT_B(newDeviceNum);
   row[findCol('# Slave')] = newSlaveId;
   row[findCol('Base')] = EXCEL_VALUES.BASE_ZERO;
@@ -94,16 +104,21 @@ const populateModbusColumns = (
 export function generateKNXFromModbus(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: KNXGenerationPolicy = {}
+  policy: KNXGenerationPolicy = {},
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
 
+  // Deep clone the workbook to ensure React detects changes
+  const updatedWorkbook = JSON.parse(
+    JSON.stringify(rawWorkbook),
+  ) as RawWorkbook;
+
   // Find Signals sheet
-  const signalsSheet = findSignalsSheet(rawWorkbook);
+  const signalsSheet = findSignalsSheet(updatedWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Create sheet context with headers and helper functions
@@ -153,7 +168,7 @@ export function generateKNXFromModbus(
       groupAddress = parseGroupAddress(policy.startGroupAddress);
     } catch {
       warnings.push(
-        `Invalid startGroupAddress: ${policy.startGroupAddress}. Using next available address.`
+        `Invalid startGroupAddress: ${policy.startGroupAddress}. Using next available address.`,
       );
       groupAddress = getNextGroupAddressFromSheet();
     }
@@ -172,7 +187,7 @@ export function generateKNXFromModbus(
 
     const { isReadable, isWritable } = getReadWriteCapabilities(
       modbusSignal,
-      () => getModbusReadWriteFallback(modbusSignal.registerType)
+      () => getModbusReadWriteFallback(modbusSignal.registerType),
     );
 
     // Map Modbus signal to KNX DPT
@@ -191,14 +206,20 @@ export function generateKNXFromModbus(
     }
 
     // Calculate data length and format using Modbus utils
-    const dataLengthStr = calculateModbusDataLength(modbusSignal.registerType, modbusSignal.dataType);
+    const dataLengthStr = calculateModbusDataLength(
+      modbusSignal.registerType,
+      modbusSignal.dataType,
+    );
     const dataLength = parseInt(dataLengthStr, 10);
-    const format = getModbusFormat(modbusSignal.dataType, modbusSignal.registerType);
+    const format = getModbusFormat(
+      modbusSignal.dataType,
+      modbusSignal.registerType,
+    );
     const dpt = modbusTypeToKNXDPT(
       signalCategory,
       dataLength,
       modbusSignal.dataType, // Pass original dataType instead of format
-      modbusSignal.units
+      modbusSignal.units,
     );
 
     // Generate KNX flags
@@ -208,14 +229,33 @@ export function generateKNXFromModbus(
     const modbusFunctions = getModbusFunctions(
       modbusSignal.registerType,
       isReadable,
-      isWritable
+      isWritable,
     );
 
     // Build row with all required columns
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    populateKNXColumns(row, modbusSignal, dpt, groupAddress, flags, nextId, findCol);
-    populateModbusColumns(row, modbusSignal, modbusFunctions, dataLengthStr, format, newDeviceNum, newSlaveId, nextId, headers, findCol);
+    populateKNXColumns(
+      row,
+      modbusSignal,
+      dpt,
+      groupAddress,
+      flags,
+      nextId,
+      findCol,
+    );
+    populateModbusColumns(
+      row,
+      modbusSignal,
+      modbusFunctions,
+      dataLengthStr,
+      format,
+      newDeviceNum,
+      newSlaveId,
+      nextId,
+      headers,
+      findCol,
+    );
 
     signalsSheet.rows.push(row);
     rowsAdded++;
@@ -226,11 +266,11 @@ export function generateKNXFromModbus(
       groupAddress = incrementGroupAddress(groupAddress);
     } catch {
       warnings.push(
-        `Group address overflow at signal ${modbusSignal.signalName}. Stopping generation.`
+        `Group address overflow at signal ${modbusSignal.signalName}. Stopping generation.`,
       );
       break;
     }
   }
 
-  return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
+  return { updatedWorkbook, rowsAdded, warnings };
 }

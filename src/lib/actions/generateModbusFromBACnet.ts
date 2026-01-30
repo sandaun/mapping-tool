@@ -1,7 +1,11 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
 import type { GenerateSignalsResult, AllocationPolicy } from '@/types/actions';
-import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
+import {
+  WARNINGS,
+  EXCEL_VALUES,
+  DEVICE_TEMPLATES,
+} from '@/constants/generation';
 import { getLastDeviceNumberSimple } from './utils/device';
 import { formatBACnetType } from './utils/bacnet';
 import { getModbusFormat, getModbusReadWrite } from './utils/modbus';
@@ -21,15 +25,17 @@ const populateModbusColumns = (
   address: number,
   readWrite: string,
   nextId: number,
-  findCol: (name: string) => number
+  findCol: (name: string) => number,
 ): void => {
   row[findCol('#')] = nextId;
   row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
-  row[findCol('Description')] = bacnetSignal.description || EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Description')] =
+    bacnetSignal.description || EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Data Length')] = dataType.includes('32') ? '32' : '16';
   row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
   row[findCol('Address')] = address;
-  row[findCol('Bit')] = bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Bit')] =
+    bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY_KNX;
   row[findCol('Read / Write')] = readWrite;
   row[findCol('String Length')] = EXCEL_VALUES.EMPTY_KNX;
 };
@@ -43,14 +49,14 @@ const populateBACnetColumns = (
   newDeviceNum: number,
   nextId: number,
   headers: CellValue[],
-  findCol: (name: string) => number
+  findCol: (name: string) => number,
 ): void => {
   // Find second # column
   const bacnetIdCol = headers.findIndex(
-    (h, i) => h === '#' && i > findCol('String Length')
+    (h, i) => h === '#' && i > findCol('String Length'),
   );
   if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
-  
+
   row[findCol('Device Name')] = DEVICE_TEMPLATES.DEVICE(newDeviceNum);
   row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
   row[findCol('Instance')] = bacnetSignal.instance;
@@ -69,20 +75,26 @@ const populateBACnetColumns = (
 export function generateModbusFromBACnet(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: AllocationPolicy = 'simple'
+  policy: AllocationPolicy = 'simple',
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
 
+  // Deep clone the workbook to ensure React detects changes
+  const updatedWorkbook = JSON.parse(
+    JSON.stringify(rawWorkbook),
+  ) as RawWorkbook;
+
   // Find Signals sheet
-  const signalsSheet = findSignalsSheet(rawWorkbook);
+  const signalsSheet = findSignalsSheet(updatedWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Create sheet context with headers and helper functions
-  const { headers, headerRowIdx, findCol, getMaxNumericInColumn } = createSheetContext(signalsSheet);
+  const { headers, headerRowIdx, findCol, getMaxNumericInColumn } =
+    createSheetContext(signalsSheet);
 
   // Get the next # value (sequential ID)
   let nextId =
@@ -113,13 +125,28 @@ export function generateModbusFromBACnet(
     // Build row with 15 columns (Modbus Slave template structure)
     const row: CellValue[] = new Array(headers.length).fill(null);
 
-    populateModbusColumns(row, bacnetSignal, dataType, address, readWrite, nextId, findCol);
-    populateBACnetColumns(row, bacnetSignal, newDeviceNum, nextId, headers, findCol);
+    populateModbusColumns(
+      row,
+      bacnetSignal,
+      dataType,
+      address,
+      readWrite,
+      nextId,
+      findCol,
+    );
+    populateBACnetColumns(
+      row,
+      bacnetSignal,
+      newDeviceNum,
+      nextId,
+      headers,
+      findCol,
+    );
 
     signalsSheet.rows.push(row);
     rowsAdded++;
     nextId++;
   }
 
-  return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
+  return { updatedWorkbook, rowsAdded, warnings };
 }

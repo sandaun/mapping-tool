@@ -1,7 +1,14 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, KNXGenerationPolicy } from '@/types/actions';
-import { WARNINGS, EXCEL_VALUES, DEVICE_TEMPLATES } from '@/constants/generation';
+import type {
+  GenerateSignalsResult,
+  KNXGenerationPolicy,
+} from '@/types/actions';
+import {
+  WARNINGS,
+  EXCEL_VALUES,
+  DEVICE_TEMPLATES,
+} from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterBACnetSignals } from './utils/signal-filtering';
 import { getBACnetReadWriteCapabilities } from './utils/read-write';
@@ -25,16 +32,21 @@ import {
 export function generateKNXFromBACnet(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: KNXGenerationPolicy = {}
+  policy: KNXGenerationPolicy = {},
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
 
+  // Deep clone the workbook to ensure React detects changes
+  const updatedWorkbook = JSON.parse(
+    JSON.stringify(rawWorkbook),
+  ) as RawWorkbook;
+
   // Find Signals sheet
-  const signalsSheet = findSignalsSheet(rawWorkbook);
+  const signalsSheet = findSignalsSheet(updatedWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Create sheet context
@@ -79,7 +91,7 @@ export function generateKNXFromBACnet(
       groupAddress = parseGroupAddress(policy.startGroupAddress);
     } catch {
       warnings.push(
-        `Invalid startGroupAddress: ${policy.startGroupAddress}. Using next available address.`
+        `Invalid startGroupAddress: ${policy.startGroupAddress}. Using next available address.`,
       );
       groupAddress = getNextGroupAddressFromSheet();
     }
@@ -101,7 +113,7 @@ export function generateKNXFromBACnet(
     dpt: string,
     groupAddr: GroupAddress,
     flags: ReturnType<typeof getDefaultKNXFlags>,
-    nextId: number
+    nextId: number,
   ): void => {
     row[findCol('#')] = nextId;
     row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
@@ -123,11 +135,11 @@ export function generateKNXFromBACnet(
     objectType: string,
     instance: number,
     deviceName: string,
-    nextId: number
+    nextId: number,
   ): void => {
     // Find second # column (after Priority)
     const bacnetIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('Priority')
+      (h, i) => h === '#' && i > findCol('Priority'),
     );
     if (bacnetIdCol >= 0) row[bacnetIdCol] = nextId;
     row[findCol('Device Name')] = deviceName;
@@ -140,7 +152,9 @@ export function generateKNXFromBACnet(
   // Process each BACnet signal
   for (const bacnetSignal of bacnetSignals) {
     // Determine signal read/write capabilities based on BACnet object type
-    const { isReadable, isWritable } = getBACnetReadWriteCapabilities(bacnetSignal.objectType);
+    const { isReadable, isWritable } = getBACnetReadWriteCapabilities(
+      bacnetSignal.objectType,
+    );
 
     // Map BACnet signal to KNX DPT
     const dpt = bacnetTypeToKNXDPT(bacnetSignal.objectType, bacnetSignal.units);
@@ -152,11 +166,25 @@ export function generateKNXFromBACnet(
     const row: CellValue[] = new Array(headers.length).fill(null);
 
     // Populate KNX Internal columns
-    populateKNXColumns(row, bacnetSignal.signalName, dpt, groupAddress, flags, nextId);
+    populateKNXColumns(
+      row,
+      bacnetSignal.signalName,
+      dpt,
+      groupAddress,
+      flags,
+      nextId,
+    );
 
     // Populate BACnet Client External columns
-    const deviceName = policy.deviceName ?? DEVICE_TEMPLATES.DEVICE(newDeviceNum);
-    populateBACnetColumns(row, bacnetSignal.objectType, bacnetSignal.instance, deviceName, nextId);
+    const deviceName =
+      policy.deviceName ?? DEVICE_TEMPLATES.DEVICE(newDeviceNum);
+    populateBACnetColumns(
+      row,
+      bacnetSignal.objectType,
+      bacnetSignal.instance,
+      deviceName,
+      nextId,
+    );
 
     signalsSheet.rows.push(row);
     rowsAdded++;
@@ -167,11 +195,11 @@ export function generateKNXFromBACnet(
       groupAddress = incrementGroupAddress(groupAddress);
     } catch {
       warnings.push(
-        `Group address overflow at signal ${bacnetSignal.signalName}. Stopping generation.`
+        `Group address overflow at signal ${bacnetSignal.signalName}. Stopping generation.`,
       );
       break;
     }
   }
 
-  return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
+  return { updatedWorkbook, rowsAdded, warnings };
 }

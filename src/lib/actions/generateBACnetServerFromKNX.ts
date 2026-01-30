@@ -1,6 +1,9 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, BACnetGenerationPolicy } from '@/types/actions';
+import type {
+  GenerateSignalsResult,
+  BACnetGenerationPolicy,
+} from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES } from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterKNXSignals } from './utils/signal-filtering';
@@ -20,28 +23,34 @@ import { formatBACnetType } from './utils/bacnet';
 export function generateBACnetServerFromKNX(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: BACnetGenerationPolicy = {}
+  policy: BACnetGenerationPolicy = {},
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
+
+  // Deep clone the workbook to ensure React detects changes
+  const updatedWorkbook = JSON.parse(
+    JSON.stringify(rawWorkbook),
+  ) as RawWorkbook;
 
   // Filter only KNX signals
   const knxSignals = filterKNXSignals(deviceSignals);
 
   if (knxSignals.length === 0) {
     warnings.push(WARNINGS.NO_KNX_SIGNALS);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Find Signals sheet
-  const signalsSheet = findSignalsSheet(rawWorkbook);
+  const signalsSheet = findSignalsSheet(updatedWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Create sheet context
-  const { headers, findCol, getMaxNumericInColumn, headerRowIdx } = createSheetContext(signalsSheet);
+  const { headers, findCol, getMaxNumericInColumn, headerRowIdx } =
+    createSheetContext(signalsSheet);
 
   // Get the next # value (sequential ID)
   let nextId =
@@ -60,7 +69,7 @@ export function generateBACnetServerFromKNX(
     objectType: string,
     instance: number,
     bacnetFields: ReturnType<typeof getBACnetFieldsByType>,
-    nextId: number
+    nextId: number,
   ): void => {
     row[findCol('#')] = nextId;
     row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
@@ -82,11 +91,11 @@ export function generateBACnetServerFromKNX(
     dptFormatted: string,
     groupAddress: string,
     flags: ReturnType<typeof getDefaultKNXFlags>,
-    nextId: number
+    nextId: number,
   ): void => {
     // Find second # column (after COV)
     const knxIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('COV')
+      (h, i) => h === '#' && i > findCol('COV'),
     );
     if (knxIdCol >= 0) row[knxIdCol] = nextId;
     row[findCol('DPT')] = dptFormatted;
@@ -140,10 +149,24 @@ export function generateBACnetServerFromKNX(
     const row: CellValue[] = new Array(headers.length).fill(null);
 
     // Populate BACnet Server Internal columns
-    populateBACnetColumns(row, knxSignal.signalName, knxSignal.description, objectType, bacnetInstance, bacnetFields, nextId);
+    populateBACnetColumns(
+      row,
+      knxSignal.signalName,
+      knxSignal.description,
+      objectType,
+      bacnetInstance,
+      bacnetFields,
+      nextId,
+    );
 
     // Populate KNX External columns
-    populateKNXColumns(row, dptFormatted, knxSignal.groupAddress, flags, nextId);
+    populateKNXColumns(
+      row,
+      dptFormatted,
+      knxSignal.groupAddress,
+      flags,
+      nextId,
+    );
 
     signalsSheet.rows.push(row);
     rowsAdded++;
@@ -151,5 +174,5 @@ export function generateBACnetServerFromKNX(
     bacnetInstance++;
   }
 
-  return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
+  return { updatedWorkbook, rowsAdded, warnings };
 }

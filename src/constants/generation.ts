@@ -17,15 +17,16 @@ export const WARNINGS = {
 export const EXCEL_VALUES = {
   // Common values
   ACTIVE_TRUE: 'True',
-  EMPTY_BACNET: '-',  // BACnet empty fields (NC, COV, Rel. Def., etc.)
-  EMPTY_KNX: '',      // KNX empty fields (Additional Addresses, flags, Conv. Id, etc.)
-  
+  EMPTY_BACNET: '-', // BACnet empty fields (NC, COV, Rel. Def., etc.)
+  EMPTY_KNX: '', // KNX empty fields (Additional Addresses, flags, Conv. Id, etc.)
+  EMPTY_MODBUS: '-', // Modbus empty fields (Bit, # Bits, Conv. Id, Conversions)
+
   // Modbus specific
   BASE_ZERO: '0-based',
   BASE_ONE: '1-based',
   BYTE_ORDER_BIG_ENDIAN: '0: Big Endian',
   DEFAULT_DEADBAND: '0',
-  
+
   // KNX specific
   DEFAULT_PRIORITY: '3: Normal',
 } as const;
@@ -49,7 +50,7 @@ export const COLUMN_NAMES = {
   ACTIVE: 'Active',
   DESCRIPTION: 'Description',
   NAME: 'Name',
-  
+
   // BACnet columns
   TYPE: 'Type',
   INSTANCE: 'Instance',
@@ -59,7 +60,7 @@ export const COLUMN_NAMES = {
   NUM_STATES: '# States',
   REL_DEF: 'Rel. Def.',
   COV: 'COV',
-  
+
   // Modbus columns
   DEVICE: 'Device',
   NUM_SLAVE: '# Slave',
@@ -75,7 +76,7 @@ export const COLUMN_NAMES = {
   DEADBAND: 'Deadband',
   CONV_ID: 'Conv. Id',
   CONVERSIONS: 'Conversions',
-  
+
   // KNX columns
   DPT: 'DPT',
   GROUP_ADDRESS: 'Group Address',
@@ -86,11 +87,11 @@ export const COLUMN_NAMES = {
   W: 'W',
   R: 'R',
   PRIORITY: 'Priority',
-  
+
   // Modbus Slave specific
   READ_WRITE: 'Read / Write',
   STRING_LENGTH: 'String Length',
-  
+
   // BACnet Client specific
   DEVICE_NAME: 'Device Name',
 } as const;

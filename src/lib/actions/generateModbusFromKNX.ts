@@ -1,6 +1,9 @@
 import type { RawWorkbook, CellValue } from '../excel/raw';
 import type { DeviceSignal } from '../deviceSignals';
-import type { GenerateSignalsResult, ModbusGenerationPolicy } from '@/types/actions';
+import type {
+  GenerateSignalsResult,
+  ModbusGenerationPolicy,
+} from '@/types/actions';
 import { WARNINGS, EXCEL_VALUES } from '@/constants/generation';
 import { findSignalsSheet, createSheetContext } from './utils/common';
 import { filterKNXSignals } from './utils/signal-filtering';
@@ -22,28 +25,34 @@ import {
 export function generateModbusFromKNX(
   deviceSignals: DeviceSignal[],
   rawWorkbook: RawWorkbook,
-  policy: ModbusGenerationPolicy = {}
+  policy: ModbusGenerationPolicy = {},
 ): GenerateSignalsResult {
   const warnings: string[] = [];
   let rowsAdded = 0;
+
+  // Deep clone the workbook to ensure React detects changes
+  const updatedWorkbook = JSON.parse(
+    JSON.stringify(rawWorkbook),
+  ) as RawWorkbook;
 
   // Filter only KNX signals
   const knxSignals = filterKNXSignals(deviceSignals);
 
   if (knxSignals.length === 0) {
     warnings.push(WARNINGS.NO_KNX_SIGNALS);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Find Signals sheet
-  const signalsSheet = findSignalsSheet(rawWorkbook);
+  const signalsSheet = findSignalsSheet(updatedWorkbook);
   if (!signalsSheet) {
     warnings.push(WARNINGS.SIGNALS_SHEET_NOT_FOUND);
-    return { updatedWorkbook: rawWorkbook, rowsAdded: 0, warnings };
+    return { updatedWorkbook, rowsAdded: 0, warnings };
   }
 
   // Create sheet context
-  const { headers, findCol, getMaxNumericInColumn, headerRowIdx } = createSheetContext(signalsSheet);
+  const { headers, findCol, getMaxNumericInColumn, headerRowIdx } =
+    createSheetContext(signalsSheet);
 
   // Get the next # value (sequential ID)
   let nextId =
@@ -62,7 +71,7 @@ export function generateModbusFromKNX(
     format: string,
     address: number,
     readWrite: string,
-    nextId: number
+    nextId: number,
   ): void => {
     row[findCol('#')] = nextId;
     row[findCol('Active')] = EXCEL_VALUES.ACTIVE_TRUE;
@@ -81,11 +90,11 @@ export function generateModbusFromKNX(
     dptFormatted: string,
     groupAddress: string,
     flags: ReturnType<typeof getDefaultKNXFlags>,
-    nextId: number
+    nextId: number,
   ): void => {
     // Find second # column (after String Length)
     const knxIdCol = headers.findIndex(
-      (h, i) => h === '#' && i > findCol('String Length')
+      (h, i) => h === '#' && i > findCol('String Length'),
     );
     if (knxIdCol >= 0) row[knxIdCol] = nextId;
     row[findCol('DPT')] = dptFormatted;
@@ -141,10 +150,24 @@ export function generateModbusFromKNX(
     const row: CellValue[] = new Array(headers.length).fill(null);
 
     // Populate Modbus Internal columns
-    populateModbusColumns(row, knxSignal.signalName, dataLength, format, modbusAddress, readWrite, nextId);
+    populateModbusColumns(
+      row,
+      knxSignal.signalName,
+      dataLength,
+      format,
+      modbusAddress,
+      readWrite,
+      nextId,
+    );
 
     // Populate KNX External columns
-    populateKNXColumns(row, dptFormatted, knxSignal.groupAddress, flags, nextId);
+    populateKNXColumns(
+      row,
+      dptFormatted,
+      knxSignal.groupAddress,
+      flags,
+      nextId,
+    );
 
     signalsSheet.rows.push(row);
     rowsAdded++;
@@ -152,5 +175,5 @@ export function generateModbusFromKNX(
     modbusAddress++;
   }
 
-  return { updatedWorkbook: rawWorkbook, rowsAdded, warnings };
+  return { updatedWorkbook, rowsAdded, warnings };
 }

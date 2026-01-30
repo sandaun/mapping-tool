@@ -31,13 +31,13 @@ export function ResultsSection({
   // Extract signals from workbook
   const extractedSignals = useMemo(
     () => extractSignalsFromWorkbook(raw, templateId),
-    [raw, templateId]
+    [raw, templateId],
   );
 
   // Apply overrides to get displayed signals
   const displayedSignals = useMemo(
     () => applyOverrides(extractedSignals, overrides),
-    [extractedSignals, overrides]
+    [extractedSignals, overrides],
   );
 
   const handleDelete = (signalId: string) => {
@@ -61,14 +61,6 @@ export function ResultsSection({
           <p className="text-sm text-muted-foreground">
             Sheets: {sheetNames.join(', ')}
           </p>
-        </div>
-
-        <div className="flex items-center gap-2 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-300">
-          <span className="font-medium">✓</span>
-          <span>
-            {displayedSignals.length} signal{displayedSignals.length !== 1 ? 's' : ''}{' '}
-            ready to export
-          </span>
         </div>
 
         <div className="flex gap-2">
