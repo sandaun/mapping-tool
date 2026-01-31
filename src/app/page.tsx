@@ -40,6 +40,7 @@ export default function Home() {
     handleParseCSV,
     handleClearSignals,
     handleGenerateSignals,
+    generateWithSignals,
     resetPendingExport,
   } = useSignalsWorkflow(selectedTemplate, raw, setRaw);
 
@@ -123,6 +124,7 @@ export default function Home() {
             parseAndAddSignals={parseAndAddSignals}
             onCopyPrompt={handleCopyPrompt}
             onGenerateSignals={handleGenerateSignals}
+            generateWithSignals={generateWithSignals}
             onClearSignals={handleClearSignals}
             deviceSignals={deviceSignals}
             parseWarnings={parseWarnings}

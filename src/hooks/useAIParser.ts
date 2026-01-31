@@ -7,7 +7,12 @@ export type AIParseStatus =
   | { status: 'idle' }
   | { status: 'uploading'; file: File; progress: number }
   | { status: 'parsing'; file: File }
-  | { status: 'review'; signals: (DeviceSignal & { confidence: number })[]; warnings: string[]; fileName: string }
+  | {
+      status: 'review';
+      signals: (DeviceSignal & { confidence: number })[];
+      warnings: string[];
+      fileName: string;
+    }
   | { status: 'error'; error: string; code?: string };
 
 interface AIParseResult {
@@ -26,7 +31,11 @@ interface AIParseResult {
 
 interface UseAIParserReturn {
   state: AIParseStatus;
-  parseFile: (file: File, templateId: TemplateId, model?: AIModel) => Promise<void>;
+  parseFile: (
+    file: File,
+    templateId: TemplateId,
+    model?: AIModel,
+  ) => Promise<void>;
   reset: () => void;
   acceptSignals: () => (DeviceSignal & { confidence: number })[] | null;
   retry: (file: File, templateId: TemplateId, model?: AIModel) => Promise<void>;
@@ -85,18 +94,21 @@ export function useAIParser(): UseAIParserReturn {
       } catch (error) {
         setState({
           status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error occurred',
+          error:
+            error instanceof Error ? error.message : 'Unknown error occurred',
         });
       }
     },
-    []
+    [],
   );
 
   const reset = useCallback(() => {
     setState({ status: 'idle' });
   }, []);
 
-  const acceptSignals = useCallback((): (DeviceSignal & { confidence: number })[] | null => {
+  const acceptSignals = useCallback(():
+    | (DeviceSignal & { confidence: number })[]
+    | null => {
     if (state.status === 'review') {
       return state.signals;
     }
@@ -108,7 +120,7 @@ export function useAIParser(): UseAIParserReturn {
       setState({ status: 'idle' });
       await parseFile(file, templateId, model);
     },
-    [parseFile]
+    [parseFile],
   );
 
   return {

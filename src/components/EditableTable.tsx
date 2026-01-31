@@ -16,7 +16,7 @@ import type { EditableRow } from '@/types/overrides';
 
 type EditableTableProps = {
   data: EditableRow[];
-  onDelete: (signalId: string) => void;
+  onDelete?: (signalId: string) => void;
 };
 
 export function EditableTable({ data, onDelete }: EditableTableProps) {
@@ -43,23 +43,26 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
       },
     }));
 
-    // Add actions column
-    const actionsColumn: ColumnDef<EditableRow> = {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => (
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
-          onClick={() => onDelete(row.original.id)}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      ),
-    };
+    // Only add actions column if onDelete is provided
+    if (onDelete) {
+      const actionsColumn: ColumnDef<EditableRow> = {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
+            onClick={() => onDelete(row.original.id)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        ),
+      };
+      return [...dataColumns, actionsColumn];
+    }
 
-    return [...dataColumns, actionsColumn];
+    return dataColumns;
   }, [data, onDelete]);
 
   // eslint-disable-next-line react-hooks/incompatible-library

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import type { Template } from '@/types/page.types';
+import type { EditableRow } from '@/types/overrides';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { EditableTable } from './EditableTable';
 import { FileUploader } from './FileUploader';
 import { SignalReviewPanel } from './SignalReviewPanel';
 import { useAIParser } from '@/hooks/useAIParser';
@@ -18,6 +20,7 @@ type DeviceSignalsSectionProps = {
   parseAndAddSignals: (csv: string) => void;
   onCopyPrompt: () => void;
   onGenerateSignals: () => void;
+  generateWithSignals: (signals: DeviceSignal[]) => void;
   onClearSignals: () => void;
   deviceSignals: DeviceSignal[];
   parseWarnings: string[];
@@ -32,30 +35,25 @@ export function DeviceSignalsSection({
   parseAndAddSignals,
   onCopyPrompt,
   onGenerateSignals,
+  generateWithSignals,
   onClearSignals,
   deviceSignals,
   parseWarnings,
   busy,
 }: DeviceSignalsSectionProps) {
   const [showManualInput, setShowManualInput] = useState(false);
-  const [hasSavedData, setHasSavedData] = useState(false);
-  const { state, parseFile, reset, acceptSignals } = useAIParser();
 
-  const isParsed = deviceSignals.length > 0;
-  const canClear =
-    isParsed || csvInput.trim().length > 0 || parseWarnings.length > 0;
-
-  // Check for saved data on mount
-  useEffect(() => {
+  // Check for saved data on mount using lazy initializer (avoids useEffect + setState)
+  const [hasSavedData, setHasSavedData] = useState(() => {
+    if (typeof window === 'undefined') return false;
     const saved = localStorage.getItem('ai-parsed-signals');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         const age = Date.now() - parsed.timestamp;
         const MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
-
         if (age < MAX_AGE) {
-          setHasSavedData(true);
+          return true;
         } else {
           localStorage.removeItem('ai-parsed-signals');
         }
@@ -63,24 +61,58 @@ export function DeviceSignalsSection({
         localStorage.removeItem('ai-parsed-signals');
       }
     }
-  }, []);
+    return false;
+  });
+
+  const { state, parseFile, reset, acceptSignals } = useAIParser();
+
+  const isParsed = deviceSignals.length > 0;
+  const canClear =
+    isParsed || csvInput.trim().length > 0 || parseWarnings.length > 0;
+
+  // Convert device signals to EditableRow format for table
+  const signalsTableData: EditableRow[] = useMemo(() => {
+    return deviceSignals.map((sig, index) => {
+      let type = '—';
+      let address: string | number = '—';
+
+      if ('objectType' in sig) {
+        type = sig.objectType;
+        address = sig.instance;
+      } else if ('registerType' in sig) {
+        type = sig.registerType;
+        address = sig.address;
+      } else if ('dpt' in sig) {
+        type = sig.dpt;
+        address = 'groupAddress' in sig ? sig.groupAddress : '—';
+      }
+
+      return {
+        id: `signal-${index}`,
+        Device: 'deviceId' in sig ? sig.deviceId : '—',
+        Name: sig.signalName,
+        Type: type,
+        Address: String(address),
+        Units: 'units' in sig ? (sig.units ?? '—') : '—',
+      };
+    });
+  }, [deviceSignals]);
 
   // Handle file upload
   const handleFileSelect = async (file: File) => {
     await parseFile(file, template.id);
   };
 
-  // Handle accepting AI signals
+  // Handle accepting AI signals and generating directly
   const handleAcceptSignals = () => {
     const signals = acceptSignals();
     if (signals) {
-      // Convert to CSV format and parse directly
-      const csv = convertSignalsToCSV(signals);
-      parseAndAddSignals(csv);
+      // Generate directly with the AI-parsed signals (no intermediate state)
+      generateWithSignals(signals);
+
       reset();
 
       // Save to localStorage with timestamp
-      // eslint-disable-next-line
       const timestamp = Date.now();
       localStorage.setItem(
         'ai-parsed-signals',
@@ -324,7 +356,7 @@ export function DeviceSignalsSection({
 
       {/* Preview signals */}
       {deviceSignals.length > 0 && (
-        <div className="rounded-lg border border-border bg-muted/30 p-4">
+        <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Badge variant="default" className="bg-emerald-600">
@@ -354,54 +386,9 @@ export function DeviceSignalsSection({
             </div>
           </div>
 
-          <div className="mt-3 overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-border text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="px-2 py-2">Device</th>
-                  <th className="px-2 py-2">Signal</th>
-                  <th className="px-2 py-2">Type</th>
-                  <th className="px-2 py-2">Address/Instance</th>
-                  <th className="px-2 py-2">Units</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {deviceSignals.slice(0, 20).map((sig, i) => (
-                  <tr key={i} className="text-foreground">
-                    <td className="px-2 py-2 font-mono text-xs">
-                      {'deviceId' in sig ? sig.deviceId : '—'}
-                    </td>
-                    <td className="px-2 py-2">{sig.signalName}</td>
-                    <td className="px-2 py-2 font-mono text-xs">
-                      {'objectType' in sig
-                        ? sig.objectType
-                        : 'registerType' in sig
-                          ? sig.registerType
-                          : 'dpt' in sig
-                            ? sig.dpt
-                            : '—'}
-                    </td>
-                    <td className="px-2 py-2 font-mono text-xs">
-                      {'instance' in sig
-                        ? sig.instance
-                        : 'address' in sig
-                          ? sig.address
-                          : 'groupAddress' in sig
-                            ? sig.groupAddress
-                            : '—'}
-                    </td>
-                    <td className="px-2 py-2 text-xs">
-                      {'units' in sig ? (sig.units ?? '—') : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {deviceSignals.length > 20 && (
-              <p className="mt-2 text-xs text-muted-foreground">
-                Showing first 20 of {deviceSignals.length} signals.
-              </p>
-            )}
+          {/* Use EditableTable for consistent styling */}
+          <div className="max-h-64 overflow-auto">
+            <EditableTable data={signalsTableData} />
           </div>
         </div>
       )}

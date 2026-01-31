@@ -62,27 +62,40 @@ export const useSignalsWorkflow = (
   };
 
   /**
-   * Generate signals and update workbook
+   * Generate signals and update workbook (uses current deviceSignals state)
    */
   const handleGenerateSignals = () => {
-    if (!raw || deviceSignals.length === 0) return;
+    if (deviceSignals.length === 0) return;
+    generateWithSignals(deviceSignals);
+
+    // Clear after generating (already done in generateWithSignals? No, it doesn't clear)
+    setCsvInput('');
+    setDeviceSignals([]);
+  };
+
+  /**
+   * Generate signals directly with provided signals (bypasses deviceSignals state)
+   * Used for AI workflow where we don't need the intermediate preview
+   */
+  const generateWithSignals = (signals: DeviceSignal[]) => {
+    if (!raw || signals.length === 0) return;
 
     try {
       let result;
 
       // Dispatch to correct action based on gateway type
       if (template.id === 'bacnet-server__modbus-master') {
-        result = generateBACnetFromModbus(deviceSignals, raw, 'simple');
+        result = generateBACnetFromModbus(signals, raw, 'simple');
       } else if (template.id === 'modbus-slave__bacnet-client') {
-        result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
+        result = generateModbusFromBACnet(signals, raw, 'simple');
       } else if (template.id === 'knx__modbus-master') {
-        result = generateKNXFromModbus(deviceSignals, raw);
+        result = generateKNXFromModbus(signals, raw);
       } else if (template.id === 'knx__bacnet-client') {
-        result = generateKNXFromBACnet(deviceSignals, raw);
+        result = generateKNXFromBACnet(signals, raw);
       } else if (template.id === 'modbus-slave__knx') {
-        result = generateModbusFromKNX(deviceSignals, raw);
+        result = generateModbusFromKNX(signals, raw);
       } else if (template.id === 'bacnet-server__knx') {
-        result = generateBACnetServerFromKNX(deviceSignals, raw);
+        result = generateBACnetServerFromKNX(signals, raw);
       } else {
         throw new Error(`Gateway type not implemented yet: ${template.id}`);
       }
@@ -105,10 +118,6 @@ export const useSignalsWorkflow = (
         signalsCount: (prev?.signalsCount ?? 0) + result.rowsAdded,
         targetSheet,
       }));
-
-      // Clear CSV input i signals després de generar
-      setCsvInput('');
-      setDeviceSignals([]);
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setParseWarnings((prev) => [...prev, message]);
@@ -131,6 +140,7 @@ export const useSignalsWorkflow = (
     handleParseCSV,
     handleClearSignals,
     handleGenerateSignals,
+    generateWithSignals,
     resetPendingExport,
   };
 };
