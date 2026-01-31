@@ -16,6 +16,7 @@ import {
   type AIProvider,
   supportsVision,
   getApiKey,
+  PROVIDER_INFO,
 } from '@/lib/ai/config';
 import { buildAIMessageContent } from '@/lib/ai/file-extract';
 
@@ -61,13 +62,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check API key for selected provider
-    const apiKey = getApiKey(providerParam);
+    // Hybrid provider strategy:
+    // - PDFs → Always OpenAI (has vision, best quality)
+    // - Excel/CSV/Text → Use configured provider (Cerebras/Groq for free)
+    const isPDF = file.type === 'application/pdf' || file.name.endsWith('.pdf');
+    const finalProvider: AIProvider = isPDF ? 'openai' : providerParam;
+
+    // Check API key for final provider
+    const apiKey = getApiKey(finalProvider);
     if (!apiKey) {
+      const providerName = PROVIDER_INFO[finalProvider].name;
       return Response.json(
         {
-          error: `${providerParam} API key not configured. Please check your environment variables.`,
+          error: isPDF
+            ? `PDF files require ${providerName}. Please add ${PROVIDER_INFO[finalProvider].apiKeyName} to .env.local`
+            : `${providerName} API key not configured. Please check your environment variables.`,
           code: 'MISSING_API_KEY',
+          suggestion: isPDF
+            ? `Add OPENAI_API_KEY to process PDFs with vision, or convert to Excel/CSV first`
+            : undefined,
         },
         { status: 401 },
       );
@@ -108,14 +121,14 @@ export async function POST(request: Request) {
     const schema = SCHEMAS[inputType];
     const systemPrompt = AI_PROMPTS[inputType];
 
-    // Get AI model (use provided or default)
-    const model = getAIModel(providerParam, modelParam || undefined);
+    // Get AI model using final provider (hybrid strategy applied)
+    const model = getAIModel(finalProvider, modelParam || undefined);
 
-    // Build message content based on provider capabilities and file type
+    // Build message content based on final provider capabilities and file type
     const messageContent = await buildAIMessageContent(
       file,
       `Extract all ${inputType.toUpperCase()} signals from this file: ${file.name}`,
-      providerParam,
+      finalProvider,
     );
 
     // Call AI to parse the file
@@ -174,9 +187,9 @@ export async function POST(request: Request) {
         signalsFound: signals.length,
         templateId,
         inputType,
-        provider: providerParam,
-        usedTextExtraction:
-          !supportsVision(providerParam) && file.type === 'application/pdf',
+        provider: finalProvider, // Actual provider used (hybrid strategy)
+        requestedProvider: providerParam, // What user requested
+        usedTextExtraction: !supportsVision(finalProvider),
         confidenceStats,
       },
     });

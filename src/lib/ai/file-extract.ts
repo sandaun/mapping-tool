@@ -1,4 +1,3 @@
-import { extractText } from 'unpdf';
 import * as XLSX from 'xlsx';
 
 export interface ExtractedContent {
@@ -6,23 +5,6 @@ export interface ExtractedContent {
   data?: string; // For file: data URI, for text: plain text
   mediaType?: string;
   text?: string; // Alternative for text content
-}
-
-/**
- * Extract text content from PDF buffer using unpdf
- * unpdf works in Next.js/serverless without requiring workers
- */
-export async function extractPDFText(buffer: Buffer): Promise<string> {
-  try {
-    // unpdf requires Uint8Array
-    const uint8Array = new Uint8Array(buffer);
-    // Extract text with mergePages to get a single string
-    const { text } = await extractText(uint8Array, { mergePages: true });
-    return cleanExtractedText(text);
-  } catch (error) {
-    console.error('PDF extraction error:', error);
-    throw new Error('Failed to extract text from PDF');
-  }
 }
 
 /**
@@ -121,7 +103,11 @@ export async function prepareFileForAI(
   let textContent: string;
 
   if (mimeType === 'application/pdf' || file.name.endsWith('.pdf')) {
-    textContent = await extractPDFText(buffer);
+    // PDFs should always go to OpenAI with vision (hybrid strategy)
+    // If we're here, something went wrong with provider routing
+    throw new Error(
+      'PDF text extraction attempted but PDFs should use OpenAI vision. This is a routing error.',
+    );
   } else if (
     mimeType.includes('spreadsheet') ||
     mimeType.includes('excel') ||

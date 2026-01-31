@@ -51,9 +51,6 @@ export function getAIModel(
   // Priority: 1) explicit model param, 2) AI_MODEL env, 3) provider default
   const modelToUse = model || process.env.AI_MODEL;
 
-  console.log('AI Provider:', provider);
-  console.log('AI Model:', modelToUse);
-
   switch (provider) {
     case 'groq':
       // Use: explicit > env > default Groq model
