@@ -19,11 +19,7 @@ export const ModbusSignalSchema = z.object({
   registerType: z
     .enum(['HoldingRegister', 'InputRegister', 'Coil', 'DiscreteInput'])
     .describe('Modbus register type'),
-  address: z
-    .number()
-    .int()
-    .min(0)
-    .describe('Modbus register address (0-based integer)'),
+  address: z.number().describe('Modbus register address (integer, 0-based)'),
   dataType: z
     .enum(['Int16', 'Uint16', 'Int32', 'Uint32', 'Float32', 'Int64', 'Uint64'])
     .describe(
@@ -55,8 +51,6 @@ export const ModbusSignalSchema = z.object({
     ),
   confidence: z
     .number()
-    .min(0)
-    .max(1)
     .describe('Confidence score from 0 to 1 based on clarity of source data'),
 });
 
@@ -78,9 +72,7 @@ export const BACnetSignalSchema = z.object({
     ),
   instance: z
     .number()
-    .int()
-    .min(0)
-    .describe('BACnet object instance number (0-based integer)'),
+    .describe('BACnet object instance number (integer, 0-based)'),
   units: z
     .string()
     .nullable()
@@ -95,8 +87,6 @@ export const BACnetSignalSchema = z.object({
     ),
   confidence: z
     .number()
-    .min(0)
-    .max(1)
     .describe('Confidence score from 0 to 1 based on clarity of source data'),
 });
 
@@ -122,8 +112,6 @@ export const KNXSignalSchema = z.object({
     ),
   confidence: z
     .number()
-    .min(0)
-    .max(1)
     .describe('Confidence score from 0 to 1 based on clarity of source data'),
 });
 

@@ -12,8 +12,12 @@ import {
   isAllowedFileType,
   getFileExtension,
   getAIModel,
-  type AIModel,
+  DEFAULT_PROVIDER,
+  type AIProvider,
+  supportsVision,
+  getApiKey,
 } from '@/lib/ai/config';
+import { buildAIMessageContent } from '@/lib/ai/file-extract';
 
 // Map template IDs to input types
 const TEMPLATE_INPUT_TYPE: Record<TemplateId, 'modbus' | 'bacnet' | 'knx'> = {
@@ -38,7 +42,9 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const templateId = formData.get('templateId') as TemplateId | null;
-    const modelParam = formData.get('model') as AIModel | null;
+    const providerParam =
+      (formData.get('provider') as AIProvider) || DEFAULT_PROVIDER;
+    const modelParam = formData.get('model') as string | null;
 
     // Validate required fields
     if (!file) {
@@ -52,6 +58,18 @@ export async function POST(request: Request) {
       return Response.json(
         { error: 'No template selected', code: 'MISSING_TEMPLATE' },
         { status: 400 },
+      );
+    }
+
+    // Check API key for selected provider
+    const apiKey = getApiKey(providerParam);
+    if (!apiKey) {
+      return Response.json(
+        {
+          error: `${providerParam} API key not configured. Please check your environment variables.`,
+          code: 'MISSING_API_KEY',
+        },
+        { status: 401 },
       );
     }
 
@@ -90,83 +108,15 @@ export async function POST(request: Request) {
     const schema = SCHEMAS[inputType];
     const systemPrompt = AI_PROMPTS[inputType];
 
-    // Read file content
-    const bytes = await file.arrayBuffer();
-    const mimeType = file.type || 'application/octet-stream';
-
-    // Determine if this is a file type that OpenAI supports natively
-    const nativeFileTypes = [
-      'application/pdf',
-      'image/png',
-      'image/jpeg',
-      'image/webp',
-      'image/gif',
-    ];
-
     // Get AI model (use provided or default)
-    const model = getAIModel(modelParam || undefined);
+    const model = getAIModel(providerParam, modelParam || undefined);
 
-    // Build message content based on file type
-    type MessageContent = Array<
-      | { type: 'text'; text: string }
-      | { type: 'file'; data: string; mediaType: string }
-    >;
-
-    let messageContent: MessageContent;
-
-    if (nativeFileTypes.includes(mimeType)) {
-      // For PDFs and images, send as file attachment
-      const base64 = Buffer.from(bytes).toString('base64');
-      messageContent = [
-        {
-          type: 'text',
-          text: `Extract all ${inputType.toUpperCase()} signals from this file: ${file.name}`,
-        },
-        {
-          type: 'file',
-          data: `data:${mimeType};base64,${base64}`,
-          mediaType: mimeType,
-        },
-      ];
-    } else {
-      // For text-based files (CSV, TXT, Excel), extract content as text
-      let textContent: string;
-
-      if (
-        mimeType.includes('spreadsheet') ||
-        mimeType.includes('excel') ||
-        file.name.endsWith('.xlsx') ||
-        file.name.endsWith('.xls')
-      ) {
-        // For Excel files, we need to use xlsx library to extract text
-        const XLSX = await import('xlsx');
-        const workbook = XLSX.read(bytes, { type: 'array' });
-        const sheetsText = workbook.SheetNames.map((name) => {
-          const sheet = workbook.Sheets[name];
-          const csv = XLSX.utils.sheet_to_csv(sheet);
-          return `=== Sheet: ${name} ===\n${csv}`;
-        }).join('\n\n');
-        textContent = sheetsText;
-      } else {
-        // For plain text, CSV, etc., decode as UTF-8
-        const decoder = new TextDecoder('utf-8');
-        textContent = decoder.decode(bytes);
-      }
-
-      messageContent = [
-        {
-          type: 'text',
-          text: `Extract all ${inputType.toUpperCase()} signals from this document content.
-
-File name: ${file.name}
-File type: ${mimeType}
-
---- DOCUMENT CONTENT START ---
-${textContent}
---- DOCUMENT CONTENT END ---`,
-        },
-      ];
-    }
+    // Build message content based on provider capabilities and file type
+    const messageContent = await buildAIMessageContent(
+      file,
+      `Extract all ${inputType.toUpperCase()} signals from this file: ${file.name}`,
+      providerParam,
+    );
 
     // Call AI to parse the file
     const result = await generateObject({
@@ -224,6 +174,9 @@ ${textContent}
         signalsFound: signals.length,
         templateId,
         inputType,
+        provider: providerParam,
+        usedTextExtraction:
+          !supportsVision(providerParam) && file.type === 'application/pdf',
         confidenceStats,
       },
     });
@@ -267,7 +220,7 @@ ${textContent}
       return Response.json(
         {
           error:
-            'OpenAI API key is invalid or missing. Please check your configuration.',
+            'API key is invalid or missing. Please check your configuration.',
           code: 'AUTH_ERROR',
           message: error.message,
         },
@@ -292,7 +245,9 @@ export async function GET() {
   return Response.json({
     status: 'ok',
     message: 'AI file parsing endpoint is ready',
-    supportedModels: ['gpt-4o', 'gpt-4o-mini'],
+    supportedProviders: ['openai', 'groq', 'cerebras'],
+    currentProvider: DEFAULT_PROVIDER,
+    supportsVision: supportsVision(),
     maxFileSize: UPLOAD_CONFIG.maxFileSizeMB,
   });
 }

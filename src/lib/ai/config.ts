@@ -1,19 +1,106 @@
 // AI Configuration and Model Selection
+// Supports: OpenAI (with vision), Groq, Cerebras (text-based)
 
 import { openai } from '@ai-sdk/openai';
+import { groq } from '@ai-sdk/groq';
+import { cerebras } from '@ai-sdk/cerebras';
 import type { LanguageModel } from 'ai';
 
-// Model configuration
+// Provider configuration
+export type AIProvider = 'openai' | 'groq' | 'cerebras';
+
+// Default provider from environment variable (server-side only)
+export const DEFAULT_PROVIDER: AIProvider =
+  (process.env.AI_PROVIDER as AIProvider) || 'openai';
+
+// Provider information for UI
+export const PROVIDER_INFO: Record<
+  AIProvider,
+  {
+    name: string;
+    description: string;
+    supportsVision: boolean;
+    apiKeyName: string;
+  }
+> = {
+  openai: {
+    name: 'OpenAI',
+    description: 'Best accuracy. Supports PDFs/images directly via vision.',
+    supportsVision: true,
+    apiKeyName: 'OPENAI_API_KEY',
+  },
+  groq: {
+    name: 'Groq',
+    description: 'Fast inference. Text extraction required for PDFs.',
+    supportsVision: false,
+    apiKeyName: 'GROQ_API_KEY',
+  },
+  cerebras: {
+    name: 'Cerebras',
+    description: 'Fast inference. Text extraction required for PDFs.',
+    supportsVision: false,
+    apiKeyName: 'CEREBRAS_API_KEY',
+  },
+};
+
+// Get the AI model instance based on provider
+export function getAIModel(
+  provider: AIProvider = DEFAULT_PROVIDER,
+  model?: string,
+): LanguageModel {
+  // Priority: 1) explicit model param, 2) AI_MODEL env, 3) provider default
+  const modelToUse = model || process.env.AI_MODEL;
+
+  console.log('AI Provider:', provider);
+  console.log('AI Model:', modelToUse);
+
+  switch (provider) {
+    case 'groq':
+      // Use: explicit > env > default Groq model
+      return groq(modelToUse || 'llama-3.3-70b-versatile');
+    case 'cerebras':
+      // Use: explicit > env > default Cerebras model
+      return cerebras(modelToUse || 'llama-3.3-70b');
+    case 'openai':
+    default:
+      // Use: explicit > env > default OpenAI model
+      return openai(modelToUse || 'gpt-4o');
+  }
+}
+
+// Check if provider supports vision
+export function supportsVision(
+  provider: AIProvider = DEFAULT_PROVIDER,
+): boolean {
+  return PROVIDER_INFO[provider].supportsVision;
+}
+
+// Get API key for current provider
+export function getApiKey(
+  provider: AIProvider = DEFAULT_PROVIDER,
+): string | undefined {
+  switch (provider) {
+    case 'groq':
+      return process.env.GROQ_API_KEY;
+    case 'cerebras':
+      return process.env.CEREBRAS_API_KEY;
+    case 'openai':
+    default:
+      return process.env.OPENAI_API_KEY;
+  }
+}
+
+// Legacy exports for backward compatibility
 export type AIModel = 'gpt-4o' | 'gpt-4o-mini';
 
-// Default model - can be overridden via environment variable
-export const DEFAULT_MODEL: AIModel = (process.env.AI_MODEL as AIModel) || 'gpt-4o';
-
-// Model descriptions for UI
-export const MODEL_INFO: Record<AIModel, { name: string; description: string; costLevel: string }> = {
+export const MODEL_INFO: Record<
+  AIModel,
+  { name: string; description: string; costLevel: string }
+> = {
   'gpt-4o': {
     name: 'GPT-4o',
-    description: 'Best accuracy for complex PDFs and images. Has vision capabilities.',
+    description:
+      'Best accuracy for complex PDFs and images. Has vision capabilities.',
     costLevel: 'Higher cost',
   },
   'gpt-4o-mini': {
@@ -22,17 +109,6 @@ export const MODEL_INFO: Record<AIModel, { name: string; description: string; co
     costLevel: 'Lower cost',
   },
 };
-
-// Get the AI model instance
-export function getAIModel(model: AIModel = DEFAULT_MODEL): LanguageModel {
-  switch (model) {
-    case 'gpt-4o-mini':
-      return openai('gpt-4o-mini');
-    case 'gpt-4o':
-    default:
-      return openai('gpt-4o');
-  }
-}
 
 // File upload configuration
 export const UPLOAD_CONFIG = {
@@ -50,14 +126,33 @@ export const UPLOAD_CONFIG = {
     'image/jpeg',
     'image/webp',
   ],
-  allowedExtensions: ['.pdf', '.xlsx', '.xls', '.csv', '.txt', '.doc', '.docx', '.png', '.jpg', '.jpeg', '.webp'],
+  allowedExtensions: [
+    '.pdf',
+    '.xlsx',
+    '.xls',
+    '.csv',
+    '.txt',
+    '.doc',
+    '.docx',
+    '.png',
+    '.jpg',
+    '.jpeg',
+    '.webp',
+  ],
 } as const;
 
 // Check if file type is allowed
-export function isAllowedFileType(mimeType: string, extension: string): boolean {
+export function isAllowedFileType(
+  mimeType: string,
+  extension: string,
+): boolean {
   return (
-    UPLOAD_CONFIG.allowedMimeTypes.includes(mimeType as (typeof UPLOAD_CONFIG.allowedMimeTypes)[number]) ||
-    UPLOAD_CONFIG.allowedExtensions.includes(extension.toLowerCase() as (typeof UPLOAD_CONFIG.allowedExtensions)[number])
+    UPLOAD_CONFIG.allowedMimeTypes.includes(
+      mimeType as (typeof UPLOAD_CONFIG.allowedMimeTypes)[number],
+    ) ||
+    UPLOAD_CONFIG.allowedExtensions.includes(
+      extension.toLowerCase() as (typeof UPLOAD_CONFIG.allowedExtensions)[number],
+    )
   );
 }
 
