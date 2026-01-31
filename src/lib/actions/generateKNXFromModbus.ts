@@ -89,11 +89,11 @@ const populateModbusColumns = (
   row[findCol('Format')] = format;
   row[findCol('ByteOrder')] = getModbusByteOrder(modbusSignal.registerType);
   row[findCol('Address')] = modbusSignal.address;
-  row[findCol('Bit')] = EXCEL_VALUES.EMPTY_KNX;
-  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Bit')] = EXCEL_VALUES.EMPTY_MODBUS;
+  row[findCol('# Bits')] = EXCEL_VALUES.EMPTY_MODBUS;
   row[findCol('Deadband')] = EXCEL_VALUES.DEFAULT_DEADBAND;
-  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
-  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_MODBUS;
+  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_MODBUS;
 };
 
 /**
