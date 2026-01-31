@@ -16,13 +16,12 @@ import type { EditableRow } from '@/types/overrides';
 
 type EditableTableProps = {
   data: EditableRow[];
-  onEdit: (signalId: string, field: string, value: string | number) => void;
   onDelete: (signalId: string) => void;
 };
 
-export function EditableTable({ data, onEdit, onDelete }: EditableTableProps) {
+export function EditableTable({ data, onDelete }: EditableTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  
+
   // Generate columns dynamically from data
   const columns = useMemo<ColumnDef<EditableRow>[]>(() => {
     if (data.length === 0) return [];
@@ -33,9 +32,9 @@ export function EditableTable({ data, onEdit, onDelete }: EditableTableProps) {
     const dataColumns: ColumnDef<EditableRow>[] = fields.map((field) => ({
       accessorKey: field,
       header: field,
-      cell: ({ row, getValue }) => {
+      cell: ({ getValue }) => {
         const value = getValue() as string | number;
-        
+
         return (
           <div className="flex items-center justify-between">
             <span className="text-sm">{String(value ?? '')}</span>
@@ -63,6 +62,7 @@ export function EditableTable({ data, onEdit, onDelete }: EditableTableProps) {
     return [...dataColumns, actionsColumn];
   }, [data, onDelete]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
@@ -108,7 +108,7 @@ export function EditableTable({ data, onEdit, onDelete }: EditableTableProps) {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' ↑',

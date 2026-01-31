@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Check, AlertTriangle, RefreshCw, Trash2, Edit2 } from 'lucide-react';
-import type { DeviceSignal, ModbusSignal, BACnetSignal, KNXSignal } from '@/lib/deviceSignals';
+import type {
+  DeviceSignal,
+  ModbusSignal,
+  BACnetSignal,
+  KNXSignal,
+} from '@/lib/deviceSignals';
 import { ConfidenceBadge } from './ConfidenceBadge';
 
 type SignalWithConfidence = DeviceSignal & { confidence: number };
@@ -15,15 +20,21 @@ interface SignalReviewPanelProps {
   onDelete?: (index: number) => void;
 }
 
-function isModbus(signal: DeviceSignal): signal is ModbusSignal & { confidence: number } {
+function isModbus(
+  signal: DeviceSignal,
+): signal is ModbusSignal & { confidence: number } {
   return 'registerType' in signal && 'address' in signal;
 }
 
-function isBACnet(signal: DeviceSignal): signal is BACnetSignal & { confidence: number } {
+function isBACnet(
+  signal: DeviceSignal,
+): signal is BACnetSignal & { confidence: number } {
   return 'objectType' in signal && 'instance' in signal;
 }
 
-function isKNX(signal: DeviceSignal): signal is KNXSignal & { confidence: number } {
+function isKNX(
+  signal: DeviceSignal,
+): signal is KNXSignal & { confidence: number } {
   return 'groupAddress' in signal && 'dpt' in signal;
 }
 
@@ -39,7 +50,9 @@ export function SignalReviewPanel({
   const [showLowConfidenceOnly, setShowLowConfidenceOnly] = useState(false);
 
   const lowConfidenceCount = signals.filter((s) => s.confidence < 0.6).length;
-  const mediumConfidenceCount = signals.filter((s) => s.confidence >= 0.6 && s.confidence < 0.8).length;
+  const mediumConfidenceCount = signals.filter(
+    (s) => s.confidence >= 0.6 && s.confidence < 0.8,
+  ).length;
   const highConfidenceCount = signals.filter((s) => s.confidence >= 0.8).length;
 
   const displayedSignals = showLowConfidenceOnly
@@ -123,7 +136,9 @@ export function SignalReviewPanel({
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            {showLowConfidenceOnly ? 'Show All Signals' : `Review ${mediumConfidenceCount + lowConfidenceCount} Lower Confidence`}
+            {showLowConfidenceOnly
+              ? 'Show All Signals'
+              : `Review ${mediumConfidenceCount + lowConfidenceCount} Lower Confidence`}
           </button>
         </div>
       )}
@@ -133,38 +148,62 @@ export function SignalReviewPanel({
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">#</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Signal Name</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Type</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Address</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Data</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Confidence</th>
-              <th className="px-4 py-2 text-right font-medium text-gray-700">Actions</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                #
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Signal Name
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Type
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Address
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Data
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Confidence
+              </th>
+              <th className="px-4 py-2 text-right font-medium text-gray-700">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y">
-            {displayedSignals.map((signal, index) => {
+            {displayedSignals.map((signal) => {
               const fields = getSignalDisplayFields(signal);
               const originalIndex = signals.indexOf(signal);
 
               return (
                 <tr
                   key={originalIndex}
-                  className={signal.confidence < 0.6 ? 'bg-red-50' : 'hover:bg-gray-50'}
+                  className={
+                    signal.confidence < 0.6 ? 'bg-red-50' : 'hover:bg-gray-50'
+                  }
                 >
-                  <td className="px-4 py-2 text-gray-500">{originalIndex + 1}</td>
+                  <td className="px-4 py-2 text-gray-500">
+                    {originalIndex + 1}
+                  </td>
                   <td className="px-4 py-2 font-medium">{signal.signalName}</td>
                   <td className="px-4 py-2 text-gray-600">{fields.type}</td>
                   <td className="px-4 py-2 text-gray-600">{fields.address}</td>
                   <td className="px-4 py-2 text-gray-600">{fields.dataType}</td>
                   <td className="px-4 py-2">
-                    <ConfidenceBadge score={signal.confidence} showScore size="sm" />
+                    <ConfidenceBadge
+                      score={signal.confidence}
+                      showScore
+                      size="sm"
+                    />
                   </td>
                   <td className="px-4 py-2 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {onEdit && (
                         <button
-                          onClick={() => {/* edit logic */}}
+                          onClick={() => {
+                            /* edit logic */
+                          }}
                           className="p-1 hover:bg-gray-200 rounded"
                           title="Edit"
                         >

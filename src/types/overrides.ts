@@ -26,5 +26,5 @@ export type Override = DeleteOverride | ReorderOverride | EditOverride;
  */
 export interface EditableRow {
   id: string; // Unique ID (e.g., "Device1_SignalName")
-  [key: string]: any;
+  [key: string]: unknown;
 }

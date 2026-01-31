@@ -15,6 +15,7 @@ type DeviceSignalsSectionProps = {
   csvInput: string;
   onCsvInputChange: (value: string) => void;
   onParseCSV: () => void;
+  parseAndAddSignals: (csv: string) => void;
   onCopyPrompt: () => void;
   onGenerateSignals: () => void;
   onClearSignals: () => void;
@@ -28,6 +29,7 @@ export function DeviceSignalsSection({
   csvInput,
   onCsvInputChange,
   onParseCSV,
+  parseAndAddSignals,
   onCopyPrompt,
   onGenerateSignals,
   onClearSignals,
@@ -37,7 +39,7 @@ export function DeviceSignalsSection({
 }: DeviceSignalsSectionProps) {
   const [showManualInput, setShowManualInput] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
-  const { state, parseFile, reset, acceptSignals, retry } = useAIParser();
+  const { state, parseFile, reset, acceptSignals } = useAIParser();
 
   const isParsed = deviceSignals.length > 0;
   const canClear =
@@ -51,7 +53,7 @@ export function DeviceSignalsSection({
         const parsed = JSON.parse(saved);
         const age = Date.now() - parsed.timestamp;
         const MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
-        
+
         if (age < MAX_AGE) {
           setHasSavedData(true);
         } else {
@@ -72,18 +74,22 @@ export function DeviceSignalsSection({
   const handleAcceptSignals = () => {
     const signals = acceptSignals();
     if (signals) {
-      // Convert to CSV format and set as input
+      // Convert to CSV format and parse directly
       const csv = convertSignalsToCSV(signals);
-      onCsvInputChange(csv);
-      onParseCSV();
+      parseAndAddSignals(csv);
       reset();
-      
-      // Save to localStorage
-      localStorage.setItem('ai-parsed-signals', JSON.stringify({
-        signals,
-        fileName: state.status === 'review' ? state.fileName : 'unknown',
-        timestamp: Date.now(),
-      }));
+
+      // Save to localStorage with timestamp
+      // eslint-disable-next-line
+      const timestamp = Date.now();
+      localStorage.setItem(
+        'ai-parsed-signals',
+        JSON.stringify({
+          signals,
+          fileName: state.status === 'review' ? state.fileName : 'unknown',
+          timestamp,
+        }),
+      );
     }
   };
 
@@ -94,8 +100,9 @@ export function DeviceSignalsSection({
       try {
         const parsed = JSON.parse(saved);
         const csv = convertSignalsToCSV(parsed.signals);
-        onCsvInputChange(csv);
-        onParseCSV();
+        // Use parseAndAddSignals directly - no state dependency!
+        parseAndAddSignals(csv);
+        setHasSavedData(false); // Hide banner after loading
       } catch {
         localStorage.removeItem('ai-parsed-signals');
       }
@@ -105,13 +112,14 @@ export function DeviceSignalsSection({
   // Convert signals to CSV format
   const convertSignalsToCSV = (signals: DeviceSignal[]): string => {
     if (signals.length === 0) return '';
-    
+
     // Get first signal to determine type
     const firstSignal = signals[0];
-    
+
     if ('registerType' in firstSignal) {
       // Modbus
-      const headers = 'deviceId,signalName,registerType,address,dataType,units,description,mode,factor';
+      const headers =
+        'deviceId,signalName,registerType,address,dataType,units,description,mode,factor';
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
         return `${sig.deviceId},${sig.signalName},${sig.registerType},${sig.address},${sig.dataType},${sig.units || ''},${sig.description || ''},${sig.mode || ''},${sig.factor || ''}`;
@@ -119,7 +127,8 @@ export function DeviceSignalsSection({
       return [headers, ...rows].join('\n');
     } else if ('objectType' in firstSignal) {
       // BACnet
-      const headers = 'deviceId,signalName,objectType,instance,units,description';
+      const headers =
+        'deviceId,signalName,objectType,instance,units,description';
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
         return `${sig.deviceId},${sig.signalName},${sig.objectType},${sig.instance},${sig.units || ''},${sig.description || ''}`;
@@ -134,7 +143,7 @@ export function DeviceSignalsSection({
       });
       return [headers, ...rows].join('\n');
     }
-    
+
     return '';
   };
 
@@ -172,18 +181,17 @@ export function DeviceSignalsSection({
         <h3 className="text-sm font-medium text-foreground">
           🤖 AI-Powered File Upload
         </h3>
-        
+
         {state.status === 'idle' && (
-          <FileUploader
-            onFileSelect={handleFileSelect}
-            disabled={busy}
-          />
+          <FileUploader onFileSelect={handleFileSelect} disabled={busy} />
         )}
 
         {state.status === 'uploading' && (
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-6 text-center">
             <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-2" />
-            <p className="text-sm text-blue-800">Uploading {state.file.name}...</p>
+            <p className="text-sm text-blue-800">
+              Uploading {state.file.name}...
+            </p>
             <div className="mt-3 w-full bg-blue-200 rounded-full h-2">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all"
@@ -222,7 +230,9 @@ export function DeviceSignalsSection({
 
         {state.status === 'error' && (
           <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-800 font-medium">Error parsing file</p>
+            <p className="text-sm text-red-800 font-medium">
+              Error parsing file
+            </p>
             <p className="text-xs text-red-600 mt-1">{state.error}</p>
             <Button
               onClick={reset}
@@ -300,7 +310,9 @@ export function DeviceSignalsSection({
             <Badge variant="destructive" className="bg-amber-600">
               {parseWarnings.length}
             </Badge>
-            <span className="text-sm font-semibold text-amber-900">Warnings</span>
+            <span className="text-sm font-semibold text-amber-900">
+              Warnings
+            </span>
           </div>
           <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-amber-800">
             {parseWarnings.map((w, i) => (
@@ -364,22 +376,22 @@ export function DeviceSignalsSection({
                       {'objectType' in sig
                         ? sig.objectType
                         : 'registerType' in sig
-                        ? sig.registerType
-                        : 'dpt' in sig
-                        ? sig.dpt
-                        : '—'}
+                          ? sig.registerType
+                          : 'dpt' in sig
+                            ? sig.dpt
+                            : '—'}
                     </td>
                     <td className="px-2 py-2 font-mono text-xs">
                       {'instance' in sig
                         ? sig.instance
                         : 'address' in sig
-                        ? sig.address
-                        : 'groupAddress' in sig
-                        ? sig.groupAddress
-                        : '—'}
+                          ? sig.address
+                          : 'groupAddress' in sig
+                            ? sig.groupAddress
+                            : '—'}
                     </td>
                     <td className="px-2 py-2 text-xs">
-                      {'units' in sig ? sig.units ?? '—' : '—'}
+                      {'units' in sig ? (sig.units ?? '—') : '—'}
                     </td>
                   </tr>
                 ))}

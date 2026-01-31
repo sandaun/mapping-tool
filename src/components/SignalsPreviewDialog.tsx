@@ -44,20 +44,12 @@ export function SignalsPreviewDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-auto border rounded-md border-slate-400 dark:border-slate-600">
-          <EditableTable
-            data={signals}
-            onEdit={() => {}} // Not used since editing is disabled
-            onDelete={onDelete}
-          />
+          <EditableTable data={signals} onDelete={onDelete} />
         </div>
 
         <DialogFooter className="gap-2">
           {overrides.length > 0 && (
-            <Button
-              variant="danger"
-              className="text-xs"
-              onClick={onReset}
-            >
+            <Button variant="danger" className="text-xs" onClick={onReset}>
               Reset Changes ({overrides.length})
             </Button>
           )}

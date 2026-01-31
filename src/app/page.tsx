@@ -18,18 +18,10 @@ import { ResultsSection } from '@/components/ResultsSection';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
 import { Header } from '@/components/Header';
 import type { Override } from '@/types/overrides';
-import type { RawWorkbook } from '@/lib/excel/raw';
 
 export default function Home() {
-  const {
-    raw,
-    setRaw,
-    protocols,
-    error,
-    busy,
-    importArrayBufferAsFile,
-    exportWorkbook,
-  } = useFileImport();
+  const { raw, setRaw, protocols, error, busy, importArrayBufferAsFile } =
+    useFileImport();
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<
     (typeof TEMPLATES)[number]['id']
@@ -44,12 +36,12 @@ export default function Home() {
 
   const selectedTemplate = useMemo(
     () => TEMPLATES.find((t) => t.id === selectedTemplateId)!,
-    [selectedTemplateId]
+    [selectedTemplateId],
   );
 
   const sheetNames = useMemo(
     () => (raw ? raw.sheets.map((s) => s.name) : []),
-    [raw]
+    [raw],
   );
 
   async function onLoadTemplate(templateId: (typeof TEMPLATES)[number]['id']) {
@@ -64,7 +56,7 @@ export default function Home() {
       await importArrayBufferAsFile(
         arrayBuffer,
         template.href.split('/').pop()!,
-        template.expectedSheets
+        template.expectedSheets,
       );
 
       // Reset pending export quan carrega nova plantilla
@@ -88,18 +80,28 @@ export default function Home() {
     navigator.clipboard.writeText(selectedTemplate.promptText);
   }
 
-  function onParseCsv() {
+  /**
+   * Parse CSV and add signals to current list
+   * Pure function that doesn't depend on state
+   */
+  function parseAndAddSignals(csv: string) {
     setParseWarnings([]);
 
-    if (!csvInput.trim()) {
+    if (!csv.trim()) {
       setParseWarnings(['El CSV està buit.']);
       return;
     }
 
-    const result = parseDeviceSignalsCSV(csvInput, selectedTemplateId);
-    // Acumular signals en lloc d'esborrar els anteriors
+    const result = parseDeviceSignalsCSV(csv, selectedTemplateId);
     setDeviceSignals((prev) => [...prev, ...result.signals]);
     setParseWarnings(result.warnings);
+  }
+
+  /**
+   * Parse CSV from textarea input
+   */
+  function onParseCsv() {
+    parseAndAddSignals(csvInput);
   }
 
   function onClearSignals() {
@@ -129,7 +131,7 @@ export default function Home() {
         result = generateBACnetServerFromKNX(deviceSignals, raw);
       } else {
         throw new Error(
-          `Gateway type not implemented yet: ${selectedTemplateId}`
+          `Gateway type not implemented yet: ${selectedTemplateId}`,
         );
       }
 
@@ -143,8 +145,8 @@ export default function Home() {
       const targetSheet = selectedTemplateId.includes('bacnet-server')
         ? 'BACnet Server'
         : selectedTemplateId.includes('modbus')
-        ? 'Modbus Master'
-        : 'KNX';
+          ? 'Modbus Master'
+          : 'KNX';
 
       // Mostrar badge persistent
       setPendingExport((prev) => ({
@@ -166,8 +168,12 @@ export default function Home() {
 
     try {
       // Apply overrides to workbook before exporting
-      const workbookToExport = applyOverridesToWorkbook(raw, overrides, selectedTemplateId);
-      
+      const workbookToExport = applyOverridesToWorkbook(
+        raw,
+        overrides,
+        selectedTemplateId,
+      );
+
       // Export the modified workbook
       const res = await fetch('/api/export', {
         method: 'POST',
@@ -188,7 +194,7 @@ export default function Home() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      
+
       setPendingExport(null);
     } catch (e) {
       console.error('Export error:', e);
@@ -226,6 +232,7 @@ export default function Home() {
             csvInput={csvInput}
             onCsvInputChange={setCsvInput}
             onParseCSV={onParseCsv}
+            parseAndAddSignals={parseAndAddSignals}
             onCopyPrompt={onCopyPrompt}
             onGenerateSignals={onGenerateSignals}
             onClearSignals={onClearSignals}

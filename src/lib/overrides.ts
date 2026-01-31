@@ -1,6 +1,6 @@
 import type { RawWorkbook, CellValue } from './excel/raw';
 import type { Override, EditableRow } from '@/types/overrides';
-import { findSignalsSheet, createSheetContext } from './actions/utils/common';
+import { findSignalsSheet } from './actions/utils/common';
 import { EDITABLE_COLUMNS } from '@/constants/editableColumns';
 
 /**
@@ -9,7 +9,7 @@ import { EDITABLE_COLUMNS } from '@/constants/editableColumns';
  */
 export function applyOverrides<T extends EditableRow>(
   rows: T[],
-  overrides: Override[]
+  overrides: Override[],
 ): T[] {
   let result = [...rows];
 
@@ -37,13 +37,16 @@ export function applyOverrides<T extends EditableRow>(
  * Helper to find the header row index by looking for expected columns.
  * Scans first 20 rows and returns index of row with most matches.
  */
-function findHeaderRowIndex(rows: CellValue[][], expectedColumns: string[]): number {
+function findHeaderRowIndex(
+  rows: CellValue[][],
+  expectedColumns: string[],
+): number {
   // Only scan first 20 rows to be efficient and avoid false positives in data
   const scanLimit = Math.min(rows.length, 20);
-  
+
   for (let i = 0; i < scanLimit; i++) {
     const rowValues = rows[i].map((c) => String(c || '').trim());
-    
+
     // Count how many expected columns are present in this row
     const matchCount = expectedColumns.reduce((count, col) => {
       return rowValues.includes(col) ? count + 1 : count;
@@ -52,7 +55,7 @@ function findHeaderRowIndex(rows: CellValue[][], expectedColumns: string[]): num
     // Heuristic: If we match at least 3 distinctive columns or >50% of them
     // (Use 2 as fallback for templates with very few columns)
     const threshold = Math.max(2, Math.min(3, expectedColumns.length));
-    
+
     if (matchCount >= threshold) {
       return i;
     }
@@ -67,22 +70,27 @@ function findHeaderRowIndex(rows: CellValue[][], expectedColumns: string[]): num
  */
 export function extractSignalsFromWorkbook(
   workbook: RawWorkbook,
-  templateId: string
+  templateId: string,
 ): EditableRow[] {
   const sheet = findSignalsSheet(workbook);
   if (!sheet || sheet.rows.length < 2) return [];
 
-  const allowedColumns = EDITABLE_COLUMNS[templateId as keyof typeof EDITABLE_COLUMNS] || [];
+  const allowedColumns =
+    EDITABLE_COLUMNS[templateId as keyof typeof EDITABLE_COLUMNS] || [];
 
   // Find header row robustly
   const headerRowIndex = findHeaderRowIndex(sheet.rows, allowedColumns);
 
   if (headerRowIndex === -1) {
-    console.warn(`Could not find header row in Signals sheet for template ${templateId}`);
+    console.warn(
+      `Could not find header row in Signals sheet for template ${templateId}`,
+    );
     return [];
   }
 
-  const headers = sheet.rows[headerRowIndex].map((cell) => String(cell || '').trim());
+  const headers = sheet.rows[headerRowIndex].map((cell) =>
+    String(cell || '').trim(),
+  );
   const dataRows = sheet.rows.slice(headerRowIndex + 1);
 
   // Find indices of allowed columns
@@ -108,7 +116,7 @@ export function extractSignalsFromWorkbook(
     const name = rowObj['Name'] || '';
     const type = rowObj['Type'] || '';
     const instance = rowObj['Instance'] || rowObj['Address'] || '';
-    
+
     if (name) {
       rowObj.id = `${name}_${type}_${instance}_${index}`;
     }
@@ -124,21 +132,26 @@ export function extractSignalsFromWorkbook(
 export function applyOverridesToWorkbook(
   workbook: RawWorkbook,
   overrides: Override[],
-  templateId: string
+  templateId: string,
 ): RawWorkbook {
   const newWorkbook = JSON.parse(JSON.stringify(workbook)) as RawWorkbook;
   const sheet = findSignalsSheet(newWorkbook);
   if (!sheet || sheet.rows.length < 2) return newWorkbook;
 
-  const allowedColumns = EDITABLE_COLUMNS[templateId as keyof typeof EDITABLE_COLUMNS] || [];
+  const allowedColumns =
+    EDITABLE_COLUMNS[templateId as keyof typeof EDITABLE_COLUMNS] || [];
   const headerRowIndex = findHeaderRowIndex(sheet.rows, allowedColumns);
 
   if (headerRowIndex === -1) {
-    console.warn(`Could not find header row in Signals sheet for template ${templateId}`);
+    console.warn(
+      `Could not find header row in Signals sheet for template ${templateId}`,
+    );
     return newWorkbook;
   }
 
-  const headers = sheet.rows[headerRowIndex].map((cell) => String(cell || '').trim());
+  const headers = sheet.rows[headerRowIndex].map((cell) =>
+    String(cell || '').trim(),
+  );
   const dataRows = sheet.rows.slice(headerRowIndex + 1);
 
   // Build column indices for quick lookup
@@ -159,8 +172,12 @@ export function applyOverridesToWorkbook(
 
     const name = nameIdx !== undefined ? String(row[nameIdx] || '') : '';
     const type = typeIdx !== undefined ? String(row[typeIdx] || '') : '';
-    const instance = instanceIdx !== undefined ? String(row[instanceIdx] || '') : 
-                     addressIdx !== undefined ? String(row[addressIdx] || '') : '';
+    const instance =
+      instanceIdx !== undefined
+        ? String(row[instanceIdx] || '')
+        : addressIdx !== undefined
+          ? String(row[addressIdx] || '')
+          : '';
 
     const id = name ? `${name}_${type}_${instance}_${index}` : `row-${index}`;
     rowIdMap.set(id, index);
@@ -211,8 +228,8 @@ export function applyOverridesToWorkbook(
   // Reconstruct the complete sheet preserving metadata rows before header
   const finalRows = [
     ...sheet.rows.slice(0, headerRowIndex), // Metadata rows
-    sheet.rows[headerRowIndex],              // Header row
-    ...newDataRows                           // Data rows
+    sheet.rows[headerRowIndex], // Header row
+    ...newDataRows, // Data rows
   ];
 
   sheet.rows = finalRows;
