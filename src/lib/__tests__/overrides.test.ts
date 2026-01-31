@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { applyOverrides, applyOverridesToWorkbook, extractSignalsFromWorkbook } from '../overrides';
+import {
+  applyOverrides,
+  applyOverridesToWorkbook,
+  extractSignalsFromWorkbook,
+} from '../overrides';
 import type { Override, EditableRow } from '@/types/overrides';
 import type { RawWorkbook } from '../excel/raw';
 
@@ -12,15 +16,13 @@ describe('overrides', () => {
 
   describe('applyOverrides', () => {
     it('should handle delete overrides', () => {
-      const overrides: Override[] = [
-        { type: 'delete', signalId: '2' },
-      ];
-      
+      const overrides: Override[] = [{ type: 'delete', signalId: '2' }];
+
       const result = applyOverrides(mockRows, overrides);
-      
+
       expect(result).toHaveLength(2);
-      expect(result.find(r => r.id === '2')).toBeUndefined();
-      expect(result.find(r => r.id === '1')).toBeDefined();
+      expect(result.find((r) => r.id === '2')).toBeUndefined();
+      expect(result.find((r) => r.id === '1')).toBeDefined();
     });
 
     it('should handle edit overrides', () => {
@@ -32,77 +34,88 @@ describe('overrides', () => {
       const result = applyOverrides(mockRows, overrides);
 
       expect(result).toHaveLength(3);
-      expect(result.find(r => r.id === '1')?.Name).toBe('Edited A');
-      expect(result.find(r => r.id === '3')?.Value).toBe(99);
+      expect(result.find((r) => r.id === '1')?.Name).toBe('Edited A');
+      expect(result.find((r) => r.id === '3')?.Value).toBe(99);
       // Ensure immutability
       expect(mockRows[0].Name).toBe('Signal A');
     });
 
     it('should handle combined overrides (delete then edit)', () => {
       // Note: order matters in the array, but logic handles them sequentially
-      // Editing a deleted row should do nothing effectively if delete processed first? 
-      // Actually my implementation processes sequentially. 
+      // Editing a deleted row should do nothing effectively if delete processed first?
+      // Actually my implementation processes sequentially.
       // If I delete ID 2, then try to edit ID 2, it won't be found.
-      
+
       const overrides: Override[] = [
         { type: 'delete', signalId: '2' },
         { type: 'edit', signalId: '2', field: 'Name', value: 'Zombie' },
       ];
 
       const result = applyOverrides(mockRows, overrides);
-      
+
       expect(result).toHaveLength(2);
-      expect(result.find(r => r.id === '2')).toBeUndefined();
+      expect(result.find((r) => r.id === '2')).toBeUndefined();
     });
   });
 
   describe('applyOverridesToWorkbook', () => {
+    // Use headers that match BACnet Server template
     const mockWorkbook: RawWorkbook = {
       sheets: [
         {
           name: 'Signals',
+          headers: [
+            '#',
+            'Active',
+            'Description',
+            'Name',
+            'Type',
+            'Instance',
+            'Units',
+          ],
           rows: [
-            ['Name', 'Value', 'ID'], // Headers
-            ['Sig A', 10, 'A'],
-            ['Sig B', 20, 'B'],
+            ['#', 'Active', 'Description', 'Name', 'Type', 'Instance', 'Units'], // Headers matching template
+            [1, 'Yes', '', 'Sig A', 'AI', 100, '95'],
+            [2, 'Yes', '', 'Sig B', 'AO', 101, '95'],
           ],
         },
       ],
     };
 
     it('should update the workbook correctly', () => {
-        // First, check extraction logic since ID generation depends on it
-        // In the mock, we have columns Name, Value, ID. 
-        // Our extractor tries to find "Name" or "Signal Name". 
-        // ID generation: name_type_instance_index. 
-        // Here type/instance missing. ID will be "Sig A___0" roughly.
-        
-        const extracted = extractSignalsFromWorkbook(mockWorkbook);
-        const targetId = extracted[0].id; // Should be first data row
+      const templateId = 'bacnet-server__modbus-master';
+      const extracted = extractSignalsFromWorkbook(mockWorkbook, templateId);
+      const targetId = extracted[0].id; // Should be first data row
 
-        const overrides: Override[] = [
-            { type: 'edit', signalId: targetId, field: 'Value', value: 999 }
-        ];
+      const overrides: Override[] = [
+        { type: 'edit', signalId: targetId, field: 'Name', value: 'Updated A' },
+      ];
 
-        const newWorkbook = applyOverridesToWorkbook(mockWorkbook, overrides);
-        
-        // Row 0 is header. Row 1 is data. 
-        // Column 'Value' is index 1.
-        expect(newWorkbook.sheets[0].rows[1][1]).toBe(999);
+      const newWorkbook = applyOverridesToWorkbook(
+        mockWorkbook,
+        overrides,
+        templateId,
+      );
+
+      // Find 'Name' column index (column 3)
+      expect(newWorkbook.sheets[0].rows[1][3]).toBe('Updated A');
     });
 
     it('should delete rows from workbook', () => {
-        const extracted = extractSignalsFromWorkbook(mockWorkbook);
-        const targetId = extracted[1].id; // 'Sig B'
+      const templateId = 'bacnet-server__modbus-master';
+      const extracted = extractSignalsFromWorkbook(mockWorkbook, templateId);
+      const targetId = extracted[1].id; // 'Sig B'
 
-        const overrides: Override[] = [
-            { type: 'delete', signalId: targetId }
-        ];
+      const overrides: Override[] = [{ type: 'delete', signalId: targetId }];
 
-        const newWorkbook = applyOverridesToWorkbook(mockWorkbook, overrides);
+      const newWorkbook = applyOverridesToWorkbook(
+        mockWorkbook,
+        overrides,
+        templateId,
+      );
 
-        expect(newWorkbook.sheets[0].rows).toHaveLength(2); // Header + 1 row
-        expect(newWorkbook.sheets[0].rows[1][0]).toBe('Sig A'); // Sig B gone
+      expect(newWorkbook.sheets[0].rows).toHaveLength(2); // Header + 1 row
+      expect(newWorkbook.sheets[0].rows[1][3]).toBe('Sig A'); // Sig B gone
     });
   });
 });
