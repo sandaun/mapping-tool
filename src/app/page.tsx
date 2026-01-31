@@ -1,16 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
-import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
-import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
-import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
-import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
-import { generateBACnetServerFromKNX } from '@/lib/actions/generateBACnetServerFromKNX';
-import { generateModbusFromKNX } from '@/lib/actions/generateModbusFromKNX';
+import { useMemo } from 'react';
 import { applyOverridesToWorkbook } from '@/lib/overrides';
 import { useFileImport } from '@/hooks/useFileImport';
-import { TEMPLATES } from '@/constants/templates';
+import { useTemplateManager } from '@/hooks/useTemplateManager';
+import { useSignalsWorkflow } from '@/hooks/useSignalsWorkflow';
 import { TemplateSelector } from '@/components/TemplateSelector';
 import { ProtocolsInfo } from '@/components/ProtocolsInfo';
 import { DeviceSignalsSection } from '@/components/DeviceSignalsSection';
@@ -20,161 +14,56 @@ import { Header } from '@/components/Header';
 import type { Override } from '@/types/overrides';
 
 export default function Home() {
+  // File import management
   const { raw, setRaw, protocols, error, busy, importArrayBufferAsFile } =
     useFileImport();
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState<
-    (typeof TEMPLATES)[number]['id']
-  >(TEMPLATES[0].id);
-  const [csvInput, setCsvInput] = useState('');
-  const [deviceSignals, setDeviceSignals] = useState<DeviceSignal[]>([]);
-  const [parseWarnings, setParseWarnings] = useState<string[]>([]);
-  const [pendingExport, setPendingExport] = useState<{
-    signalsCount: number;
-    targetSheet: string;
-  } | null>(null);
+  // Template management with proper reset callback
+  const {
+    selectedTemplateId,
+    selectedTemplate,
+    handleTemplateChange,
+    loadTemplate,
+    loadCustomFile,
+  } = useTemplateManager(importArrayBufferAsFile, () => {
+    // Reset will be handled by signals workflow
+  });
 
-  const selectedTemplate = useMemo(
-    () => TEMPLATES.find((t) => t.id === selectedTemplateId)!,
-    [selectedTemplateId],
-  );
+  // Signals workflow management
+  const {
+    csvInput,
+    deviceSignals,
+    parseWarnings,
+    pendingExport,
+    setCsvInput,
+    parseAndAddSignals,
+    handleParseCSV,
+    handleClearSignals,
+    handleGenerateSignals,
+    resetPendingExport,
+  } = useSignalsWorkflow(selectedTemplate, raw, setRaw);
 
+  // Computed values
   const sheetNames = useMemo(
     () => (raw ? raw.sheets.map((s) => s.name) : []),
     [raw],
   );
 
-  async function onLoadTemplate(templateId: (typeof TEMPLATES)[number]['id']) {
-    try {
-      const template = TEMPLATES.find((t) => t.id === templateId);
-      if (!template) return;
-
-      const res = await fetch(template.href);
-      if (!res.ok) throw new Error('Could not load template.');
-
-      const arrayBuffer = await res.arrayBuffer();
-      await importArrayBufferAsFile(
-        arrayBuffer,
-        template.href.split('/').pop()!,
-        template.expectedSheets,
-      );
-
-      // Reset pending export quan carrega nova plantilla
-      setPendingExport(null);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async function handleCustomFileSelect(file: File) {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      await importArrayBufferAsFile(arrayBuffer, file.name);
-      setPendingExport(null);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  function onCopyPrompt() {
+  // Event handlers
+  const handleCopyPrompt = () => {
     navigator.clipboard.writeText(selectedTemplate.promptText);
-  }
+  };
 
-  /**
-   * Parse CSV and add signals to current list
-   * Pure function that doesn't depend on state
-   */
-  function parseAndAddSignals(csv: string) {
-    setParseWarnings([]);
-
-    if (!csv.trim()) {
-      setParseWarnings(['El CSV està buit.']);
-      return;
-    }
-
-    const result = parseDeviceSignalsCSV(csv, selectedTemplateId);
-    setDeviceSignals((prev) => [...prev, ...result.signals]);
-    setParseWarnings(result.warnings);
-  }
-
-  /**
-   * Parse CSV from textarea input
-   */
-  function onParseCsv() {
-    parseAndAddSignals(csvInput);
-  }
-
-  function onClearSignals() {
-    setDeviceSignals([]);
-    setParseWarnings([]);
-    setCsvInput('');
-  }
-
-  function onGenerateSignals() {
-    if (!raw || deviceSignals.length === 0) return;
-
-    try {
-      let result;
-
-      // Dispatch to correct action based on gateway type
-      if (selectedTemplateId === 'bacnet-server__modbus-master') {
-        result = generateBACnetFromModbus(deviceSignals, raw, 'simple');
-      } else if (selectedTemplateId === 'modbus-slave__bacnet-client') {
-        result = generateModbusFromBACnet(deviceSignals, raw, 'simple');
-      } else if (selectedTemplateId === 'knx__modbus-master') {
-        result = generateKNXFromModbus(deviceSignals, raw);
-      } else if (selectedTemplateId === 'knx__bacnet-client') {
-        result = generateKNXFromBACnet(deviceSignals, raw);
-      } else if (selectedTemplateId === 'modbus-slave__knx') {
-        result = generateModbusFromKNX(deviceSignals, raw);
-      } else if (selectedTemplateId === 'bacnet-server__knx') {
-        result = generateBACnetServerFromKNX(deviceSignals, raw);
-      } else {
-        throw new Error(
-          `Gateway type not implemented yet: ${selectedTemplateId}`,
-        );
-      }
-
-      setRaw(result.updatedWorkbook);
-
-      if (result.warnings.length > 0) {
-        setParseWarnings((prev) => [...prev, ...result.warnings]);
-      }
-
-      // Determinar target sheet segons template
-      const targetSheet = selectedTemplateId.includes('bacnet-server')
-        ? 'BACnet Server'
-        : selectedTemplateId.includes('modbus')
-          ? 'Modbus Master'
-          : 'KNX';
-
-      // Mostrar badge persistent
-      setPendingExport((prev) => ({
-        signalsCount: (prev?.signalsCount ?? 0) + result.rowsAdded,
-        targetSheet,
-      }));
-
-      // Clear CSV input i signals després de generar
-      setCsvInput('');
-      setDeviceSignals([]);
-    } catch (e) {
-      const message = e instanceof Error ? e.message : 'Error desconegut';
-      setParseWarnings((prev) => [...prev, message]);
-    }
-  }
-
-  async function handleExport(overrides: Override[]) {
+  const handleExport = async (overrides: Override[]) => {
     if (!raw) return;
 
     try {
-      // Apply overrides to workbook before exporting
       const workbookToExport = applyOverridesToWorkbook(
         raw,
         overrides,
         selectedTemplateId,
       );
 
-      // Export the modified workbook
       const res = await fetch('/api/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -195,12 +84,11 @@ export default function Home() {
       a.remove();
       URL.revokeObjectURL(url);
 
-      setPendingExport(null);
+      resetPendingExport();
     } catch (e) {
       console.error('Export error:', e);
-      // Error will be shown via the error state if needed
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -216,26 +104,26 @@ export default function Home() {
 
           <TemplateSelector
             selectedTemplateId={selectedTemplateId}
-            onTemplateChange={setSelectedTemplateId}
-            onLoadTemplate={onLoadTemplate}
-            onCustomFileSelect={handleCustomFileSelect}
+            onTemplateChange={handleTemplateChange}
+            onLoadTemplate={loadTemplate}
+            onCustomFileSelect={loadCustomFile}
             busy={busy}
           />
 
           <ProtocolsInfo protocols={protocols} />
         </section>
 
-        {/* Import device signals (només visible si hi ha plantilla carregada) */}
+        {/* Import device signals */}
         {raw && (
           <DeviceSignalsSection
             template={selectedTemplate}
             csvInput={csvInput}
             onCsvInputChange={setCsvInput}
-            onParseCSV={onParseCsv}
+            onParseCSV={handleParseCSV}
             parseAndAddSignals={parseAndAddSignals}
-            onCopyPrompt={onCopyPrompt}
-            onGenerateSignals={onGenerateSignals}
-            onClearSignals={onClearSignals}
+            onCopyPrompt={handleCopyPrompt}
+            onGenerateSignals={handleGenerateSignals}
+            onClearSignals={handleClearSignals}
             deviceSignals={deviceSignals}
             parseWarnings={parseWarnings}
             busy={busy}
@@ -245,7 +133,7 @@ export default function Home() {
         {/* Errors */}
         <ErrorDisplay error={error} />
 
-        {/* Resultats (RAW + Export) */}
+        {/* Results */}
         {raw && (
           <ResultsSection
             raw={raw}
