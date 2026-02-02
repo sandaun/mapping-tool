@@ -7,6 +7,10 @@ import { applyOverrides } from '@/lib/overrides';
 import { SignalsPreviewDialog } from '@/components/SignalsPreviewDialog';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { Override } from '@/types/overrides';
+import type { IbmapsState } from '@/hooks/useFileImport';
+import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapter';
+import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generator';
+import type { IbmapsDevice } from '@/lib/ibmaps/types';
 
 type ResultsSectionProps = {
   raw: RawWorkbook;
@@ -15,6 +19,7 @@ type ResultsSectionProps = {
   busy: boolean;
   pendingExport: { signalsCount: number; targetSheet: string } | null;
   templateId: string;
+  originalIbmaps?: IbmapsState | null;
 };
 
 export function ResultsSection({
@@ -24,6 +29,7 @@ export function ResultsSection({
   busy,
   pendingExport,
   templateId,
+  originalIbmaps,
 }: ResultsSectionProps) {
   const [overrides, setOverrides] = useState<Override[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -53,6 +59,72 @@ export function ResultsSection({
     setIsDialogOpen(false);
   };
 
+  const handleExportIbmaps = () => {
+    if (!originalIbmaps || !pendingExport) return;
+
+    try {
+      // Get Signals sheet
+      const signalsSheet = raw.sheets.find((s) => s.name === 'Signals');
+      if (!signalsSheet) throw new Error('Signals sheet not found');
+
+      // Calculate range - skip metadata (6 rows) + header (1 row)
+      const totalRows = signalsSheet.rows.length;
+      const count = pendingExport.signalsCount;
+      const startIdx = totalRows - count;
+
+      if (startIdx < 0) throw new Error('Invalid row count calculation');
+
+      // Convert rows to RawSignals using the reverse adapter
+      const newSignals = workbookRowsToRawSignals(signalsSheet, startIdx, count);
+
+      // Find max device index and create new device if needed
+      const maxDeviceIndex = originalIbmaps.devices.reduce(
+        (max, d) => Math.max(max, d.index),
+        -1,
+      );
+      const newDeviceIndex = maxDeviceIndex + 1;
+      const newSlaveNum = 10 + newDeviceIndex;
+
+      // Check if we need to create a new device
+      const newDevices: IbmapsDevice[] = [];
+      const hasNewDevice = newSignals.some(
+        (s) => s.modbus.deviceIndex > maxDeviceIndex
+      );
+      
+      if (hasNewDevice) {
+        newDevices.push({
+          index: newDeviceIndex,
+          name: `Device ${newDeviceIndex}`,
+          slaveNum: newSlaveNum,
+          baseRegister: 0,
+          timeout: 1000,
+          enabled: true,
+        });
+      }
+
+      // Generate XML injecting the new signals
+      const newXml = addModbusSignals_BAC_MBM(
+        originalIbmaps.content,
+        newSignals,
+        newDevices,
+      );
+
+      // Download file
+      const blob = new Blob([newXml], { type: 'text/xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'IN-BAC-MBM-UPDATED.ibmaps';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Export error:', e);
+      alert('Error exporting IBMAPS (check console)');
+    }
+  };
+
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
       <div className="space-y-4">
@@ -65,10 +137,6 @@ export function ResultsSection({
 
         {pendingExport && (
           <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
-            {/* TODO: remove this */}
-            {/* <p className="font-medium text-blue-900 dark:text-blue-100">
-              Export ready
-            </p> */}
             <p className="text-blue-700 dark:text-blue-300">
               {pendingExport.signalsCount} signals will be exported
             </p>
@@ -92,16 +160,17 @@ export function ResultsSection({
           >
             {busy ? 'Exporting...' : 'Export Template'}
           </Button>
+          {originalIbmaps && (
+            <Button
+              onClick={handleExportIbmaps}
+              disabled={busy || !pendingExport}
+              variant="default"
+              className="text-xs"
+            >
+              Export IBMAPS
+            </Button>
+          )}
         </div>
-        {/* TODO: remove this */}
-        {/* <details className="rounded-lg border border-border bg-muted/50 p-3">
-          <summary className="cursor-pointer text-sm font-medium text-foreground">
-            View RAW JSON
-          </summary>
-          <pre className="mt-3 max-h-120 overflow-auto text-xs leading-5 text-muted-foreground">
-            {JSON.stringify(raw, null, 2)}
-          </pre>
-        </details> */}
       </div>
 
       <SignalsPreviewDialog

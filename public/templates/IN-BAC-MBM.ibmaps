@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Platform="2" CreatedBy="IntesisMAPS" OEMCode="0,2" ProjectName="IN-BAC-MBM.ibmaps" ProjectDescription="Intesis Modbus Master to BACnet Server Gateway" DeviceOrderCode="IN700485xxx0000" ToolVersion="5.0.1217.9763" InternalProtocol="BACnet Server" ExternalProtocol="Modbus Master">
+  <Columns>
+    <InternalColumns>
+      <Column Name="#" SignalsEnabled="True" DiangosticEnabled="True" Width="35" />
+      <Column Name="Description" SignalsEnabled="True" DiangosticEnabled="True" Width="175" />
+      <Column Name="Name" SignalsEnabled="True" DiangosticEnabled="True" Width="120" />
+      <Column Name="Type" SignalsEnabled="True" DiangosticEnabled="True" Width="55" />
+      <Column Name="Instance" SignalsEnabled="True" DiangosticEnabled="True" Width="70" />
+      <Column Name="Units" SignalsEnabled="True" DiangosticEnabled="False" Width="150" />
+      <Column Name="NC" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Texts" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="# States" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+      <Column Name="Rel. Def." SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+      <Column Name="COV" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+      <Column Name="Active" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+    </InternalColumns>
+    <ExternalColumns>
+      <Column ProtIndex="1" Name="#" SignalsEnabled="False" DiangosticEnabled="False" Width="55" />
+      <Column ProtIndex="1" Name="Device" SignalsEnabled="True" DiangosticEnabled="True" Width="140" />
+      <Column ProtIndex="1" Name="# Slave" SignalsEnabled="True" DiangosticEnabled="False" Width="70" />
+      <Column ProtIndex="1" Name="Base" SignalsEnabled="True" DiangosticEnabled="False" Width="70" />
+      <Column ProtIndex="1" Name="Read Func" SignalsEnabled="True" DiangosticEnabled="True" Width="150" />
+      <Column ProtIndex="1" Name="Write Func" SignalsEnabled="True" DiangosticEnabled="True" Width="150" />
+      <Column ProtIndex="1" Name="Data Length" SignalsEnabled="True" DiangosticEnabled="False" Width="55" />
+      <Column ProtIndex="1" Name="Format" SignalsEnabled="True" DiangosticEnabled="False" Width="100" />
+      <Column ProtIndex="1" Name="ByteOrder" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+      <Column ProtIndex="1" Name="Address" SignalsEnabled="True" DiangosticEnabled="True" Width="65" />
+      <Column ProtIndex="1" Name="Bit" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column ProtIndex="1" Name="# Bits" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column ProtIndex="1" Name="Deadband" SignalsEnabled="False" DiangosticEnabled="False" Width="70" />
+    </ExternalColumns>
+    <ExtraColumns>
+      <Column Name="Conv. Id" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Conversions" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+    </ExtraColumns>
+  </Columns>
+  <Connection Pwd="admin" isUSB="False" Device="" Port="23" />
+  <Header Description="Intesis Modbus Master to BACnet Server Gateway" Version="1.2.26.0" CompatibilityVersion="0.0.0.0" CreationVersion="1.2.26.0" TimeStamp="-1" Endianess="False" LicenseMode="0" CompatibilityID="2" />
+  <IBOX Name="IN-BAC-MBM" IP="192.168.100.246" NetMask="255.255.255.0" Gateway="" DNS="" DNS2="" DHCP="True" Pwd="" ExtraProtocol="0">
+    <USBConfig GetLogs="True" GetProject="True" SaveProject="True" SaveFirm="True" SponsEnabled="True" CommsEnabled="True" DebugLevel="1" VerboseLevel="1" />
+    <TimeConfiguration Enabled="False" NtpAddress="" TimeZoneIndex="0" NtpUpdateTime="100" SetTimeInDownload="False" />
+    <SecurityConfiguration TCPDisabled="False" UDPDisabled="False" CustomPort="False" Port="23" />
+    <CertUpdateConfig CAUpdateDisabled="False" CAUpdatePeriod="168" CAUpdateUrl="https://api-tools.intesis.com/" />
+    <Conversions>
+      <Conversion Id="0" Description="Limit to 0-100" Type="0" Param1="2" Param2="4" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Limit to 0-255" Type="0" Param1="2" Param2="4" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="Is not 0" Type="0" Param1="0" Param2="1" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Is higher than 100" Type="0" Param1="0" Param2="3" Param3="100" Param4="100" />
+      <Conversion Id="0" Description="Only positive values" Type="0" Param1="2" Param2="3" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Celsius to Fahrenheit" Type="2" Param1="-1" Param2="18" Param3="32" Param4="0" />
+      <Conversion Id="0" Description="Fahrenheit to Celsius" Type="2" Param1="-3" Param2="555" Param3="-17.78" Param4="0" />
+      <Conversion Id="0" Description="x10" Type="2" Param1="1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/10" Type="2" Param1="-1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x100" Type="2" Param1="2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/100" Type="2" Param1="-2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x1000" Type="2" Param1="3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/1000" Type="2" Param1="-3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="0-100 to 0-255" Type="1" Param1="0" Param2="100" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="0-255 to 0-100" Type="1" Param1="0" Param2="255" Param3="0" Param4="100" />
+    </Conversions>
+    <RemapLUTs />
+  </IBOX>
+  <InternalProtocol ProtocolType="BACnet Server">
+    <DevName>Device IN-BAC-MBM</DevName>
+    <Media>True</Media>
+    <AutoBacName>False</AutoBacName>
+    <Password Disabled="False"></Password>
+    <DevInstance>246</DevInstance>
+    <InstanceMode>0</InstanceMode>
+    <IncludeBACDescription>False</IncludeBACDescription>
+    <HasExtendedBACDescription>False</HasExtendedBACDescription>
+    <CharsetFormat>0</CharsetFormat>
+    <TemperatureSensor Enabled="False" />
+    <BACnetIP>
+      <UDPPort>47808</UDPPort>
+      <ForeignDevice>False</ForeignDevice>
+      <BBMDIP>192.168.100.247</BBMDIP>
+      <RegistrationTTL>300</RegistrationTTL>
+      <BBMD>False</BBMD>
+      <BDTTables>
+        <BDTObject Enabled="True" IP="192.168.100.246" Port="47808" Mask="255.255.255.255" Description="BBMD-1" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-2" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-3" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-4" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-5" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-6" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-7" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-8" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-9" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-10" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-11" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-12" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-13" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-14" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-15" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-16" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-17" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-18" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-19" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-20" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-21" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-22" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-23" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-24" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-25" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-26" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-27" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-28" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-29" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-30" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-31" FixedIp="False" />
+        <BDTObject Enabled="False" IP="" Port="47808" Mask="255.255.255.255" Description="BBMD-32" FixedIp="False" />
+      </BDTTables>
+    </BACnetIP>
+    <BACnetMSTP>
+      <MaxMasters>127</MaxMasters>
+      <MaxInfoFrames>1</MaxInfoFrames>
+      <MACAddress>1</MACAddress>
+      <Baudrate>0</Baudrate>
+      <PfmTimeout>60</PfmTimeout>
+      <TpTimeout>60</TpTimeout>
+    </BACnetMSTP>
+    <MultiStateTextTables>
+      <LUT id="0" NumberOfElements="2">
+        <State Text="On" />
+        <State Text="Off" />
+      </LUT>
+      <LUT id="1" NumberOfElements="5">
+        <State Text="State text 1" />
+        <State Text="State text 2" />
+        <State Text="State text 3" />
+        <State Text="State text 4" />
+        <State Text="State text 5" />
+      </LUT>
+    </MultiStateTextTables>
+    <BinaryStateTextTables>
+      <LUT id="0" ActiveText="Active" InactiveText="Inactive" />
+      <LUT id="1" ActiveText="On" InactiveText="Off" />
+      <LUT id="2" ActiveText="True" InactiveText="False" />
+    </BinaryStateTextTables>
+    <MAPConfiguration>
+      <LUT id="0" NumberOfElements="2" DefaultState="1">
+        <State Value="5" />
+        <State Value="4" />
+      </LUT>
+      <LUT id="1" NumberOfElements="6" DefaultState="5">
+        <State Value="10" />
+        <State Value="11" />
+        <State Value="12" />
+        <State Value="13" />
+        <State Value="14" />
+        <State Value="15" />
+      </LUT>
+    </MAPConfiguration>
+    <NotificationClasses />
+    <BACnetCalendars />
+    <BACnetTrendLogs />
+    <BACnetSchedulers />
+    <BACnetObject ID="0">
+      <BACName>Comm Error Device 0</BACName>
+      <Description></Description>
+      <BACType>3</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>12582912</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>0</idxConfig>
+      <idxExternal>0</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="True" TimeDelay="0" EventEnable="224" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="True" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="1">
+      <BACName>Comm Error Device 1</BACName>
+      <Description></Description>
+      <BACType>3</BACType>
+      <BACInstance>1</BACInstance>
+      <ObjectID>12582913</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>1</idxConfig>
+      <idxExternal>1</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="True" TimeDelay="0" EventEnable="224" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="True" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="2">
+      <BACName>Comm Error Device 2</BACName>
+      <Description></Description>
+      <BACType>3</BACType>
+      <BACInstance>2</BACInstance>
+      <ObjectID>12582914</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>2</idxConfig>
+      <idxExternal>2</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="True" TimeDelay="0" EventEnable="224" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="True" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="True" Fixed="True" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="3">
+      <BACName>Analog Input</BACName>
+      <Description></Description>
+      <BACType>0</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>0</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>3</idxConfig>
+      <idxExternal>3</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="62" />
+      <COV>0</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>-1</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="True" TimeDelay="0" EventEnable="224" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="True" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="4">
+      <BACName>Analog Output</BACName>
+      <Description></Description>
+      <BACType>1</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>4194304</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>4</idxConfig>
+      <idxExternal>4</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="62" />
+      <COV>0</COV>
+      <Relinquish>0</Relinquish>
+      <NumOfStates>-1</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="True" TimeDelay="0" EventEnable="224" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="True" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="5">
+      <BACName>Analog Value</BACName>
+      <Description></Description>
+      <BACType>2</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>8388608</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>5</idxConfig>
+      <idxExternal>5</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="95" />
+      <COV>0</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>-1</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="6">
+      <BACName>Binary Input</BACName>
+      <Description></Description>
+      <BACType>3</BACType>
+      <BACInstance>3</BACInstance>
+      <ObjectID>12582915</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>6</idxConfig>
+      <idxExternal>6</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="7">
+      <BACName>Binary Output</BACName>
+      <Description></Description>
+      <BACType>4</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>16777216</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>7</idxConfig>
+      <idxExternal>7</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>0</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="8">
+      <BACName>Binary Value</BACName>
+      <Description></Description>
+      <BACType>5</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>20971520</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>8</idxConfig>
+      <idxExternal>8</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>2</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="9">
+      <BACName>Multistate Input</BACName>
+      <Description></Description>
+      <BACType>13</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>54525952</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>9</idxConfig>
+      <idxExternal>9</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>65535</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="10">
+      <BACName>Multistate Output</BACName>
+      <Description></Description>
+      <BACType>14</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>58720256</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>10</idxConfig>
+      <idxExternal>10</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>1</Relinquish>
+      <NumOfStates>65535</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+    <BACnetObject ID="11">
+      <BACName>Multistate Value</BACName>
+      <Description></Description>
+      <BACType>19</BACType>
+      <BACInstance>0</BACInstance>
+      <ObjectID>79691776</ObjectID>
+      <Polarity>False</Polarity>
+      <LUT>-1</LUT>
+      <MAP>-1</MAP>
+      <idxConfig>11</idxConfig>
+      <idxExternal>11</idxExternal>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Active>True</Active>
+      <Units Value="-1" />
+      <COV>-1</COV>
+      <Relinquish>-1</Relinquish>
+      <NumOfStates>65535</NumOfStates>
+      <NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>-1</ProtocolIndex>
+    </BACnetObject>
+  </InternalProtocol>
+  <ExternalProtocol ProtocolType="Modbus Master">
+    <Enabled>True</Enabled>
+    <Media>0</Media>
+    <Deadband>0</Deadband>
+    <PollRecords Enabled="False" UseMissingReg="False" MaxRegisters="100" />
+    <RtuNodes>
+      <RtuNode Baudrate="9600" DataBits="8" Parity="0" StopBits="1" TimeInterFrame="60" PhysicalPort="0" PollAfterWrite="False" PollReadSignal="False">
+        <Device Index="0" Name="Device 0" Manufacturer="" SlaveNum="10" BaseRegister="0" Timeout="1000" Enabled="True" />
+        <Device Index="1" Name="Device 1" Manufacturer="" SlaveNum="11" BaseRegister="0" Timeout="1000" Enabled="True" />
+        <Device Index="2" Name="Device 2" Manufacturer="" SlaveNum="12" BaseRegister="0" Timeout="1000" Enabled="True" />
+      </RtuNode>
+      <RtuNode Baudrate="9600" DataBits="8" Parity="0" StopBits="1" TimeInterFrame="60" PhysicalPort="1" PollAfterWrite="False" PollReadSignal="False" />
+    </RtuNodes>
+    <TCPNodes />
+    <Signals>
+      <Signal ID="0">
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="1">
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="2">
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>-1</LenBits>
+        <Format>99</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>-1</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>-1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="True" Fixed="True" />
+      </Signal>
+      <Signal ID="3">
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="4">
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>6</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="5">
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>0</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>6</WriteFunc>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="6">
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>1</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="7">
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>5</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>1</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="8">
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>1</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>1</ReadFunc>
+        <WriteFunc>5</WriteFunc>
+        <LenBits>1</LenBits>
+        <Format>255</Format>
+        <ByteOrder>255</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="9">
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>-1</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>0</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="10">
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>-1</ReadFunc>
+        <WriteFunc>16</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>2</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+      <Signal ID="11">
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Port>0</Port>
+        <DeviceIndex>2</DeviceIndex>
+        <IsBroadcast>False</IsBroadcast>
+        <ReadFunc>3</ReadFunc>
+        <WriteFunc>16</WriteFunc>
+        <LenBits>32</LenBits>
+        <Format>0</Format>
+        <ByteOrder>0</ByteOrder>
+        <Bit>0</Bit>
+        <NumOfBits>1</NumOfBits>
+        <Address>4</Address>
+        <Deadband>0</Deadband>
+        <Virtual Status="False" Fixed="False" />
+      </Signal>
+    </Signals>
+  </ExternalProtocol>
+</Project>

@@ -15,7 +15,7 @@ import type { Override } from '@/types/overrides';
 
 export default function Home() {
   // File import management
-  const { raw, setRaw, protocols, error, busy, importArrayBufferAsFile } =
+  const { raw, setRaw, protocols, error, busy, importArrayBufferAsFile, originalIbmaps } =
     useFileImport();
 
   // Template management with proper reset callback
@@ -65,7 +65,10 @@ export default function Home() {
         selectedTemplateId,
       );
 
-      const res = await fetch('/api/export', {
+      // Use special endpoint for ibmaps export (rows already contains metadata + header)
+      const endpoint = originalIbmaps ? '/api/export-ibmaps' : '/api/export';
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(workbookToExport),
@@ -144,6 +147,7 @@ export default function Home() {
             busy={busy}
             pendingExport={pendingExport}
             templateId={selectedTemplateId}
+            originalIbmaps={originalIbmaps}
           />
         )}
       </main>

@@ -36,15 +36,18 @@ export function applyOverrides<T extends EditableRow>(
 /**
  * Helper to find the header row index by looking for expected columns.
  * Scans first 20 rows and returns index of row with most matches.
+ * 
+ * For MAPS format (ibmaps), skips the first 6 metadata rows.
  */
 function findHeaderRowIndex(
   rows: CellValue[][],
   expectedColumns: string[],
 ): number {
-  // Only scan first 20 rows to be efficient and avoid false positives in data
+  // Skip first 6 rows (MAPS metadata) and scan from row 6 onwards
+  const startIdx = Math.min(6, rows.length);
   const scanLimit = Math.min(rows.length, 20);
 
-  for (let i = 0; i < scanLimit; i++) {
+  for (let i = startIdx; i < scanLimit; i++) {
     const rowValues = rows[i].map((c) => String(c || '').trim());
 
     // Count how many expected columns are present in this row
