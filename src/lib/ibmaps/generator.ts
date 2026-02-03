@@ -13,7 +13,7 @@ import { parseIbmapsSignals_BAC_MBM } from './parser';
 export function addModbusSignals_BAC_MBM(
   templateXmlText: string,
   newSignals: RawSignal[],
-  newDevices: IbmapsDevice[] = []
+  newDevices: IbmapsDevice[] = [],
 ): string {
   if (newSignals.length === 0 && newDevices.length === 0) {
     return templateXmlText;
@@ -21,7 +21,6 @@ export function addModbusSignals_BAC_MBM(
 
   // Detect indentation/eol style from the file
   const eol = templateXmlText.includes('\r\n') ? '\r\n' : '\n';
-
 
   let result = templateXmlText;
 
@@ -33,9 +32,14 @@ export function addModbusSignals_BAC_MBM(
       const devicesXml = newDevices
         .map((d) => generateDeviceXml(d, deviceIndent))
         .join(eol);
-      
+
       // Insert after the last newline before </RtuNode> to avoid double indentation
-      result = insertAfterLastNewlineBefore(result, rtuNodeEndIdx, `${devicesXml}${eol}`, eol);
+      result = insertAfterLastNewlineBefore(
+        result,
+        rtuNodeEndIdx,
+        `${devicesXml}${eol}`,
+        eol,
+      );
     }
   }
 
@@ -48,9 +52,14 @@ export function addModbusSignals_BAC_MBM(
     const signalsXml = newSignals
       .map((s) => generateSignalXml(s, signalIndent, eol))
       .join(eol);
-      
+
     // Insert after the last newline before </Signals>
-    result = insertAfterLastNewlineBefore(result, signalsEndIdx, `${signalsXml}${eol}`, eol);
+    result = insertAfterLastNewlineBefore(
+      result,
+      signalsEndIdx,
+      `${signalsXml}${eol}`,
+      eol,
+    );
   }
 
   // 3. Inject BACnet Objects
@@ -64,13 +73,23 @@ export function addModbusSignals_BAC_MBM(
       .join(eol);
 
     // Insert after the last newline before </InternalProtocol>
-    result = insertAfterLastNewlineBefore(result, internalEndIdx, `${bacObjXml}${eol}`, eol);
+    result = insertAfterLastNewlineBefore(
+      result,
+      internalEndIdx,
+      `${bacObjXml}${eol}`,
+      eol,
+    );
   }
-  
+
   return result;
 }
 
-function insertAfterLastNewlineBefore(original: string, limitIdx: number, content: string, eol: string): string {
+function insertAfterLastNewlineBefore(
+  original: string,
+  limitIdx: number,
+  content: string,
+  eol: string,
+): string {
   // Scan backwards from limitIdx to find the first newline
   let insertPos = limitIdx;
   for (let i = limitIdx - 1; i >= 0; i--) {
@@ -83,7 +102,7 @@ function insertAfterLastNewlineBefore(original: string, limitIdx: number, conten
       insertPos = limitIdx;
       // If minified/inline, we might need to prepend eol? Assuming pretty printed for now based on file.
       // But if we insert at limitIdx (right before </Tag>), and we have content `  <Tag>...`,
-      // we might want to force a newline if none exists. 
+      // we might want to force a newline if none exists.
       // For now, sticking to "Find indented closing tag" logic.
       break;
     }
@@ -116,7 +135,7 @@ function generateDeviceXml(d: IbmapsDevice, indent: string): string {
 function generateSignalXml(s: RawSignal, indent: string, eol: string): string {
   const m = s.modbus;
   const innerIndent = indent + '  ';
-  
+
   const lines = [
     `${indent}<Signal ID="${s.idxExternal}">`,
     `${innerIndent}<idxConfig>${s.idxExternal}</idxConfig>`,
@@ -128,36 +147,42 @@ function generateSignalXml(s: RawSignal, indent: string, eol: string): string {
     `${innerIndent}<IsBroadcast>False</IsBroadcast>`,
     `${innerIndent}<ReadFunc>${m.readFunc}</ReadFunc>`,
     `${innerIndent}<WriteFunc>${m.writeFunc}</WriteFunc>`,
-    `${innerIndent}<LenBits>-1</LenBits>`, // Standard default
-    `${innerIndent}<Format>${m.regType ?? 99}</Format>`, // 99 seems to be used when undefined or specific types
-    `${innerIndent}<ByteOrder>255</ByteOrder>`, // Default
-    `${innerIndent}<Bit>-1</Bit>`,
-    `${innerIndent}<NumOfBits>1</NumOfBits>`,
+    `${innerIndent}<LenBits>${m.lenBits ?? -1}</LenBits>`,
+    `${innerIndent}<Format>${m.format ?? m.regType ?? 99}</Format>`,
+    `${innerIndent}<ByteOrder>${m.byteOrder ?? 255}</ByteOrder>`,
+    `${innerIndent}<Bit>${m.bit ?? -1}</Bit>`,
+    `${innerIndent}<NumOfBits>${m.numOfBits ?? 1}</NumOfBits>`,
     `${innerIndent}<Address>${m.address}</Address>`,
-    `${innerIndent}<Deadband>0</Deadband>`
+    `${innerIndent}<Deadband>${m.deadband ?? 0}</Deadband>`,
   ];
 
   if (m.virtual) {
-    lines.push(`${innerIndent}<Virtual Status="True" Fixed="${m.fixed ? 'True' : 'False'}" />`);
+    lines.push(
+      `${innerIndent}<Virtual Status="True" Fixed="${m.fixed ? 'True' : 'False'}" />`,
+    );
   } else {
     lines.push(`${innerIndent}<Virtual Status="False" Fixed="False" />`);
   }
 
-  // Replicate extra unknown attributes if necessary? 
+  // Replicate extra unknown attributes if necessary?
   // For now we stick to the generated structure which mimics the template.
-  
+
   lines.push(`${indent}</Signal>`);
   return lines.join(eol);
 }
 
-function generateBacnetObjectXml(s: RawSignal, indent: string, eol: string): string {
+function generateBacnetObjectXml(
+  s: RawSignal,
+  indent: string,
+  eol: string,
+): string {
   const b = s.bacnet;
   const innerIndent = indent + '  ';
 
   // ID is typically same as idxExternal in the template, but technically BACnetObject ID attribute might be just a sequence.
   // In the template Observation: <BACnetObject ID="0">...<idxExternal>0</idxExternal>
   // We'll use idxExternal for ID too for consistency.
-  
+
   const lines = [
     `${indent}<BACnetObject ID="${s.idxExternal}">`,
     `${innerIndent}<BACName>${b.bacName}</BACName>`,
@@ -177,13 +202,17 @@ function generateBacnetObjectXml(s: RawSignal, indent: string, eol: string): str
     `${innerIndent}<COV>-1</COV>`,
     `${innerIndent}<Relinquish>-1</Relinquish>`,
     `${innerIndent}<NumOfStates>-1</NumOfStates>`,
-    `${innerIndent}<NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />`
+    `${innerIndent}<NotificationClass Id="-1" AlarmNotify="False" TimeDelay="0" EventEnable="0" HighLimit="0" LowLimit="0" HighLimitEnabled="False" LowLimitEnabled="False" DeadBand="0" AlarmValueActive="False" AlarmValuesId="0" FaultValuesId="0" AlarmValues="" FaultValues="" FeedbackValue="1" HighLimitLav="0" LowLimitLav="0" DeadBandLav="0" />`,
   ];
 
   if (s.modbus.virtual) {
-    lines.push(`${innerIndent}<Virtual Status="True" Fixed="True" General="False" />`);
+    lines.push(
+      `${innerIndent}<Virtual Status="True" Fixed="True" General="False" />`,
+    );
   } else {
-    lines.push(`${innerIndent}<Virtual Status="False" Fixed="False" General="False" />`);
+    lines.push(
+      `${innerIndent}<Virtual Status="False" Fixed="False" General="False" />`,
+    );
   }
 
   lines.push(`${innerIndent}<ProtocolIndex>-1</ProtocolIndex>`);

@@ -16,13 +16,40 @@ export type ParseIbmapsResult = {
  * @param xmlContent The content of the .ibmaps file
  * @returns ParseIbmapsResult
  */
-export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResult {
+export function parseIbmapsSignals_BAC_MBM(
+  xmlContent: string,
+): ParseIbmapsResult {
+  type XmlRecord = Record<string, unknown>;
+
+  const asRecord = (value: unknown): XmlRecord =>
+    typeof value === 'object' && value !== null ? (value as XmlRecord) : {};
+
+  const toStringValue = (value: unknown): string =>
+    value === null || value === undefined ? '' : String(value);
+
+  const toNumberValue = (value: unknown, fallback = -1): number => {
+    const num = Number(value);
+    return Number.isNaN(num) ? fallback : num;
+  };
+
+  const toOptionalNumber = (value: unknown): number | undefined => {
+    if (value === null || value === undefined || value === '') return undefined;
+    const num = Number(value);
+    return Number.isNaN(num) ? undefined : num;
+  };
+
+  const toStringRecord = (record: XmlRecord): Record<string, string> =>
+    Object.fromEntries(
+      Object.entries(record).map(([key, val]) => [key, toStringValue(val)]),
+    );
+
   const parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: '@_',
     isArray: (name, jpath) => {
       // Force arrays for repeatable elements
-      if (jpath.endsWith('ExternalProtocol.RtuNodes.RtuNode.Device')) return true;
+      if (jpath.endsWith('ExternalProtocol.RtuNodes.RtuNode.Device'))
+        return true;
       if (jpath.endsWith('ExternalProtocol.Signals.Signal')) return true;
       if (jpath.endsWith('InternalProtocol.BACnetObject')) return true;
       return false;
@@ -30,7 +57,7 @@ export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResul
   });
 
   const parsed = parser.parse(xmlContent);
-  const project = parsed.Project;
+  const project = parsed.Project as XmlRecord | undefined;
 
   const warnings: string[] = [];
 
@@ -40,25 +67,37 @@ export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResul
 
   // 1. Extract Devices (Flat list from all RtuNodes)
   const devices: IbmapsDevice[] = [];
-  const rtuNodes = project.ExternalProtocol?.RtuNodes?.RtuNode;
+  const externalProtocol = asRecord(project).ExternalProtocol;
+  const rtuNodeEntries = asRecord(asRecord(externalProtocol).RtuNodes).RtuNode;
 
-  if (rtuNodes) {
-    // rtuNodes can be an array or single object depending on XML structure/parser settings, 
-    // but usually in these files there is a list of nodes. 
+  if (rtuNodeEntries) {
+    // rtuNodes can be an array or single object depending on XML structure/parser settings,
+    // but usually in these files there is a list of nodes.
     // However, the parser 'isArray' option above helps.
-    const nodesArray = Array.isArray(rtuNodes) ? rtuNodes : [rtuNodes];
+    const nodesArray = Array.isArray(rtuNodeEntries)
+      ? rtuNodeEntries
+      : [rtuNodeEntries];
 
     for (const node of nodesArray) {
-      if (node.Device) {
-        for (const dev of node.Device) {
+      const nodeRecord = node as XmlRecord;
+      if (nodeRecord.Device) {
+        const devicesArray = Array.isArray(nodeRecord.Device)
+          ? nodeRecord.Device
+          : [nodeRecord.Device];
+        for (const dev of devicesArray) {
+          const devRecord = dev as XmlRecord;
           devices.push({
-            index: parseInt(dev['@_Index'], 10),
-            name: dev['@_Name'] || '',
-            slaveNum: parseInt(dev['@_SlaveNum'], 10),
-            manufacturer: dev['@_Manufacturer'],
-            baseRegister: dev['@_BaseRegister'] ? parseInt(dev['@_BaseRegister'], 10) : undefined,
-            timeout: dev['@_Timeout'] ? parseInt(dev['@_Timeout'], 10) : undefined,
-            enabled: dev['@_Enabled'] === 'True',
+            index: toNumberValue(devRecord['@_Index'], -1),
+            name: toStringValue(devRecord['@_Name']),
+            slaveNum: toNumberValue(devRecord['@_SlaveNum'], -1),
+            manufacturer: toStringValue(devRecord['@_Manufacturer']),
+            baseRegister: devRecord['@_BaseRegister']
+              ? toNumberValue(devRecord['@_BaseRegister'], 0)
+              : undefined,
+            timeout: devRecord['@_Timeout']
+              ? toNumberValue(devRecord['@_Timeout'], 1000)
+              : undefined,
+            enabled: devRecord['@_Enabled'] === 'True',
           });
         }
       }
@@ -69,24 +108,39 @@ export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResul
   const devicesByIndex = new Map(devices.map((d) => [d.index, d]));
 
   // 2. Extract Signals (Modbus)
-  const xmlSignals = project.ExternalProtocol?.Signals?.Signal || [];
-  const modbusSignalsMap = new Map<number, any>();
+  const xmlSignalsRaw = asRecord(asRecord(externalProtocol).Signals).Signal;
+  const xmlSignals = Array.isArray(xmlSignalsRaw)
+    ? xmlSignalsRaw
+    : xmlSignalsRaw
+      ? [xmlSignalsRaw]
+      : [];
+  const modbusSignalsMap = new Map<number, XmlRecord>();
 
   for (const sig of xmlSignals) {
-    const idxExternal = parseInt(sig.idxExternal, 10);
-    modbusSignalsMap.set(idxExternal, sig);
+    const sigRecord = sig as XmlRecord;
+    const idxExternal = toNumberValue(sigRecord.idxExternal, -1);
+    modbusSignalsMap.set(idxExternal, sigRecord);
   }
 
   // 3. Extract BACnet Objects (Internal)
-  const xmlBacObjs = project.InternalProtocol?.BACnetObject || [];
+  const internalProtocol = asRecord(project).InternalProtocol;
+  const xmlBacObjsRaw = asRecord(internalProtocol).BACnetObject;
+  const xmlBacObjs = Array.isArray(xmlBacObjsRaw)
+    ? xmlBacObjsRaw
+    : xmlBacObjsRaw
+      ? [xmlBacObjsRaw]
+      : [];
   const signals: RawSignal[] = [];
 
   for (const bacObj of xmlBacObjs) {
-    const idxExternal = parseInt(bacObj.idxExternal, 10);
+    const bacRecord = bacObj as XmlRecord;
+    const idxExternal = toNumberValue(bacRecord.idxExternal, -1);
     const modSig = modbusSignalsMap.get(idxExternal);
 
     if (!modSig) {
-      warnings.push(`BACnetObject with idxExternal=${idxExternal} has no matching Modbus Signal.`);
+      warnings.push(
+        `BACnetObject with idxExternal=${idxExternal} has no matching Modbus Signal.`,
+      );
       continue;
     }
 
@@ -94,23 +148,12 @@ export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResul
 
     // 3.1 BACnet part
     // Extract unknown attributes for preservation
-    const {
-      BACName,
-      BACType,
-      BACInstance,
-      Units,
-      StatusFlags, // Usually complex object or missing
-      idxExternal: _idx1,
-      ...bacRest
-    } = bacObj;
+    const { BACName, BACType, BACInstance, Units, ...bacRest } = bacRecord;
 
     // Handle MAP node specifically
     // Assuming 1 MAP per object as per spec
     // MAP can be "-1" string if not configured/mapped, or an object
-    let mapData: any = {};
-    if (bacObj.MAP && typeof bacObj.MAP === 'object') {
-       mapData = bacObj.MAP;
-    }
+    const mapData = asRecord(bacRecord.MAP);
 
     const {
       '@_Address': mapAddr,
@@ -121,76 +164,102 @@ export function parseIbmapsSignals_BAC_MBM(xmlContent: string): ParseIbmapsResul
       '@_PollPriority': mapPollPriority,
       ...mapRest
     } = mapData;
-    
+
     // 3.2 Modbus part
     const {
-       DeviceIndex,
-       Description,
-       Address,
-       ReadFunc,
-       WriteFunc,
-       RegType, // Might be missing on Signal node
-       DataType, // Might be missing on Signal node
-       ScanPeriod,
-       Virtual,
-       idxExternal: _idx2,
-       ...modRest
+      DeviceIndex,
+      Description,
+      Address,
+      ReadFunc,
+      WriteFunc,
+      RegType, // Might be missing on Signal node
+      DataType, // Might be missing on Signal node
+      LenBits,
+      Format,
+      ByteOrder,
+      Bit,
+      NumOfBits,
+      Deadband,
+      ScanPeriod,
+      Virtual,
+      ...modRest
     } = modSig;
 
-    const devIndex = parseInt(DeviceIndex, 10);
+    const devIndex = toNumberValue(DeviceIndex, -1);
     const linkedDevice = devicesByIndex.get(devIndex);
 
     // Heuristic for Virtual
-    const isVirtual = Virtual && Virtual['@_Status'] === 'True';
+    const virtualRecord = asRecord(Virtual);
+    const isVirtual = virtualRecord['@_Status'] === 'True';
 
     const rawSig: RawSignal = {
       idxExternal,
-      name: BACName,
+      name: toStringValue(BACName),
       direction: 'BACnet->Modbus',
-      isCommError: BACName.startsWith('Comm Error'),
-      
+      isCommError: toStringValue(BACName).startsWith('Comm Error'),
+
       bacnet: {
-        bacName: BACName,
-        type: parseInt(BACType, 10),
-        instance: parseInt(BACInstance, 10),
-        units: Units && Units['@_Value'] ? parseInt(Units['@_Value'], 10) : undefined,
-        extraAttrs: bacRest,
+        bacName: toStringValue(BACName),
+        type: toNumberValue(BACType, 0),
+        instance: toNumberValue(BACInstance, 0),
+        units:
+          Units && asRecord(Units)['@_Value']
+            ? toNumberValue(asRecord(Units)['@_Value'], -1)
+            : undefined,
+        extraAttrs: toStringRecord(bacRest),
         map: {
-          address: parseInt(mapAddr ?? '-1', 10),
-          regType: parseInt(mapRegType ?? '-1', 10),
-          dataType: parseInt(mapDataType ?? '-1', 10),
-          readFunc: parseInt(mapReadFunc ?? '-1', 10),
-          writeFunc: parseInt(mapWriteFunc ?? '-1', 10),
-          pollPriority: mapPollPriority ? parseInt(mapPollPriority, 10) : undefined,
-          extraAttrs: mapRest
-        }
+          address: toNumberValue(mapAddr, -1),
+          regType: toNumberValue(mapRegType, -1),
+          dataType: toNumberValue(mapDataType, -1),
+          readFunc: toNumberValue(mapReadFunc, -1),
+          writeFunc: toNumberValue(mapWriteFunc, -1),
+          pollPriority: mapPollPriority
+            ? toNumberValue(mapPollPriority, -1)
+            : undefined,
+          extraAttrs: toStringRecord(mapRest),
+        },
       },
 
       modbus: {
         deviceIndex: devIndex,
         slaveNum: linkedDevice ? linkedDevice.slaveNum : -1,
-        description: Description,
-        address: parseInt(Address ?? '-1', 10),
-        readFunc: parseInt(ReadFunc ?? '-1', 10),
-        writeFunc: parseInt(WriteFunc ?? '-1', 10),
-        regType: RegType ? parseInt(RegType, 10) : undefined, 
-        dataType: DataType ? parseInt(DataType, 10) : undefined,
-        scanPeriod: ScanPeriod ? parseInt(ScanPeriod, 10) : undefined,
-        virtual: isVirtual,
-        fixed: isVirtual ? (Virtual['@_Fixed'] === 'True') : undefined,
-        enable: isVirtual ? (Virtual['@_Enable'] === 'True') : undefined,
-        extraAttrs: modRest
-      }
+        description: toStringValue(Description) || undefined,
+        address: toNumberValue(Address, -1),
+        readFunc: toNumberValue(ReadFunc, -1),
+        writeFunc: toNumberValue(WriteFunc, -1),
+        regType: RegType ? toNumberValue(RegType, -1) : undefined,
+        dataType: DataType ? toNumberValue(DataType, -1) : undefined,
+        lenBits: LenBits ? toOptionalNumber(LenBits) : undefined,
+        format: Format ? toOptionalNumber(Format) : undefined,
+        byteOrder: ByteOrder ? toOptionalNumber(ByteOrder) : undefined,
+        bit: Bit ? toOptionalNumber(Bit) : undefined,
+        numOfBits: NumOfBits ? toOptionalNumber(NumOfBits) : undefined,
+        deadband: Deadband ? toOptionalNumber(Deadband) : undefined,
+        scanPeriod: ScanPeriod ? toOptionalNumber(ScanPeriod) : undefined,
+        virtual: Boolean(isVirtual),
+        fixed: isVirtual
+          ? toStringValue(virtualRecord['@_Fixed']) === 'True'
+          : undefined,
+        enable: isVirtual
+          ? toStringValue(virtualRecord['@_Enable']) === 'True'
+          : undefined,
+        extraAttrs: toStringRecord(modRest),
+      },
     };
 
     signals.push(rawSig);
   }
 
   // Check for Modbus signals without BACnet object (orphans)
-  for (const [idx, modSig] of modbusSignalsMap) {
-    const hasBac = xmlBacObjs.some((b: any) => parseInt(b.idxExternal, 10) === idx);
+  const getIdxExternal = (record: XmlRecord): number =>
+    toNumberValue(record.idxExternal, -1);
+
+  for (const idx of modbusSignalsMap.keys()) {
+    const hasBac = xmlBacObjs.some((b) => getIdxExternal(b) === idx);
     if (!hasBac) {
-      warnings.push(`Modbus Signal with idxExternal=${idx} has no matching BACnetObject.`);
+      warnings.push(
+        `Modbus Signal with idxExternal=${idx} has no matching BACnetObject.`,
+      );
     }
   }
 

@@ -5,7 +5,8 @@ export const TEMPLATES = [
     id: 'bacnet-server__modbus-master',
     label: 'BACnet Server → Modbus Master',
     href: '/templates/IN-BAC-MBM.ibmaps',
-    expectedSheets: [], // Not used for .ibmaps parsing
+    baseXlsxHref: '/templates/bacnet-server-to-modbus-master.xlsx',
+    expectedSheets: ['Signals', 'BACnet Server', 'Conversions'],
     promptText: `Convert the following Modbus device register map into CSV format with these exact columns:
 
 deviceId,signalName,registerType,address,dataType,units,description
@@ -31,6 +32,7 @@ Output only the CSV with the exact column names above, no explanations.`,
     id: 'modbus-slave__bacnet-client',
     label: 'Modbus Slave → BACnet Client',
     href: '/templates/modbus-slave-to-bacnet-client.xlsx',
+    baseXlsxHref: undefined,
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following BACnet point list into CSV format with these exact columns:
 
@@ -52,6 +54,7 @@ Output only the CSV with the exact column names above, no explanations.`,
     id: 'knx__modbus-master',
     label: 'KNX → Modbus Master',
     href: '/templates/knx-to-modbus-master.xlsx',
+    baseXlsxHref: undefined,
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following Modbus device register map into CSV format with these exact columns:
 
@@ -78,6 +81,7 @@ Output only the CSV with the exact column names above, no explanations.`,
     id: 'knx__bacnet-client',
     label: 'KNX → BACnet Client',
     href: '/templates/knx-to-bacnet-client.xlsx',
+    baseXlsxHref: undefined,
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following BACnet point list into CSV format with these exact columns:
 
@@ -99,6 +103,7 @@ Output only the CSV with the exact column names above, no explanations.`,
     id: 'modbus-slave__knx',
     label: 'Modbus Slave → KNX',
     href: '/templates/modbus-slave-to-knx.xlsx',
+    baseXlsxHref: undefined,
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `This template generates Modbus Slave signals from a KNX project exported from ETS software.
 
@@ -124,6 +129,7 @@ The system will:
     id: 'bacnet-server__knx',
     label: 'BACnet Server → KNX',
     href: '/templates/bacnet-server-to-knx.xlsx',
+    baseXlsxHref: undefined,
     expectedSheets: ['Signals', 'BACnet Server', 'KNX', 'Conversions'],
     promptText: `This template generates BACnet Server signals from a KNX project exported from ETS software.
 

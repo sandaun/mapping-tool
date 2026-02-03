@@ -40,51 +40,26 @@ export function useFileImport() {
     arrayBuffer: ArrayBuffer,
     filename: string,
     expectedSheets?: readonly string[],
+    baseXlsxHref?: string,
   ) {
     setError(null);
     setBusy(true);
     setOriginalIbmaps(null); // Reset on new import
 
-    try {
-      // Check for .ibmaps extension - parse client-side
-      if (filename.toLowerCase().endsWith('.ibmaps')) {
-        const textDecoder = new TextDecoder('utf-8');
-        const xmlContent = textDecoder.decode(arrayBuffer);
-
-        const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);
-
-        if (parseResult.warnings.length > 0) {
-          console.warn('IBMAPS Parse Warnings:', parseResult.warnings);
-        }
-
-        const workbook = rawSignalsToWorkbook(
-          parseResult.signals,
-          parseResult.devices,
-        );
-
-        setRaw(workbook);
-        setProtocols({
-          internalProtocol: 'BACnet Server', // Fixed for BAC-MBM template
-          externalProtocol: 'Modbus Master',
-        });
-        setOriginalIbmaps({
-          content: xmlContent,
-          devices: parseResult.devices,
-        });
-
-        return; // Skip server call for ibmaps
-      }
-
-      // Standard xlsx import via API
-      const file = new File([arrayBuffer], filename, {
+    const importXlsxArrayBuffer = async (
+      buffer: ArrayBuffer,
+      fileName: string,
+      expected?: readonly string[],
+    ): Promise<ImportResponse> => {
+      const file = new File([buffer], fileName, {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
 
       const formData = new FormData();
       formData.set('file', file);
 
-      if (expectedSheets) {
-        formData.set('expectedSheets', JSON.stringify(expectedSheets));
+      if (expected) {
+        formData.set('expectedSheets', JSON.stringify(expected));
       }
 
       const res = await fetch('/api/import', {
@@ -103,6 +78,93 @@ export function useFileImport() {
       if (!isImportResponse(data)) {
         throw new Error('Resposta invàlida del servidor.');
       }
+
+      return data;
+    };
+
+    try {
+      // Check for .ibmaps extension - parse client-side
+      if (filename.toLowerCase().endsWith('.ibmaps')) {
+        const textDecoder = new TextDecoder('utf-8');
+        const xmlContent = textDecoder.decode(arrayBuffer);
+
+        const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);
+
+        if (parseResult.warnings.length > 0) {
+          console.warn('IBMAPS Parse Warnings:', parseResult.warnings);
+        }
+
+        const workbook = rawSignalsToWorkbook(
+          parseResult.signals,
+          parseResult.devices,
+        );
+
+        let mergedWorkbook = workbook;
+        let baseProtocols: ProtocolsMetadata | null = null;
+
+        if (baseXlsxHref) {
+          const res = await fetch(baseXlsxHref);
+          if (!res.ok) {
+            throw new Error('Could not load base XLSX template.');
+          }
+
+          const baseBuffer = await res.arrayBuffer();
+          const baseImport = await importXlsxArrayBuffer(
+            baseBuffer,
+            baseXlsxHref.split('/').pop() || 'template.xlsx',
+            expectedSheets,
+          );
+
+          baseProtocols = baseImport.protocols;
+
+          const baseSheet = baseImport.raw.sheets.find(
+            (sheet) => sheet.name === 'Signals',
+          );
+          const ibmapsSheet = workbook.sheets.find(
+            (sheet) => sheet.name === 'Signals',
+          );
+
+          if (!baseSheet || !ibmapsSheet) {
+            throw new Error('Signals sheet not found.');
+          }
+
+          const basePrefix = baseSheet.rows.slice(0, 6);
+          const baseDataRows = baseSheet.rows.slice(6);
+          const ibmapsDataRows = ibmapsSheet.rows.slice(7);
+          const extraRows = ibmapsDataRows.slice(baseDataRows.length);
+          const updatedSignalsSheet = {
+            ...baseSheet,
+            rows: [...basePrefix, ...baseDataRows, ...extraRows],
+          };
+
+          mergedWorkbook = {
+            sheets: baseImport.raw.sheets.map((sheet) =>
+              sheet.name === 'Signals' ? updatedSignalsSheet : sheet,
+            ),
+          };
+        }
+
+        setRaw(mergedWorkbook);
+        setProtocols(
+          baseProtocols ?? {
+            internalProtocol: 'BACnet Server',
+            externalProtocol: 'Modbus Master',
+          },
+        );
+        setOriginalIbmaps({
+          content: xmlContent,
+          devices: parseResult.devices,
+        });
+
+        return; // Skip server call for ibmaps
+      }
+
+      // Standard xlsx import via API
+      const data = await importXlsxArrayBuffer(
+        arrayBuffer,
+        filename,
+        expectedSheets,
+      );
 
       setRaw(data.raw);
       setProtocols(data.protocols);

@@ -3,13 +3,14 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { extractSignalsFromWorkbook } from '@/lib/overrides';
-import { applyOverrides } from '@/lib/overrides';
+import { applyOverrides, applyOverridesToWorkbook } from '@/lib/overrides';
 import { SignalsPreviewDialog } from '@/components/SignalsPreviewDialog';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { Override } from '@/types/overrides';
 import type { IbmapsState } from '@/hooks/useFileImport';
 import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapter';
 import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generator';
+import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parser';
 import type { IbmapsDevice } from '@/lib/ibmaps/types';
 
 type ResultsSectionProps = {
@@ -63,11 +64,19 @@ export function ResultsSection({
     if (!originalIbmaps || !pendingExport) return;
 
     try {
+      const workbookWithOverrides = applyOverridesToWorkbook(
+        raw,
+        overrides,
+        templateId,
+      );
+
       // Get Signals sheet
-      const signalsSheet = raw.sheets.find((s) => s.name === 'Signals');
+      const signalsSheet = workbookWithOverrides.sheets.find(
+        (s) => s.name === 'Signals',
+      );
       if (!signalsSheet) throw new Error('Signals sheet not found');
 
-      // Calculate range - skip metadata (6 rows) + header (1 row)
+      // Calculate range for the newest rows at the bottom of the sheet
       const totalRows = signalsSheet.rows.length;
       const count = pendingExport.signalsCount;
       const startIdx = totalRows - count;
@@ -75,7 +84,23 @@ export function ResultsSection({
       if (startIdx < 0) throw new Error('Invalid row count calculation');
 
       // Convert rows to RawSignals using the reverse adapter
-      const newSignals = workbookRowsToRawSignals(signalsSheet, startIdx, count);
+      const newSignals = workbookRowsToRawSignals(
+        signalsSheet,
+        startIdx,
+        count,
+      );
+
+      const baseSignals = parseIbmapsSignals_BAC_MBM(
+        originalIbmaps.content,
+      ).signals;
+      const baseMaxId = baseSignals.reduce(
+        (max, s) => Math.max(max, s.idxExternal),
+        -1,
+      );
+      const normalizedSignals = newSignals.map((signal, index) => ({
+        ...signal,
+        idxExternal: baseMaxId + 1 + index,
+      }));
 
       // Find max device index and create new device if needed
       const maxDeviceIndex = originalIbmaps.devices.reduce(
@@ -87,10 +112,10 @@ export function ResultsSection({
 
       // Check if we need to create a new device
       const newDevices: IbmapsDevice[] = [];
-      const hasNewDevice = newSignals.some(
-        (s) => s.modbus.deviceIndex > maxDeviceIndex
+      const hasNewDevice = normalizedSignals.some(
+        (s) => s.modbus.deviceIndex > maxDeviceIndex,
       );
-      
+
       if (hasNewDevice) {
         newDevices.push({
           index: newDeviceIndex,
@@ -105,7 +130,7 @@ export function ResultsSection({
       // Generate XML injecting the new signals
       const newXml = addModbusSignals_BAC_MBM(
         originalIbmaps.content,
-        newSignals,
+        normalizedSignals,
         newDevices,
       );
 

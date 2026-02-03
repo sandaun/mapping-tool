@@ -10,6 +10,7 @@ export const useTemplateManager = (
     arrayBuffer: ArrayBuffer,
     fileName: string,
     expectedSheets?: string[],
+    baseXlsxHref?: string,
   ) => Promise<void>,
   onPendingExportReset: () => void,
 ) => {
@@ -41,6 +42,7 @@ export const useTemplateManager = (
         arrayBuffer,
         template.href.split('/').pop()!,
         template.expectedSheets ? [...template.expectedSheets] : undefined,
+        template.baseXlsxHref,
       );
 
       onPendingExportReset();

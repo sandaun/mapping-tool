@@ -5,24 +5,57 @@ import type { RawSheet, CellValue } from '../excel/raw';
  * Column headers - must match adapter.ts COLUMN_HEADERS exactly
  */
 const COLUMN_HEADERS = [
-  '#', 'Active', 'Description', 'Name', 'Type', 'Instance', 'Units', 
-  'NC', 'Texts', '# States', 'Rel. Def.', 'COV',
-  '#', 'Device', '# Slave', 'Base', 'Read Func', 'Write Func', 
-  'Data Length', 'Format', 'ByteOrder', 'Address', 'Bit', '# Bits', 
-  'Deadband', 'Conv. Id', 'Conversions'
+  '#',
+  'Active',
+  'Description',
+  'Name',
+  'Type',
+  'Instance',
+  'Units',
+  'NC',
+  'Texts',
+  '# States',
+  'Rel. Def.',
+  'COV',
+  '#',
+  'Device',
+  '# Slave',
+  'Base',
+  'Read Func',
+  'Write Func',
+  'Data Length',
+  'Format',
+  'ByteOrder',
+  'Address',
+  'Bit',
+  '# Bits',
+  'Deadband',
+  'Conv. Id',
+  'Conversions',
 ];
 
 /**
- * Extract numeric type code from formatted type string
- * "0: AI" -> 0, "3: BI" -> 3
+ * Extract numeric code from formatted values
+ * "0: AI" -> 0, "3: BI" -> 3, "-" -> fallback
  */
-function extractTypeCode(typeVal: CellValue): number {
-  if (typeVal === null || typeVal === undefined) return 0;
-  const str = String(typeVal);
+function extractLeadingCode(value: CellValue, fallback: number): number {
+  if (value === null || value === undefined) return fallback;
+  const str = String(value).trim();
+  if (str === '' || str === '-') return fallback;
   const match = str.match(/^(\d+):/);
   if (match) return parseInt(match[1], 10);
   const num = parseInt(str, 10);
-  return isNaN(num) ? 0 : num;
+  return isNaN(num) ? fallback : num;
+}
+
+function extractLeadingCodeOptional(value: CellValue): number | undefined {
+  if (value === null || value === undefined) return undefined;
+  const str = String(value).trim();
+  if (str === '' || str === '-') return undefined;
+  const match = str.match(/^(\d+):/);
+  if (match) return parseInt(match[1], 10);
+  const num = parseInt(str, 10);
+  return isNaN(num) ? undefined : num;
 }
 
 /**
@@ -30,13 +63,7 @@ function extractTypeCode(typeVal: CellValue): number {
  * "3: Read Holding Registers" -> 3, "-" -> -1
  */
 function extractFunctionCode(funcVal: CellValue): number {
-  if (funcVal === null || funcVal === undefined) return -1;
-  const val = String(funcVal).trim();
-  if (val === '-' || val === '') return -1;
-  const match = val.match(/^(\d+):/);
-  if (match) return parseInt(match[1], 10);
-  const num = parseInt(val, 10);
-  return isNaN(num) ? -1 : num;
+  return extractLeadingCode(funcVal, -1);
 }
 
 /**
@@ -48,10 +75,16 @@ function safeNumber(val: CellValue, fallback: number = -1): number {
   return isNaN(n) ? fallback : n;
 }
 
+function safeOptionalNumber(val: CellValue): number | undefined {
+  if (val === null || val === undefined || val === '-') return undefined;
+  const n = Number(val);
+  return isNaN(n) ? undefined : n;
+}
+
 /**
  * Converts rows from a RawSheet back to RawSignal array.
  * Used when exporting new signals to ibmaps format.
- * 
+ *
  * @param sheet The Signals sheet from RawWorkbook
  * @param startIdx Start index of rows to convert (0-based from rows array)
  * @param count Number of rows to convert
@@ -62,22 +95,32 @@ export function workbookRowsToRawSignals(
   startIdx: number,
   count: number,
 ): RawSignal[] {
-  // Skip metadata rows (6) + header row (1) = 7 rows offset
-  const dataStartIdx = startIdx + 7;
-  const rows = sheet.rows.slice(dataStartIdx, dataStartIdx + count);
+  const rows = sheet.rows.slice(startIdx, startIdx + count);
+
+  const columnIndex = new Map(
+    COLUMN_HEADERS.map((header, index) => [header, index]),
+  );
+
+  const col = (name: string): number => columnIndex.get(name) ?? -1;
 
   return rows.map((row) => {
-    const internalIdx = safeNumber(row[0], 0);
-    const name = String(row[3] || '');
-    const typeCode = extractTypeCode(row[4]);
-    const instance = safeNumber(row[5], 0);
-    const units = safeNumber(row[6], -1);
+    const internalIdx = safeNumber(row[col('#')], 0);
+    const name = String(row[col('Name')] || '');
+    const typeCode = extractLeadingCode(row[col('Type')], 0);
+    const instance = safeNumber(row[col('Instance')], 0);
+    const units = safeNumber(row[col('Units')], -1);
 
-    const deviceName = String(row[13] || '');
-    const slaveNum = safeNumber(row[14], 10);
-    const readFunc = extractFunctionCode(row[16]);
-    const writeFunc = extractFunctionCode(row[17]);
-    const address = safeNumber(row[21], -1);
+    const deviceName = String(row[col('Device')] || '');
+    const slaveNum = safeNumber(row[col('# Slave')], 10);
+    const readFunc = extractFunctionCode(row[col('Read Func')]);
+    const writeFunc = extractFunctionCode(row[col('Write Func')]);
+    const address = safeNumber(row[col('Address')], -1);
+    const lenBits = safeOptionalNumber(row[col('Data Length')]);
+    const format = extractLeadingCodeOptional(row[col('Format')]);
+    const byteOrder = extractLeadingCodeOptional(row[col('ByteOrder')]);
+    const bit = safeOptionalNumber(row[col('Bit')]);
+    const numOfBits = safeOptionalNumber(row[col('# Bits')]);
+    const deadband = safeOptionalNumber(row[col('Deadband')]);
 
     // Extract device index from device name
     let deviceIndex = 0;
@@ -110,6 +153,12 @@ export function workbookRowsToRawSignals(
         readFunc,
         writeFunc,
         regType: -1,
+        lenBits,
+        format,
+        byteOrder,
+        bit,
+        numOfBits,
+        deadband,
         virtual: false,
         extraAttrs: {},
       },
