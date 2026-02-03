@@ -72,6 +72,21 @@ export default function Home() {
         selectedTemplateId,
       );
 
+      // Update timestamp to current date
+      const signalsSheet = workbookToExport.sheets.find(
+        (s) => s.name === 'Signals',
+      );
+      if (signalsSheet) {
+        // Find the row that contains 'Timestamp' in column A
+        const timestampRowIndex = signalsSheet.rows.findIndex(
+          (row) => row[0] === 'Timestamp',
+        );
+        if (timestampRowIndex !== -1) {
+          signalsSheet.rows[timestampRowIndex][1] =
+            new Date().toLocaleDateString();
+        }
+      }
+
       const res = await fetch('/api/export', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
