@@ -8,10 +8,13 @@ import { SignalsPreviewDialog } from '@/components/SignalsPreviewDialog';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { Override } from '@/types/overrides';
 import type { IbmapsState } from '@/hooks/useFileImport';
-import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapter';
-import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generator';
-import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parser';
-import type { IbmapsDevice } from '@/lib/ibmaps/types';
+import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapters/bac-mbm';
+import { workbookRowsToKnxRawSignals } from '@/lib/ibmaps/reverseAdapters/knx-mbm';
+import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generators/bac-mbm';
+import { addModbusSignals_KNX_MBM } from '@/lib/ibmaps/generators/knx-mbm';
+import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
+import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
+import type { IbmapsDevice, RawSignal, KNXRawSignal } from '@/lib/ibmaps/types';
 
 type ResultsSectionProps = {
   raw: RawWorkbook;
@@ -83,26 +86,7 @@ export function ResultsSection({
 
       if (startIdx < 0) throw new Error('Invalid row count calculation');
 
-      // Convert rows to RawSignals using the reverse adapter
-      const newSignals = workbookRowsToRawSignals(
-        signalsSheet,
-        startIdx,
-        count,
-      );
-
-      const baseSignals = parseIbmapsSignals_BAC_MBM(
-        originalIbmaps.content,
-      ).signals;
-      const baseMaxId = baseSignals.reduce(
-        (max, s) => Math.max(max, s.idxExternal),
-        -1,
-      );
-      const normalizedSignals = newSignals.map((signal, index) => ({
-        ...signal,
-        idxExternal: baseMaxId + 1 + index,
-      }));
-
-      // Find max device index and create new device if needed
+      // Find max device index for new device creation
       const maxDeviceIndex = originalIbmaps.devices.reduce(
         (max, d) => Math.max(max, d.index),
         -1,
@@ -110,36 +94,110 @@ export function ResultsSection({
       const newDeviceIndex = maxDeviceIndex + 1;
       const newSlaveNum = 10 + newDeviceIndex;
 
-      // Check if we need to create a new device
-      const newDevices: IbmapsDevice[] = [];
-      const hasNewDevice = normalizedSignals.some(
-        (s) => s.modbus.deviceIndex > maxDeviceIndex,
-      );
+      let newXml: string;
 
-      if (hasNewDevice) {
-        newDevices.push({
-          index: newDeviceIndex,
-          name: `Device ${newDeviceIndex}`,
-          slaveNum: newSlaveNum,
-          baseRegister: 0,
-          timeout: 1000,
-          enabled: true,
-        });
+      // Route based on template type
+      if (templateId === 'knx__modbus-master') {
+        // KNX → Modbus Master flow
+        const newSignals = workbookRowsToKnxRawSignals(
+          signalsSheet,
+          startIdx,
+          count,
+        );
+
+        const baseSignals = parseIbmapsSignals_KNX_MBM(
+          originalIbmaps.content,
+        ).signals;
+        const baseMaxId = baseSignals.reduce(
+          (max, s) => Math.max(max, s.idxExternal),
+          -1,
+        );
+        const normalizedSignals: KNXRawSignal[] = newSignals.map(
+          (signal, index) => ({
+            ...signal,
+            idxExternal: baseMaxId + 1 + index,
+          }),
+        );
+
+        // Check if we need to create a new device
+        const newDevices: IbmapsDevice[] = [];
+        const hasNewDevice = normalizedSignals.some(
+          (s) => s.modbus.deviceIndex > maxDeviceIndex,
+        );
+
+        if (hasNewDevice) {
+          newDevices.push({
+            index: newDeviceIndex,
+            name: `Device ${newDeviceIndex}`,
+            slaveNum: newSlaveNum,
+            baseRegister: 0,
+            timeout: 1000,
+            enabled: true,
+          });
+        }
+
+        newXml = addModbusSignals_KNX_MBM(
+          originalIbmaps.content,
+          normalizedSignals,
+          newDevices,
+        );
+      } else {
+        // BACnet → Modbus Master flow (default)
+        const newSignals = workbookRowsToRawSignals(
+          signalsSheet,
+          startIdx,
+          count,
+        );
+
+        const baseSignals = parseIbmapsSignals_BAC_MBM(
+          originalIbmaps.content,
+        ).signals;
+        const baseMaxId = baseSignals.reduce(
+          (max, s) => Math.max(max, s.idxExternal),
+          -1,
+        );
+        const normalizedSignals: RawSignal[] = newSignals.map(
+          (signal, index) => ({
+            ...signal,
+            idxExternal: baseMaxId + 1 + index,
+          }),
+        );
+
+        // Check if we need to create a new device
+        const newDevices: IbmapsDevice[] = [];
+        const hasNewDevice = normalizedSignals.some(
+          (s) => s.modbus.deviceIndex > maxDeviceIndex,
+        );
+
+        if (hasNewDevice) {
+          newDevices.push({
+            index: newDeviceIndex,
+            name: `Device ${newDeviceIndex}`,
+            slaveNum: newSlaveNum,
+            baseRegister: 0,
+            timeout: 1000,
+            enabled: true,
+          });
+        }
+
+        newXml = addModbusSignals_BAC_MBM(
+          originalIbmaps.content,
+          normalizedSignals,
+          newDevices,
+        );
       }
-
-      // Generate XML injecting the new signals
-      const newXml = addModbusSignals_BAC_MBM(
-        originalIbmaps.content,
-        normalizedSignals,
-        newDevices,
-      );
 
       // Download file
       const blob = new Blob([newXml], { type: 'text/xml' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'IN-BAC-MBM-UPDATED.ibmaps';
+      // Dynamic filename based on template
+      const filenameMap: Record<string, string> = {
+        'bacnet-server__modbus-master': 'IN-BAC-MBM-UPDATED.ibmaps',
+        'knx__modbus-master': 'IN-KNX-MBM-UPDATED.ibmaps',
+      };
+      a.download = filenameMap[templateId] || 'UPDATED.ibmaps';
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -189,7 +247,7 @@ export function ResultsSection({
             <Button
               onClick={handleExportIbmaps}
               disabled={busy || !pendingExport}
-              variant="default"
+              variant="primary-action"
               className="text-xs"
             >
               Export IBMAPS

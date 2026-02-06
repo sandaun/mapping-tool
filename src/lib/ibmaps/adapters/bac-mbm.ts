@@ -1,5 +1,5 @@
-import type { RawSignal, IbmapsDevice } from './types';
-import type { RawWorkbook, RawSheet, CellValue } from '../excel/raw';
+import type { RawSignal, IbmapsDevice } from '../types';
+import type { RawWorkbook, RawSheet, CellValue } from '../../excel/raw';
 
 /**
  * Column headers EXACTLY as they appear in bacnet-server-to-modbus-master.xlsx template
@@ -78,7 +78,7 @@ function createDataRow(
     '-', // 8: Texts
     getNumStates(s.bacnet.type), // 9: # States
     '-', // 10: Rel. Def.
-    getCOV(s.bacnet.type), // 11: COV
+    '-', // 11: COV
     id, // 12: # (Modbus)
     deviceName, // 13: Device
     s.modbus.slaveNum, // 14: # Slave
@@ -140,11 +140,6 @@ function formatType(type: number): string {
 function getNumStates(type: number): string {
   if (type === 3 || type === 4 || type === 5) return '2';
   if (type === 13 || type === 14 || type === 19) return '65535';
-  return '-';
-}
-
-function getCOV(type: number): string {
-  if (type === 0 || type === 1 || type === 2) return '0';
   return '-';
 }
 

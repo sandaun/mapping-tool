@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { parseIbmapsSignals_BAC_MBM } from '../parser';
-import { addModbusSignals_BAC_MBM } from '../generator';
-import { rawSignalsToWorkbook } from '../adapter';
+import { parseIbmapsSignals_BAC_MBM } from '../parsers/bac-mbm';
+import { addModbusSignals_BAC_MBM } from '../generators/bac-mbm';
+import { rawSignalsToWorkbook } from '../adapters/bac-mbm';
 import type { RawSignal } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';

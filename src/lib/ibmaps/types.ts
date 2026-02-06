@@ -8,6 +8,68 @@ export type IbmapsDevice = {
   enabled?: boolean;
 };
 
+// -----------------------------------------------------
+// Modbus configuration (shared between BACnet and KNX)
+// -----------------------------------------------------
+export type ModbusConfig = {
+  deviceIndex: number;
+  slaveNum: number;
+  description?: string;
+  address: number;
+  readFunc: number;
+  writeFunc: number;
+  regType?: number;
+  dataType?: number;
+  lenBits?: number;
+  format?: number;
+  byteOrder?: number;
+  bit?: number;
+  numOfBits?: number;
+  deadband?: number;
+  scanPeriod?: number;
+  virtual: boolean;
+  fixed?: boolean;
+  enable?: boolean;
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// KNX → Modbus Master signal type
+// -----------------------------------------------------
+export type KNXRawSignal = {
+  idxExternal: number;
+  name: string;
+  direction: 'KNX->Modbus';
+
+  knx: {
+    description: string;
+    active: boolean;
+    dptValue: number;
+    dptString?: string;
+    groupAddress: string;
+    groupAddressValue: number;
+    additionalAddresses?: string;
+    flags: {
+      u: boolean;
+      t: boolean;
+      ri: boolean;
+      w: boolean;
+      r: boolean;
+    };
+    priority: number;
+    virtual: boolean;
+    fixed?: boolean;
+    extraAttrs: Record<string, string>;
+  };
+
+  modbus: ModbusConfig;
+
+  isCommError?: boolean;
+};
+
+// -----------------------------------------------------
+// BACnet → Modbus Master signal type (legacy name kept)
+// -----------------------------------------------------
 export type RawSignal = {
   /** Join key between Internal and External protocol objects */
   idxExternal: number;

@@ -1,5 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
-import type { RawSignal, IbmapsDevice } from './types';
+import type { RawSignal, IbmapsDevice } from '../types';
 
 /**
  * Parse results containing extracted signals and device configurations
@@ -47,7 +47,6 @@ export function parseIbmapsSignals_BAC_MBM(
     ignoreAttributes: false,
     attributeNamePrefix: '@_',
     isArray: (name, jpath) => {
-      // Force arrays for repeatable elements
       if (jpath.endsWith('ExternalProtocol.RtuNodes.RtuNode.Device'))
         return true;
       if (jpath.endsWith('ExternalProtocol.Signals.Signal')) return true;
@@ -71,9 +70,6 @@ export function parseIbmapsSignals_BAC_MBM(
   const rtuNodeEntries = asRecord(asRecord(externalProtocol).RtuNodes).RtuNode;
 
   if (rtuNodeEntries) {
-    // rtuNodes can be an array or single object depending on XML structure/parser settings,
-    // but usually in these files there is a list of nodes.
-    // However, the parser 'isArray' option above helps.
     const nodesArray = Array.isArray(rtuNodeEntries)
       ? rtuNodeEntries
       : [rtuNodeEntries];
@@ -147,12 +143,9 @@ export function parseIbmapsSignals_BAC_MBM(
     // --- Build RawSignal ---
 
     // 3.1 BACnet part
-    // Extract unknown attributes for preservation
     const { BACName, BACType, BACInstance, Units, ...bacRest } = bacRecord;
 
     // Handle MAP node specifically
-    // Assuming 1 MAP per object as per spec
-    // MAP can be "-1" string if not configured/mapped, or an object
     const mapData = asRecord(bacRecord.MAP);
 
     const {
@@ -172,8 +165,8 @@ export function parseIbmapsSignals_BAC_MBM(
       Address,
       ReadFunc,
       WriteFunc,
-      RegType, // Might be missing on Signal node
-      DataType, // Might be missing on Signal node
+      RegType,
+      DataType,
       LenBits,
       Format,
       ByteOrder,

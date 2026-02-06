@@ -1,5 +1,4 @@
-import type { RawSignal, IbmapsDevice } from './types';
-import { parseIbmapsSignals_BAC_MBM } from './parser';
+import type { RawSignal, IbmapsDevice } from '../types';
 
 /**
  * Adds new Modbus signals (and their BACnet counterparts) to an existing IBMAPS XML string.
@@ -28,24 +27,21 @@ export function addModbusSignals_BAC_MBM(
   if (newDevices.length > 0) {
     const rtuNodeEndIdx = result.indexOf('</RtuNode>');
     if (rtuNodeEndIdx !== -1) {
-      const deviceIndent = deriveIndent(result, rtuNodeEndIdx) + '  '; // Detect parent + 2 spaces
+      const deviceIndent = deriveIndent(result, rtuNodeEndIdx) + '  ';
       const devicesXml = newDevices
         .map((d) => generateDeviceXml(d, deviceIndent))
         .join(eol);
 
-      // Insert after the last newline before </RtuNode> to avoid double indentation
       result = insertAfterLastNewlineBefore(
         result,
         rtuNodeEndIdx,
         `${devicesXml}${eol}`,
-        eol,
       );
     }
   }
 
   // 2. Inject Signals
   const signalsEndTag = '</Signals>';
-  // Re-evaluate index because result changed
   const signalsEndIdx = result.lastIndexOf(signalsEndTag);
   if (signalsEndIdx !== -1 && newSignals.length > 0) {
     const signalIndent = deriveIndent(result, signalsEndIdx) + '  ';
@@ -53,18 +49,15 @@ export function addModbusSignals_BAC_MBM(
       .map((s) => generateSignalXml(s, signalIndent, eol))
       .join(eol);
 
-    // Insert after the last newline before </Signals>
     result = insertAfterLastNewlineBefore(
       result,
       signalsEndIdx,
       `${signalsXml}${eol}`,
-      eol,
     );
   }
 
   // 3. Inject BACnet Objects
   const internalProtocolEndTag = '</InternalProtocol>';
-  // Re-evaluate index
   const internalEndIdx = result.indexOf(internalProtocolEndTag);
   if (internalEndIdx !== -1 && newSignals.length > 0) {
     const bacIndent = deriveIndent(result, internalEndIdx) + '  ';
@@ -72,12 +65,10 @@ export function addModbusSignals_BAC_MBM(
       .map((s) => generateBacnetObjectXml(s, bacIndent, eol))
       .join(eol);
 
-    // Insert after the last newline before </InternalProtocol>
     result = insertAfterLastNewlineBefore(
       result,
       internalEndIdx,
       `${bacObjXml}${eol}`,
-      eol,
     );
   }
 
@@ -88,22 +79,15 @@ function insertAfterLastNewlineBefore(
   original: string,
   limitIdx: number,
   content: string,
-  eol: string,
 ): string {
-  // Scan backwards from limitIdx to find the first newline
   let insertPos = limitIdx;
   for (let i = limitIdx - 1; i >= 0; i--) {
     if (original[i] === '\n') {
       insertPos = i + 1;
       break;
     }
-    // If we hit non-whitespace before newline, assume we are on inline tag or minified, just insert at limit
     if (original[i] !== ' ' && original[i] !== '\t' && original[i] !== '\r') {
       insertPos = limitIdx;
-      // If minified/inline, we might need to prepend eol? Assuming pretty printed for now based on file.
-      // But if we insert at limitIdx (right before </Tag>), and we have content `  <Tag>...`,
-      // we might want to force a newline if none exists.
-      // For now, sticking to "Find indented closing tag" logic.
       break;
     }
   }
@@ -111,24 +95,17 @@ function insertAfterLastNewlineBefore(
 }
 
 function deriveIndent(xml: string, index: number): string {
-  // Scan backwards from index to finding newline
   let i = index - 1;
   while (i >= 0 && xml[i] !== '\n') {
     i--;
   }
-  // The indentation is from i+1 to index
-  // But we need to exclude non-whitespace if any (shouldn't be for closing tag line)
   const lineStart = i + 1;
   const lineStr = xml.slice(lineStart, index);
-  // Match only leading whitespace
   const match = lineStr.match(/^([ \t]*)/);
   return match ? match[1] : '';
 }
 
 function generateDeviceXml(d: IbmapsDevice, indent: string): string {
-  // <Device Index="0" Name="Device 0" Manufacturer="" SlaveNum="10" BaseRegister="0" Timeout="1000" Enabled="True" />
-  // Careful with attribute order if strictness is required, but usually standard DOM order is Name, SlaveNum etc depending on tooling.
-  // We follow standard observed order: Index, Name, Manufacturer, SlaveNum, BaseRegister, Timeout, Enabled
   return `${indent}<Device Index="${d.index}" Name="${d.name || ''}" Manufacturer="${d.manufacturer || ''}" SlaveNum="${d.slaveNum}" BaseRegister="${d.baseRegister ?? 0}" Timeout="${d.timeout ?? 1000}" Enabled="${d.enabled !== false ? 'True' : 'False'}" />`;
 }
 
@@ -164,9 +141,6 @@ function generateSignalXml(s: RawSignal, indent: string, eol: string): string {
     lines.push(`${innerIndent}<Virtual Status="False" Fixed="False" />`);
   }
 
-  // Replicate extra unknown attributes if necessary?
-  // For now we stick to the generated structure which mimics the template.
-
   lines.push(`${indent}</Signal>`);
   return lines.join(eol);
 }
@@ -179,17 +153,13 @@ function generateBacnetObjectXml(
   const b = s.bacnet;
   const innerIndent = indent + '  ';
 
-  // ID is typically same as idxExternal in the template, but technically BACnetObject ID attribute might be just a sequence.
-  // In the template Observation: <BACnetObject ID="0">...<idxExternal>0</idxExternal>
-  // We'll use idxExternal for ID too for consistency.
-
   const lines = [
     `${indent}<BACnetObject ID="${s.idxExternal}">`,
     `${innerIndent}<BACName>${b.bacName}</BACName>`,
     `${innerIndent}<Description></Description>`,
     `${innerIndent}<BACType>${b.type}</BACType>`,
     `${innerIndent}<BACInstance>${b.instance}</BACInstance>`,
-    `${innerIndent}<ObjectID>0</ObjectID>`, // This usually gets calculated/overwritten by MAPS, or we need logic to calc it (type << 22 | instance)
+    `${innerIndent}<ObjectID>0</ObjectID>`,
     `${innerIndent}<Polarity>False</Polarity>`,
     `${innerIndent}<LUT>-1</LUT>`,
     `${innerIndent}<MAP>-1</MAP>`,

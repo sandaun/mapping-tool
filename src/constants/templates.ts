@@ -53,8 +53,8 @@ Output only the CSV with the exact column names above, no explanations.`,
   {
     id: 'knx__modbus-master',
     label: 'KNX → Modbus Master',
-    href: '/templates/knx-to-modbus-master.xlsx',
-    baseXlsxHref: undefined,
+    href: '/templates/IN-KNX-MBM.ibmaps',
+    baseXlsxHref: '/templates/knx-to-modbus-master.xlsx',
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following Modbus device register map into CSV format with these exact columns:
 

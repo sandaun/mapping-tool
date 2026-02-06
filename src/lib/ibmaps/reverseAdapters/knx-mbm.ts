@@ -1,22 +1,22 @@
-import type { RawSignal } from './types';
-import type { RawSheet, CellValue } from '../excel/raw';
+import type { KNXRawSignal } from '../types';
+import type { RawSheet, CellValue } from '../../excel/raw';
 
 /**
- * Column headers - must match adapter.ts COLUMN_HEADERS exactly
+ * Column headers - must match adapters/knx-mbm.ts COLUMN_HEADERS exactly
  */
 const COLUMN_HEADERS = [
   '#',
   'Active',
   'Description',
-  'Name',
-  'Type',
-  'Instance',
-  'Units',
-  'NC',
-  'Texts',
-  '# States',
-  'Rel. Def.',
-  'COV',
+  'DPT',
+  'Group Address',
+  'Additional Addresses',
+  'U',
+  'T',
+  'Ri',
+  'W',
+  'R',
+  'Priority',
   '#',
   'Device',
   '# Slave',
@@ -36,7 +36,7 @@ const COLUMN_HEADERS = [
 
 /**
  * Extract numeric code from formatted values
- * "0: AI" -> 0, "3: BI" -> 3, "-" -> fallback
+ * "3: Low" -> 3, "9.001: temperature (°C)" -> 2305 (9*256+1), "-" -> fallback
  */
 function extractLeadingCode(value: CellValue, fallback: number): number {
   if (value === null || value === undefined) return fallback;
@@ -48,14 +48,38 @@ function extractLeadingCode(value: CellValue, fallback: number): number {
   return isNaN(num) ? fallback : num;
 }
 
-function extractLeadingCodeOptional(value: CellValue): number | undefined {
-  if (value === null || value === undefined) return undefined;
+/**
+ * Extract DPT value from formatted string
+ * "9.001: temperature (°C)" -> 2305 (9*256+1)
+ * "1.001: switch" -> 257 (1*256+1)
+ */
+function extractDPTValue(value: CellValue): number {
+  if (value === null || value === undefined) return 257; // Default to 1.001: switch
   const str = String(value).trim();
-  if (str === '' || str === '-') return undefined;
-  const match = str.match(/^(\d+):/);
-  if (match) return parseInt(match[1], 10);
+  if (str === '' || str === '-') return 257;
+
+  // Match pattern "main.sub" at start
+  const match = str.match(/^(\d+)\.(\d+)/);
+  if (match) {
+    const main = parseInt(match[1], 10);
+    const sub = parseInt(match[2], 10);
+    return main * 256 + sub;
+  }
+
+  // If it's just a number, return it
   const num = parseInt(str, 10);
-  return isNaN(num) ? undefined : num;
+  return isNaN(num) ? 257 : num;
+}
+
+/**
+ * Parse Group Address string to numeric value
+ * "0/0/1" -> 1, "1/2/3" -> 2563
+ */
+function parseGroupAddressValue(groupAddress: string): number {
+  const parts = groupAddress.split('/').map((p) => parseInt(p.trim(), 10));
+  if (parts.length !== 3 || parts.some(isNaN)) return 0;
+  const [main, middle, sub] = parts;
+  return (main << 11) | (middle << 8) | sub;
 }
 
 /**
@@ -82,19 +106,28 @@ function safeOptionalNumber(val: CellValue): number | undefined {
 }
 
 /**
- * Converts rows from a RawSheet back to RawSignal array.
+ * Parse flag from display value
+ * "U", "T", "Ri", "W", "R" -> true, " " or empty -> false
+ */
+function parseFlag(val: CellValue): boolean {
+  if (val === null || val === undefined) return false;
+  return String(val).trim().length > 0;
+}
+
+/**
+ * Converts rows from a RawSheet (KNX-MBM template) back to KNXRawSignal array.
  * Used when exporting new signals to ibmaps format.
  *
  * @param sheet The Signals sheet from RawWorkbook
  * @param startIdx Start index of rows to convert (0-based from rows array)
  * @param count Number of rows to convert
- * @returns Array of RawSignal objects
+ * @returns Array of KNXRawSignal objects
  */
-export function workbookRowsToRawSignals(
+export function workbookRowsToKnxRawSignals(
   sheet: RawSheet,
   startIdx: number,
   count: number,
-): RawSignal[] {
+): KNXRawSignal[] {
   const rows = sheet.rows.slice(startIdx, startIdx + count);
 
   const columnIndex = new Map(
@@ -105,19 +138,30 @@ export function workbookRowsToRawSignals(
 
   return rows.map((row) => {
     const internalIdx = safeNumber(row[col('#')], 0);
-    const name = String(row[col('Name')] || '');
-    const typeCode = extractLeadingCode(row[col('Type')], 0);
-    const instance = safeNumber(row[col('Instance')], 0);
-    const units = safeNumber(row[col('Units')], -1);
+    const description = String(row[col('Description')] || '');
+    const dptValue = extractDPTValue(row[col('DPT')]);
+    const groupAddress = String(row[col('Group Address')] || '0/0/0');
+    const groupAddressValue = parseGroupAddressValue(groupAddress);
+    const additionalAddresses = String(row[col('Additional Addresses')] || '');
+    const active = String(row[col('Active')]).toLowerCase() === 'true';
+    const priority = extractLeadingCode(row[col('Priority')], 3);
 
+    // Parse flags
+    const u = parseFlag(row[col('U')]);
+    const t = parseFlag(row[col('T')]);
+    const ri = parseFlag(row[col('Ri')]);
+    const w = parseFlag(row[col('W')]);
+    const r = parseFlag(row[col('R')]);
+
+    // Modbus side
     const deviceName = String(row[col('Device')] || '');
     const slaveNum = safeNumber(row[col('# Slave')], 10);
     const readFunc = extractFunctionCode(row[col('Read Func')]);
     const writeFunc = extractFunctionCode(row[col('Write Func')]);
     const address = safeNumber(row[col('Address')], -1);
     const lenBits = safeOptionalNumber(row[col('Data Length')]);
-    const format = extractLeadingCodeOptional(row[col('Format')]);
-    const byteOrder = extractLeadingCodeOptional(row[col('ByteOrder')]);
+    const format = extractLeadingCode(row[col('Format')], 99);
+    const byteOrder = extractLeadingCode(row[col('ByteOrder')], 255);
     const bit = safeOptionalNumber(row[col('Bit')]);
     const numOfBits = safeOptionalNumber(row[col('# Bits')]);
     const deadband = safeOptionalNumber(row[col('Deadband')]);
@@ -129,22 +173,19 @@ export function workbookRowsToRawSignals(
 
     return {
       idxExternal: internalIdx,
-      name,
-      direction: 'BACnet->Modbus',
-      bacnet: {
-        bacName: name,
-        type: typeCode,
-        instance,
-        units,
+      name: description,
+      direction: 'KNX->Modbus',
+      knx: {
+        description,
+        active,
+        dptValue,
+        groupAddress,
+        groupAddressValue,
+        additionalAddresses: additionalAddresses || undefined,
+        flags: { u, t, ri, w, r },
+        priority,
+        virtual: false,
         extraAttrs: {},
-        map: {
-          address,
-          regType: -1,
-          dataType: -1,
-          readFunc,
-          writeFunc,
-          extraAttrs: {},
-        },
       },
       modbus: {
         deviceIndex,
@@ -152,7 +193,6 @@ export function workbookRowsToRawSignals(
         address,
         readFunc,
         writeFunc,
-        regType: -1,
         lenBits,
         format,
         byteOrder,

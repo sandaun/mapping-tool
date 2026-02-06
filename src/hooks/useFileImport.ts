@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { ImportResponse, ProtocolsMetadata } from '@/types/page.types';
-import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parser';
-import { rawSignalsToWorkbook } from '@/lib/ibmaps/adapter';
+import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
+import { rawSignalsToWorkbook } from '@/lib/ibmaps/adapters/bac-mbm';
+import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
+import { rawKNXSignalsToWorkbook } from '@/lib/ibmaps/adapters/knx-mbm';
 import type { IbmapsDevice } from '@/lib/ibmaps/types';
 
 // Type guards
@@ -88,16 +90,36 @@ export function useFileImport() {
         const textDecoder = new TextDecoder('utf-8');
         const xmlContent = textDecoder.decode(arrayBuffer);
 
-        const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);
-
-        if (parseResult.warnings.length > 0) {
-          console.warn('IBMAPS Parse Warnings:', parseResult.warnings);
-        }
-
-        const workbook = rawSignalsToWorkbook(
-          parseResult.signals,
-          parseResult.devices,
+        // Detect protocol from XML
+        const internalProtocolMatch = xmlContent.match(
+          /InternalProtocol="([^"]+)"/,
         );
+        const externalProtocolMatch = xmlContent.match(
+          /ExternalProtocol="([^"]+)"/,
+        );
+        const internalProtocol = internalProtocolMatch?.[1] || 'BACnet Server';
+        const externalProtocol = externalProtocolMatch?.[1] || 'Modbus Master';
+
+        let workbook: RawWorkbook;
+        let devices: IbmapsDevice[];
+
+        // Route to appropriate parser based on protocol combination
+        if (internalProtocol === 'KNX' && externalProtocol === 'Modbus Master') {
+          const parseResult = parseIbmapsSignals_KNX_MBM(xmlContent);
+          if (parseResult.warnings.length > 0) {
+            console.warn('IBMAPS Parse Warnings (KNX-MBM):', parseResult.warnings);
+          }
+          workbook = rawKNXSignalsToWorkbook(parseResult.signals, parseResult.devices);
+          devices = parseResult.devices;
+        } else {
+          // Default to BACnet-Modbus
+          const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);
+          if (parseResult.warnings.length > 0) {
+            console.warn('IBMAPS Parse Warnings (BAC-MBM):', parseResult.warnings);
+          }
+          workbook = rawSignalsToWorkbook(parseResult.signals, parseResult.devices);
+          devices = parseResult.devices;
+        }
 
         let mergedWorkbook = workbook;
         let baseProtocols: ProtocolsMetadata | null = null;
@@ -147,13 +169,13 @@ export function useFileImport() {
         setRaw(mergedWorkbook);
         setProtocols(
           baseProtocols ?? {
-            internalProtocol: 'BACnet Server',
-            externalProtocol: 'Modbus Master',
+            internalProtocol,
+            externalProtocol,
           },
         );
         setOriginalIbmaps({
           content: xmlContent,
-          devices: parseResult.devices,
+          devices,
         });
 
         return; // Skip server call for ibmaps
