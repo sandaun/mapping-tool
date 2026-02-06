@@ -146,7 +146,7 @@ export function generateKNXFromBACnet(
     row[findCol('Type')] = formatBACnetType(objectType);
     row[findCol('Instance')] = instance;
     row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('Conversions')] = '-';
   };
 
   // Process each BACnet signal

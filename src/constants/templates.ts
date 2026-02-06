@@ -31,8 +31,8 @@ Output only the CSV with the exact column names above, no explanations.`,
   {
     id: 'modbus-slave__bacnet-client',
     label: 'Modbus Slave → BACnet Client',
-    href: '/templates/modbus-slave-to-bacnet-client.xlsx',
-    baseXlsxHref: undefined,
+    href: '/templates/IN-MBS-BAC.ibmaps',
+    baseXlsxHref: '/templates/modbus-slave-to-bacnet-client.xlsx',
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following BACnet point list into CSV format with these exact columns:
 
@@ -80,8 +80,8 @@ Output only the CSV with the exact column names above, no explanations.`,
   {
     id: 'knx__bacnet-client',
     label: 'KNX → BACnet Client',
-    href: '/templates/knx-to-bacnet-client.xlsx',
-    baseXlsxHref: undefined,
+    href: '/templates/IN-KNX-BAC.ibmaps',
+    baseXlsxHref: '/templates/knx-to-bacnet-client.xlsx',
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `Convert the following BACnet point list into CSV format with these exact columns:
 

@@ -269,3 +269,72 @@ export type BACKNXRawSignal = {
 
   isCommError?: boolean;
 };
+
+// -----------------------------------------------------
+// BACnet Client configuration (for external protocol)
+// -----------------------------------------------------
+export type BACnetClientConfig = {
+  /** Device index reference */
+  deviceIndex: number;
+  /** Device name (resolved from BACnetDevices) */
+  deviceName: string;
+  /** BACnet object type (0=AI, 1=AO, 2=AV, 3=BI, 4=BO, 5=BV, 13=MI, 14=MO, 19=MV) */
+  bacType: number;
+  /** BACnet instance number */
+  bacInstance: number;
+  /** Combined ObjectID */
+  objectId: number;
+  /** Whether this object is active */
+  active: boolean;
+  /** Virtual signal configuration */
+  virtual: boolean;
+  fixed?: boolean;
+  /** Extra attributes for preservation */
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// BACnet Client Device (for BACnetDevices section)
+// -----------------------------------------------------
+export type BACnetClientDevice = {
+  index: number;
+  name: string;
+  enabled: boolean;
+  ip: string;
+  port: number;
+  objInstance: number;
+};
+
+// -----------------------------------------------------
+// KNX ← BACnet Client signal type
+// -----------------------------------------------------
+export type KNXBACRawSignal = {
+  idxExternal: number;
+  name: string;
+  direction: 'KNX->BACnet Client';
+
+  /** KNX side configuration (InternalProtocol) */
+  knx: KNXConfig;
+
+  /** BACnet Client side configuration (ExternalProtocol) */
+  bacnetClient: BACnetClientConfig;
+
+  isCommError?: boolean;
+};
+
+// -----------------------------------------------------
+// Modbus Slave ← BACnet Client signal type
+// -----------------------------------------------------
+export type MBSBACRawSignal = {
+  idxExternal: number;
+  name: string;
+  direction: 'Modbus Slave->BACnet Client';
+
+  /** Modbus Slave side configuration (InternalProtocol) */
+  modbusSlave: ModbusSlaveConfig;
+
+  /** BACnet Client side configuration (ExternalProtocol) */
+  bacnetClient: BACnetClientConfig;
+
+  isCommError?: boolean;
+};
