@@ -106,8 +106,6 @@ export default function Home() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-
-      resetPendingExport();
     } catch (e) {
       console.error('Export error:', e);
     }

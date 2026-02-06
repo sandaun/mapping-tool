@@ -27,7 +27,7 @@ export const EDITABLE_COLUMNS: Record<TemplateId, string[]> = {
   'modbus-slave__bacnet-client': [
     '#',
     // Modbus Slave columns
-    'Name',
+    'Description',
     'Address',
     'Data Length',
     'Format',
@@ -42,7 +42,7 @@ export const EDITABLE_COLUMNS: Record<TemplateId, string[]> = {
   'knx__modbus-master': [
     '#',
     // KNX columns
-    'Name',
+    'Description',
     'Group Address',
     'DPT',
     'Priority',
@@ -58,7 +58,7 @@ export const EDITABLE_COLUMNS: Record<TemplateId, string[]> = {
   'knx__bacnet-client': [
     '#',
     // KNX columns
-    'Name',
+    'Description',
     'Group Address',
     'DPT',
     'Priority',
@@ -72,7 +72,7 @@ export const EDITABLE_COLUMNS: Record<TemplateId, string[]> = {
   'modbus-slave__knx': [
     '#',
     // Modbus Slave columns
-    'Name',
+    'Description',
     'Address',
     'Data Length',
     'Format',
