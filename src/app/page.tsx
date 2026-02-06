@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { applyOverridesToWorkbook } from '@/lib/overrides';
 import { useFileImport } from '@/hooks/useFileImport';
 import { useTemplateManager } from '@/hooks/useTemplateManager';
@@ -11,7 +11,11 @@ import { DeviceSignalsSection } from '@/components/DeviceSignalsSection';
 import { ResultsSection } from '@/components/ResultsSection';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
 import { Header } from '@/components/Header';
+import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { StepSection } from '@/components/ui/StepSection';
 import type { Override } from '@/types/overrides';
+import type { TemplateId } from '@/types/page.types';
 
 export default function Home() {
   // File import management
@@ -25,16 +29,19 @@ export default function Home() {
     originalIbmaps,
   } = useFileImport();
 
-  // Template management with proper reset callback
+  // Pending template change for confirmation dialog
+  const [pendingTemplateId, setPendingTemplateId] = useState<TemplateId | null>(
+    null,
+  );
+
+  // Template management - we'll handle confirmation in page.tsx
   const {
     selectedTemplateId,
     selectedTemplate,
-    handleTemplateChange,
+    handleTemplateChange: setTemplateId,
     loadTemplate,
     loadCustomFile,
-  } = useTemplateManager(importArrayBufferAsFile, () => {
-    // Reset will be handled by signals workflow
-  });
+  } = useTemplateManager(importArrayBufferAsFile, false);
 
   // Signals workflow management
   const {
@@ -50,6 +57,34 @@ export default function Home() {
     generateWithSignals,
     resetPendingExport,
   } = useSignalsWorkflow(selectedTemplate, raw, setRaw);
+
+  // Handle template change with confirmation
+  const handleTemplateChange = useCallback(
+    (templateId: TemplateId) => {
+      if (pendingExport) {
+        // There are pending changes - ask for confirmation
+        setPendingTemplateId(templateId);
+      } else {
+        // No pending changes - proceed directly
+        setTemplateId(templateId);
+      }
+    },
+    [pendingExport, setTemplateId],
+  );
+
+  // Confirm template change
+  const handleConfirmTemplateChange = useCallback(() => {
+    if (pendingTemplateId) {
+      resetPendingExport();
+      setTemplateId(pendingTemplateId);
+      setPendingTemplateId(null);
+    }
+  }, [pendingTemplateId, resetPendingExport, setTemplateId]);
+
+  // Cancel template change
+  const handleCancelTemplateChange = useCallback(() => {
+    setPendingTemplateId(null);
+  }, []);
 
   // Computed values
   const sheetNames = useMemo(
@@ -115,14 +150,29 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
-        {/* Gateway Templates */}
-        <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">Gateway Templates</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Select a gateway type to automatically load the template.
-          </p>
+      {/* Loading overlay during template/file loading */}
+      <LoadingOverlay visible={busy} message="Loading template..." />
 
+      {/* Confirmation dialog for template change with pending signals */}
+      <ConfirmDialog
+        open={pendingTemplateId !== null}
+        onOpenChange={(open) => !open && handleCancelTemplateChange()}
+        title="Unsaved changes"
+        description={`You have ${pendingExport?.signalsCount ?? 0} signals pending export. Changing template will discard them. Continue?`}
+        confirmText="Discard & Change"
+        cancelText="Keep editing"
+        confirmVariant="danger"
+        onConfirm={handleConfirmTemplateChange}
+        onCancel={handleCancelTemplateChange}
+      />
+
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
+        {/* Step 1: Gateway Templates */}
+        <StepSection
+          stepNumber={1}
+          title="Gateway Templates"
+          description="Select a gateway type to automatically load the template."
+        >
           <TemplateSelector
             selectedTemplateId={selectedTemplateId}
             onTemplateChange={handleTemplateChange}
@@ -132,40 +182,52 @@ export default function Home() {
           />
 
           <ProtocolsInfo protocols={protocols} />
-        </section>
+        </StepSection>
 
-        {/* Import device signals */}
+        {/* Step 2: Import device signals */}
         {raw && (
-          <DeviceSignalsSection
-            template={selectedTemplate}
-            csvInput={csvInput}
-            onCsvInputChange={setCsvInput}
-            onParseCSV={handleParseCSV}
-            parseAndAddSignals={parseAndAddSignals}
-            onCopyPrompt={handleCopyPrompt}
-            onGenerateSignals={handleGenerateSignals}
-            generateWithSignals={generateWithSignals}
-            onClearSignals={handleClearSignals}
-            deviceSignals={deviceSignals}
-            parseWarnings={parseWarnings}
-            busy={busy}
-          />
+          <StepSection
+            stepNumber={2}
+            title="Import Device Signals"
+            description="Parse signals from CSV or AI-extracted data."
+          >
+            <DeviceSignalsSection
+              template={selectedTemplate}
+              csvInput={csvInput}
+              onCsvInputChange={setCsvInput}
+              onParseCSV={handleParseCSV}
+              parseAndAddSignals={parseAndAddSignals}
+              onCopyPrompt={handleCopyPrompt}
+              onGenerateSignals={handleGenerateSignals}
+              generateWithSignals={generateWithSignals}
+              onClearSignals={handleClearSignals}
+              deviceSignals={deviceSignals}
+              parseWarnings={parseWarnings}
+              busy={busy}
+            />
+          </StepSection>
         )}
 
         {/* Errors */}
         <ErrorDisplay error={error} />
 
-        {/* Results */}
+        {/* Step 3: Results */}
         {raw && (
-          <ResultsSection
-            raw={raw}
-            sheetNames={sheetNames}
-            onExport={handleExport}
-            busy={busy}
-            pendingExport={pendingExport}
-            templateId={selectedTemplateId}
-            originalIbmaps={originalIbmaps}
-          />
+          <StepSection
+            stepNumber={3}
+            title="Generated Output"
+            description={`Sheets: ${sheetNames.join(', ')}`}
+          >
+            <ResultsSection
+              raw={raw}
+              onExport={handleExport}
+              onReset={resetPendingExport}
+              busy={busy}
+              pendingExport={pendingExport}
+              templateId={selectedTemplateId}
+              originalIbmaps={originalIbmaps}
+            />
+          </StepSection>
         )}
       </main>
     </div>

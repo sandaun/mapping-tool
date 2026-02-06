@@ -30,8 +30,8 @@ import type { IbmapsDevice, RawSignal, KNXRawSignal, BACKNXRawSignal, MBSKNXRawS
 
 type ResultsSectionProps = {
   raw: RawWorkbook;
-  sheetNames: string[];
   onExport: (overrides: Override[]) => void;
+  onReset: () => void;
   busy: boolean;
   pendingExport: { signalsCount: number; targetSheet: string } | null;
   templateId: string;
@@ -40,8 +40,8 @@ type ResultsSectionProps = {
 
 export function ResultsSection({
   raw,
-  sheetNames,
   onExport,
+  onReset,
   busy,
   pendingExport,
   templateId,
@@ -76,9 +76,31 @@ export function ResultsSection({
   };
 
   const handleExportIbmaps = () => {
-    if (!originalIbmaps || !pendingExport) return;
+    if (!originalIbmaps) return;
 
     try {
+      // If no pending export (no new signals), just download the original ibmaps
+      if (!pendingExport) {
+        const blob = new Blob([originalIbmaps.content], { type: 'text/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const filenameMap: Record<string, string> = {
+          'bacnet-server__modbus-master': 'IN-BAC-MBM.ibmaps',
+          'knx__modbus-master': 'IN-KNX-MBM.ibmaps',
+          'bacnet-server__knx': 'IN-BAC-KNX.ibmaps',
+          'modbus-slave__knx': 'IN-MBS-KNX.ibmaps',
+          'knx__bacnet-client': 'IN-KNX-BAC.ibmaps',
+          'modbus-slave__bacnet-client': 'IN-MBS-BAC.ibmaps',
+        };
+        a.download = filenameMap[templateId] || 'export.ibmaps';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        return;
+      }
+
       const workbookWithOverrides = applyOverridesToWorkbook(
         raw,
         overrides,
@@ -379,51 +401,57 @@ export function ResultsSection({
   };
 
   return (
-    <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold">Generated Output</h2>
-          <p className="text-sm text-muted-foreground">
-            Sheets: {sheetNames.join(', ')}
+    <div className="space-y-4">
+      {pendingExport && (
+        <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
+          <p className="text-blue-700 dark:text-blue-300">
+            {pendingExport.signalsCount} signals pending export
           </p>
         </div>
+      )}
 
-        {pendingExport && (
-          <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
-            <p className="text-blue-700 dark:text-blue-300">
-              {pendingExport.signalsCount} signals will be exported
-            </p>
-          </div>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          onClick={() => setIsDialogOpen(true)}
+          variant="neutral"
+          disabled={busy}
+          className="text-xs"
+        >
+          Preview & Edit Signals
+        </Button>
+        <Button
+          onClick={handleExport}
+          disabled={busy}
+          variant="secondary-action"
+          className="text-xs"
+        >
+          {busy ? 'Exporting...' : 'Export Template'}
+        </Button>
+        {originalIbmaps && (
+          <Button
+            onClick={handleExportIbmaps}
+            disabled={busy}
+            variant="primary-action"
+            className="text-xs"
+          >
+            Export IBMAPS
+          </Button>
         )}
 
-        <div className="flex gap-2">
+        {/* Spacer to push reset to the right */}
+        <div className="flex-1" />
+
+        {/* Reset button - only show when there are pending signals */}
+        {pendingExport && (
           <Button
-            onClick={() => setIsDialogOpen(true)}
-            variant="neutral"
+            onClick={onReset}
             disabled={busy}
+            variant="danger"
             className="text-xs"
           >
-            Preview & Edit Signals
+            Reset Signals
           </Button>
-          <Button
-            onClick={handleExport}
-            disabled={busy}
-            variant="secondary-action"
-            className="text-xs"
-          >
-            {busy ? 'Exporting...' : 'Export Template'}
-          </Button>
-          {originalIbmaps && (
-            <Button
-              onClick={handleExportIbmaps}
-              disabled={busy || !pendingExport}
-              variant="primary-action"
-              className="text-xs"
-            >
-              Export IBMAPS
-            </Button>
-          )}
-        </div>
+        )}
       </div>
 
       <SignalsPreviewDialog
@@ -435,6 +463,6 @@ export function ResultsSection({
         onReset={handleReset}
         onExport={handleExport}
       />
-    </section>
+    </div>
   );
 }
