@@ -107,7 +107,7 @@ export function generateModbusFromKNX(
     row[findCol('R')] = flags.R ? 'R' : EXCEL_VALUES.EMPTY_KNX;
     row[findCol('Priority')] = DEFAULT_KNX_PRIORITY;
     row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
-    row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
+    row[findCol('Conversions')] = '-';
   };
 
   // Process each KNX signal

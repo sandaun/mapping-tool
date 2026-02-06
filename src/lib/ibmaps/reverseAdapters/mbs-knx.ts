@@ -1,13 +1,23 @@
-import type { KNXRawSignal } from '../types';
+import type { MBSKNXRawSignal } from '../types';
 import type { RawSheet, CellValue } from '../../excel/raw';
 
 /**
- * Column headers - must match adapters/knx-mbm.ts COLUMN_HEADERS exactly
+ * Column headers - must match adapters/mbs-knx.ts COLUMN_HEADERS exactly
+ * Order: #, Active, Description, Data Length, Format, Address, Bit, Read / Write, String Length, ...
  */
 const COLUMN_HEADERS = [
+  // Internal (Modbus Slave)
   '#',
   'Active',
   'Description',
+  'Data Length',
+  'Format',
+  'Address',
+  'Bit',
+  'Read / Write',
+  'String Length',
+  // External (KNX)
+  '#',
   'DPT',
   'Group Address',
   'Additional Addresses',
@@ -17,26 +27,14 @@ const COLUMN_HEADERS = [
   'W',
   'R',
   'Priority',
-  '#',
-  'Device',
-  '# Slave',
-  'Base',
-  'Read Func',
-  'Write Func',
-  'Data Length',
-  'Format',
-  'ByteOrder',
-  'Address',
-  'Bit',
-  '# Bits',
-  'Deadband',
+  // Extra
   'Conv. Id',
   'Conversions',
 ];
 
 /**
  * Extract numeric code from formatted values
- * "3: Low" -> 3, "9.001: temperature (°C)" -> 2305 (9*256+1), "-" -> fallback
+ * "3: Low" -> 3, "16: 1 Register (16 bits)" -> 16, "-" -> fallback
  */
 function extractLeadingCode(value: CellValue, fallback: number): number {
   if (value === null || value === undefined) return fallback;
@@ -95,26 +93,12 @@ function parseGroupAddressValue(groupAddress: string): number {
 }
 
 /**
- * Extract function code from formatted function string
- * "3: Read Holding Registers" -> 3, "-" -> -1
- */
-function extractFunctionCode(funcVal: CellValue): number {
-  return extractLeadingCode(funcVal, -1);
-}
-
-/**
  * Safe number extraction
  */
 function safeNumber(val: CellValue, fallback: number = -1): number {
   if (val === null || val === undefined || val === '-') return fallback;
   const n = Number(val);
   return isNaN(n) ? fallback : n;
-}
-
-function safeOptionalNumber(val: CellValue): number | undefined {
-  if (val === null || val === undefined || val === '-') return undefined;
-  const n = Number(val);
-  return isNaN(n) ? undefined : n;
 }
 
 /**
@@ -127,19 +111,28 @@ function parseFlag(val: CellValue): boolean {
 }
 
 /**
- * Converts rows from a RawSheet (KNX-MBM template) back to KNXRawSignal array.
+ * Parse boolean from display value
+ * "True" -> true, "False" or empty -> false
+ */
+function parseBoolean(val: CellValue): boolean {
+  if (val === null || val === undefined) return false;
+  return String(val).toLowerCase() === 'true';
+}
+
+/**
+ * Converts rows from a RawSheet (MBS-KNX template) back to MBSKNXRawSignal array.
  * Used when exporting new signals to ibmaps format.
  *
  * @param sheet The Signals sheet from RawWorkbook
  * @param startIdx Start index of rows to convert (0-based from rows array)
  * @param count Number of rows to convert
- * @returns Array of KNXRawSignal objects
+ * @returns Array of MBSKNXRawSignal objects
  */
-export function workbookRowsToKnxRawSignals(
+export function workbookRowsToMBSKNXSignals(
   sheet: RawSheet,
   startIdx: number,
   count: number,
-): KNXRawSignal[] {
+): MBSKNXRawSignal[] {
   const rows = sheet.rows.slice(startIdx, startIdx + count);
 
   const columnIndex = new Map(
@@ -148,14 +141,27 @@ export function workbookRowsToKnxRawSignals(
 
   const col = (name: string): number => columnIndex.get(name) ?? -1;
 
+  // Use first occurrence of '#' (index 0) for internalIdx, not the second one (index 9)
+  const firstHashIdx = COLUMN_HEADERS.indexOf('#');
+
   return rows.map((row) => {
-    const internalIdx = safeNumber(row[col('#')], 0);
+    const internalIdx = safeNumber(row[firstHashIdx], 0);
     const description = String(row[col('Description')] || '');
+    
+    // Modbus Slave fields
+    const dataLength = extractLeadingCode(row[col('Data Length')], 16);
+    const format = extractLeadingCode(row[col('Format')], 0);
+    const address = safeNumber(row[col('Address')], 0);
+    const bit = safeNumber(row[col('Bit')], -1);
+    const readWrite = extractLeadingCode(row[col('Read / Write')], 2);
+    const stringLength = safeNumber(row[col('String Length')], -1);
+    const isEnabled = parseBoolean(row[col('Active')]);
+
+    // KNX fields
     const dptValue = extractDPTValue(row[col('DPT')]);
     const groupAddress = String(row[col('Group Address')] || '0/0/0');
     const groupAddressValue = parseGroupAddressValue(groupAddress);
     const additionalAddresses = String(row[col('Additional Addresses')] || '');
-    const active = String(row[col('Active')]).toLowerCase() === 'true';
     const priority = extractLeadingCode(row[col('Priority')], 3);
 
     // Parse flags
@@ -165,52 +171,31 @@ export function workbookRowsToKnxRawSignals(
     const w = parseFlag(row[col('W')]);
     const r = parseFlag(row[col('R')]);
 
-    // Modbus side
-    const deviceName = String(row[col('Device')] || '');
-    const slaveNum = safeNumber(row[col('# Slave')], 10);
-    const readFunc = extractFunctionCode(row[col('Read Func')]);
-    const writeFunc = extractFunctionCode(row[col('Write Func')]);
-    const address = safeNumber(row[col('Address')], -1);
-    const lenBits = safeOptionalNumber(row[col('Data Length')]);
-    const format = extractLeadingCode(row[col('Format')], 99);
-    const byteOrder = extractLeadingCode(row[col('ByteOrder')], 255);
-    const bit = safeOptionalNumber(row[col('Bit')]);
-    const numOfBits = safeOptionalNumber(row[col('# Bits')]);
-    const deadband = safeOptionalNumber(row[col('Deadband')]);
-
-    // Extract device index from device name
-    let deviceIndex = 0;
-    const deviceMatch = deviceName.match(/Device\s+(\d+)/i);
-    if (deviceMatch) deviceIndex = parseInt(deviceMatch[1], 10);
-
     return {
       idxExternal: internalIdx,
       name: description,
-      direction: 'KNX->Modbus',
+      direction: 'Modbus Slave->KNX',
+      modbusSlave: {
+        description,
+        dataLength,
+        format,
+        address,
+        bit,
+        readWrite,
+        stringLength,
+        isEnabled,
+        virtual: false,
+        extraAttrs: {},
+      },
       knx: {
         description,
-        active,
+        active: true,
         dptValue,
         groupAddress,
         groupAddressValue,
         additionalAddresses: additionalAddresses || undefined,
         flags: { u, t, ri, w, r },
         priority,
-        virtual: false,
-        extraAttrs: {},
-      },
-      modbus: {
-        deviceIndex,
-        slaveNum,
-        address,
-        readFunc,
-        writeFunc,
-        lenBits,
-        format,
-        byteOrder,
-        bit,
-        numOfBits,
-        deadband,
         virtual: false,
         extraAttrs: {},
       },

@@ -102,8 +102,8 @@ Output only the CSV with the exact column names above, no explanations.`,
   {
     id: 'modbus-slave__knx',
     label: 'Modbus Slave → KNX',
-    href: '/templates/modbus-slave-to-knx.xlsx',
-    baseXlsxHref: undefined,
+    href: '/templates/IN-MBS-KNX.ibmaps',
+    baseXlsxHref: '/templates/modbus-slave-to-knx.xlsx',
     expectedSheets: ['Signals', 'Conversions'],
     promptText: `This template generates Modbus Slave signals from a KNX project exported from ETS software.
 
@@ -128,8 +128,8 @@ The system will:
   {
     id: 'bacnet-server__knx',
     label: 'BACnet Server → KNX',
-    href: '/templates/bacnet-server-to-knx.xlsx',
-    baseXlsxHref: undefined,
+    href: '/templates/IN-BAC-KNX.ibmaps',
+    baseXlsxHref: '/templates/bacnet-server-to-knx.xlsx',
     expectedSheets: ['Signals', 'BACnet Server', 'KNX', 'Conversions'],
     promptText: `This template generates BACnet Server signals from a KNX project exported from ETS software.
 

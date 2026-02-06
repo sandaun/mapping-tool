@@ -1,13 +1,28 @@
-import type { KNXRawSignal } from '../types';
+import type { BACKNXRawSignal } from '../types';
 import type { RawSheet, CellValue } from '../../excel/raw';
 
 /**
- * Column headers - must match adapters/knx-mbm.ts COLUMN_HEADERS exactly
+ * Column headers - must match adapters/bac-knx.ts COLUMN_HEADERS exactly
+ * Order: #, Active, Description, Name, Type, Instance, Units, NC, Texts, # States, Rel. Def., COV,
+ *        #, DPT, Group Address, Additional Addresses, U, T, Ri, W, R, Priority,
+ *        Conv. Id, Conversions
  */
 const COLUMN_HEADERS = [
+  // Internal (BACnet Server)
   '#',
   'Active',
   'Description',
+  'Name',
+  'Type',
+  'Instance',
+  'Units',
+  'NC',
+  'Texts',
+  '# States',
+  'Rel. Def.',
+  'COV',
+  // External (KNX)
+  '#',
   'DPT',
   'Group Address',
   'Additional Addresses',
@@ -17,26 +32,40 @@ const COLUMN_HEADERS = [
   'W',
   'R',
   'Priority',
-  '#',
-  'Device',
-  '# Slave',
-  'Base',
-  'Read Func',
-  'Write Func',
-  'Data Length',
-  'Format',
-  'ByteOrder',
-  'Address',
-  'Bit',
-  '# Bits',
-  'Deadband',
+  // Extra
   'Conv. Id',
   'Conversions',
 ];
 
+// Reverse mapping of BACnet type names to codes
+const BAC_TYPE_CODES: Record<string, number> = {
+  'AI': 0,
+  'AO': 1,
+  'AV': 2,
+  'BI': 3,
+  'BO': 4,
+  'BV': 5,
+  'MI': 13,
+  'MO': 14,
+  'MV': 19,
+};
+
+// BACnet object type to ObjectID base multiplier
+const BAC_TYPE_OBJECT_ID_BASE: Record<number, number> = {
+  0: 0, // AI
+  1: 4194304, // AO
+  2: 8388608, // AV
+  3: 12582912, // BI
+  4: 16777216, // BO
+  5: 20971520, // BV
+  13: 54525952, // MI
+  14: 58720256, // MO
+  19: 79691776, // MV
+};
+
 /**
  * Extract numeric code from formatted values
- * "3: Low" -> 3, "9.001: temperature (°C)" -> 2305 (9*256+1), "-" -> fallback
+ * "3: Low" -> 3, "5: BV" -> 5, "-" -> fallback
  */
 function extractLeadingCode(value: CellValue, fallback: number): number {
   if (value === null || value === undefined) return fallback;
@@ -46,6 +75,32 @@ function extractLeadingCode(value: CellValue, fallback: number): number {
   if (match) return parseInt(match[1], 10);
   const num = parseInt(str, 10);
   return isNaN(num) ? fallback : num;
+}
+
+/**
+ * Extract BACnet type from formatted string
+ * "5: BV" -> 5, "BV" -> 5
+ */
+function extractBacType(value: CellValue): number {
+  if (value === null || value === undefined) return 2; // Default to AV
+  const str = String(value).trim();
+  if (str === '' || str === '-') return 2;
+
+  // Try "number: name" format first
+  const match = str.match(/^(\d+):/);
+  if (match) return parseInt(match[1], 10);
+
+  // Try just a number
+  const num = parseInt(str, 10);
+  if (!isNaN(num)) return num;
+
+  // Try name lookup
+  const upperStr = str.toUpperCase();
+  for (const [name, code] of Object.entries(BAC_TYPE_CODES)) {
+    if (upperStr.includes(name)) return code;
+  }
+
+  return 2; // Default to AV
 }
 
 /**
@@ -95,26 +150,12 @@ function parseGroupAddressValue(groupAddress: string): number {
 }
 
 /**
- * Extract function code from formatted function string
- * "3: Read Holding Registers" -> 3, "-" -> -1
- */
-function extractFunctionCode(funcVal: CellValue): number {
-  return extractLeadingCode(funcVal, -1);
-}
-
-/**
  * Safe number extraction
  */
 function safeNumber(val: CellValue, fallback: number = -1): number {
   if (val === null || val === undefined || val === '-') return fallback;
   const n = Number(val);
   return isNaN(n) ? fallback : n;
-}
-
-function safeOptionalNumber(val: CellValue): number | undefined {
-  if (val === null || val === undefined || val === '-') return undefined;
-  const n = Number(val);
-  return isNaN(n) ? undefined : n;
 }
 
 /**
@@ -127,19 +168,27 @@ function parseFlag(val: CellValue): boolean {
 }
 
 /**
- * Converts rows from a RawSheet (KNX-MBM template) back to KNXRawSignal array.
+ * Calculate ObjectID from BACType and Instance
+ */
+function calculateObjectId(type: number, instance: number): number {
+  const base = BAC_TYPE_OBJECT_ID_BASE[type] ?? 0;
+  return base + instance;
+}
+
+/**
+ * Converts rows from a RawSheet (BAC-KNX template) back to BACKNXRawSignal array.
  * Used when exporting new signals to ibmaps format.
  *
  * @param sheet The Signals sheet from RawWorkbook
  * @param startIdx Start index of rows to convert (0-based from rows array)
  * @param count Number of rows to convert
- * @returns Array of KNXRawSignal objects
+ * @returns Array of BACKNXRawSignal objects
  */
-export function workbookRowsToKnxRawSignals(
+export function workbookRowsToBACKNXSignals(
   sheet: RawSheet,
   startIdx: number,
   count: number,
-): KNXRawSignal[] {
+): BACKNXRawSignal[] {
   const rows = sheet.rows.slice(startIdx, startIdx + count);
 
   const columnIndex = new Map(
@@ -149,13 +198,23 @@ export function workbookRowsToKnxRawSignals(
   const col = (name: string): number => columnIndex.get(name) ?? -1;
 
   return rows.map((row) => {
+    // Internal (BACnet)
     const internalIdx = safeNumber(row[col('#')], 0);
     const description = String(row[col('Description')] || '');
+    const bacName = String(row[col('Name')] || '');
+    const bacType = extractBacType(row[col('Type')]);
+    const instance = safeNumber(row[col('Instance')], 0);
+    const units = extractLeadingCode(row[col('Units')], -1);
+    const numOfStates = safeNumber(row[col('# States')], -1);
+    const relinquish = safeNumber(row[col('Rel. Def.')], -1);
+    const cov = safeNumber(row[col('COV')], -1);
+    const active = String(row[col('Active')]).toLowerCase() === 'true';
+
+    // External (KNX)
     const dptValue = extractDPTValue(row[col('DPT')]);
     const groupAddress = String(row[col('Group Address')] || '0/0/0');
     const groupAddressValue = parseGroupAddressValue(groupAddress);
     const additionalAddresses = String(row[col('Additional Addresses')] || '');
-    const active = String(row[col('Active')]).toLowerCase() === 'true';
     const priority = extractLeadingCode(row[col('Priority')], 3);
 
     // Parse flags
@@ -165,30 +224,29 @@ export function workbookRowsToKnxRawSignals(
     const w = parseFlag(row[col('W')]);
     const r = parseFlag(row[col('R')]);
 
-    // Modbus side
-    const deviceName = String(row[col('Device')] || '');
-    const slaveNum = safeNumber(row[col('# Slave')], 10);
-    const readFunc = extractFunctionCode(row[col('Read Func')]);
-    const writeFunc = extractFunctionCode(row[col('Write Func')]);
-    const address = safeNumber(row[col('Address')], -1);
-    const lenBits = safeOptionalNumber(row[col('Data Length')]);
-    const format = extractLeadingCode(row[col('Format')], 99);
-    const byteOrder = extractLeadingCode(row[col('ByteOrder')], 255);
-    const bit = safeOptionalNumber(row[col('Bit')]);
-    const numOfBits = safeOptionalNumber(row[col('# Bits')]);
-    const deadband = safeOptionalNumber(row[col('Deadband')]);
-
-    // Extract device index from device name
-    let deviceIndex = 0;
-    const deviceMatch = deviceName.match(/Device\s+(\d+)/i);
-    if (deviceMatch) deviceIndex = parseInt(deviceMatch[1], 10);
+    const objectId = calculateObjectId(bacType, instance);
 
     return {
       idxExternal: internalIdx,
-      name: description,
-      direction: 'KNX->Modbus',
-      knx: {
+      name: bacName,
+      direction: 'BACnet->KNX',
+      bacnet: {
+        bacName,
         description,
+        type: bacType,
+        instance,
+        objectId,
+        units: units >= 0 ? units : undefined,
+        cov: cov >= 0 ? cov : undefined,
+        relinquish: relinquish >= 0 ? relinquish : undefined,
+        numOfStates: numOfStates >= 0 ? numOfStates : undefined,
+        active,
+        polarity: false,
+        virtual: false,
+        extraAttrs: {},
+      },
+      knx: {
+        description: description || bacName,
         active,
         dptValue,
         groupAddress,
@@ -196,21 +254,6 @@ export function workbookRowsToKnxRawSignals(
         additionalAddresses: additionalAddresses || undefined,
         flags: { u, t, ri, w, r },
         priority,
-        virtual: false,
-        extraAttrs: {},
-      },
-      modbus: {
-        deviceIndex,
-        slaveNum,
-        address,
-        readFunc,
-        writeFunc,
-        lenBits,
-        format,
-        byteOrder,
-        bit,
-        numOfBits,
-        deadband,
         virtual: false,
         extraAttrs: {},
       },

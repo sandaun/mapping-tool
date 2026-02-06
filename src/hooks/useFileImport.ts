@@ -5,6 +5,10 @@ import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
 import { rawSignalsToWorkbook } from '@/lib/ibmaps/adapters/bac-mbm';
 import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
 import { rawKNXSignalsToWorkbook } from '@/lib/ibmaps/adapters/knx-mbm';
+import { parseIbmapsSignals_BAC_KNX } from '@/lib/ibmaps/parsers/bac-knx';
+import { rawBACKNXSignalsToWorkbook } from '@/lib/ibmaps/adapters/bac-knx';
+import { parseIbmapsSignals_MBS_KNX } from '@/lib/ibmaps/parsers/mbs-knx';
+import { rawMBSKNXSignalsToWorkbook } from '@/lib/ibmaps/adapters/mbs-knx';
 import type { IbmapsDevice } from '@/lib/ibmaps/types';
 
 // Type guards
@@ -111,6 +115,20 @@ export function useFileImport() {
           }
           workbook = rawKNXSignalsToWorkbook(parseResult.signals, parseResult.devices);
           devices = parseResult.devices;
+        } else if (internalProtocol === 'BACnet Server' && externalProtocol === 'KNX') {
+          const parseResult = parseIbmapsSignals_BAC_KNX(xmlContent);
+          if (parseResult.warnings.length > 0) {
+            console.warn('IBMAPS Parse Warnings (BAC-KNX):', parseResult.warnings);
+          }
+          workbook = rawBACKNXSignalsToWorkbook(parseResult.signals);
+          devices = []; // BAC-KNX doesn't have Modbus devices
+        } else if (internalProtocol === 'Modbus Slave' && externalProtocol === 'KNX') {
+          const parseResult = parseIbmapsSignals_MBS_KNX(xmlContent);
+          if (parseResult.warnings.length > 0) {
+            console.warn('IBMAPS Parse Warnings (MBS-KNX):', parseResult.warnings);
+          }
+          workbook = rawMBSKNXSignalsToWorkbook(parseResult.signals);
+          devices = []; // MBS-KNX doesn't have Modbus devices
         } else {
           // Default to BACnet-Modbus
           const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);

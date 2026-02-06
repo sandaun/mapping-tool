@@ -139,3 +139,133 @@ export type RawSignal = {
   /** Heuristics or flags */
   isCommError?: boolean;
 };
+
+// -----------------------------------------------------
+// Modbus Slave configuration (for MBS-KNX and MBS-BAC)
+// -----------------------------------------------------
+export type ModbusSlaveConfig = {
+  description: string;
+  /** Data Length in bits: 16, 32, etc. */
+  dataLength: number;
+  /** Format code: 0=Unsigned, 1=Signed, 2=Binary, 3=Float, 4=Bitfield, 5=String */
+  format: number;
+  /** Modbus register address (0-based) */
+  address: number;
+  /** Bit position for bitfield access, -1 if not used */
+  bit: number;
+  /** ReadWrite mode: 0=Read, 1=Write, 2=Read/Write */
+  readWrite: number;
+  /** String length, -1 if not a string type */
+  stringLength: number;
+  /** Whether this signal is enabled */
+  isEnabled: boolean;
+  /** Virtual signal configuration */
+  virtual: boolean;
+  fixed?: boolean;
+  /** Extra attributes for preservation */
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// KNX configuration (shared for KNX external protocol)
+// -----------------------------------------------------
+export type KNXExternalConfig = {
+  description: string;
+  active: boolean;
+  dptValue: number;
+  dptString?: string;
+  groupAddress: string;
+  groupAddressValue: number;
+  additionalAddresses?: string;
+  flags: {
+    u: boolean;
+    t: boolean;
+    ri: boolean;
+    w: boolean;
+    r: boolean;
+  };
+  priority: number;
+  virtual: boolean;
+  fixed?: boolean;
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// Modbus Slave → KNX signal type
+// -----------------------------------------------------
+export type MBSKNXRawSignal = {
+  /** Join key between Internal and External protocol objects */
+  idxExternal: number;
+  /** Human readable name (usually Description) */
+  name: string;
+  /** Direction of the mapping */
+  direction: 'Modbus Slave->KNX';
+
+  /** Modbus Slave side configuration (InternalProtocol) */
+  modbusSlave: ModbusSlaveConfig;
+
+  /** KNX side configuration (ExternalProtocol) */
+  knx: KNXExternalConfig;
+
+  /** Heuristics or flags */
+  isCommError?: boolean;
+};
+
+// -----------------------------------------------------
+// KNX configuration (shared for BACnet-KNX mappings)
+// -----------------------------------------------------
+export type KNXConfig = {
+  description: string;
+  active: boolean;
+  dptValue: number;
+  dptString?: string;
+  groupAddress: string;
+  groupAddressValue: number;
+  additionalAddresses?: string;
+  flags: {
+    u: boolean;
+    t: boolean;
+    ri: boolean;
+    w: boolean;
+    r: boolean;
+  };
+  priority: number;
+  virtual: boolean;
+  fixed?: boolean;
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// BACnet configuration (for BACnet Server side)
+// -----------------------------------------------------
+export type BACnetConfig = {
+  bacName: string;
+  description: string;
+  type: number; // BACType (0=AI, 1=AO, 2=AV, 3=BI, 4=BO, 5=BV, 13=MI, 14=MO, 19=MV)
+  instance: number;
+  objectId: number;
+  units?: number;
+  cov?: number;
+  relinquish?: number;
+  numOfStates?: number;
+  active: boolean;
+  lut?: number;
+  polarity?: boolean;
+  virtual: boolean;
+  fixed?: boolean;
+  extraAttrs: Record<string, string>;
+};
+
+// -----------------------------------------------------
+// BACnet Server ↔ KNX signal type
+// -----------------------------------------------------
+export type BACKNXRawSignal = {
+  idxExternal: number;
+  name: string;
+  direction: 'BACnet->KNX';
+
+  bacnet: BACnetConfig;
+  knx: KNXConfig;
+
+  isCommError?: boolean;
+};
