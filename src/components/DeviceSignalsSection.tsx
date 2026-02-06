@@ -10,7 +10,7 @@ import { EditableTable } from './EditableTable';
 import { FileUploader } from './FileUploader';
 import { SignalReviewPanel } from './SignalReviewPanel';
 import { useAIParser } from '@/hooks/useAIParser';
-import { Loader2, ChevronDown, ChevronUp, Save } from 'lucide-react';
+import { Loader2, ChevronDown, ChevronUp, Save, Sparkles, FileText, Wand2, Check } from 'lucide-react';
 
 type DeviceSignalsSectionProps = {
   template: Template;
@@ -184,28 +184,29 @@ export function DeviceSignalsSection({
 
       {/* Saved Data Indicator */}
       {hasSavedData && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 flex items-center justify-between">
+        <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Save className="w-4 h-4 text-blue-600" />
-            <span className="text-sm text-blue-800">
+            <Save className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <span className="text-sm text-blue-800 dark:text-blue-300">
               You have previously parsed signals saved
             </span>
           </div>
           <Button
             onClick={handleLoadSaved}
-            variant="outline"
+            variant="neutral"
             size="sm"
             className="text-xs"
           >
-            Load saved signals
+            Load saved
           </Button>
         </div>
       )}
 
       {/* AI File Upload */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-foreground">
-          🤖 AI-Powered File Upload
+        <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4 text-primary" />
+          AI-Powered File Upload
         </h3>
 
         {state.status === 'idle' && (
@@ -213,14 +214,14 @@ export function DeviceSignalsSection({
         )}
 
         {state.status === 'uploading' && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-6 text-center">
-            <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-2" />
-            <p className="text-sm text-blue-800">
+          <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
+            <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
+            <p className="text-sm text-blue-800 dark:text-blue-300">
               Uploading {state.file.name}...
             </p>
-            <div className="mt-3 w-full bg-blue-200 rounded-full h-2">
+            <div className="mt-3 w-full bg-blue-200 dark:bg-blue-900/40 rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all"
+                className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all"
                 style={{ width: `${state.progress}%` }}
               />
             </div>
@@ -228,12 +229,13 @@ export function DeviceSignalsSection({
         )}
 
         {state.status === 'parsing' && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-6 text-center">
-            <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-2" />
-            <p className="text-sm text-blue-800">
-              🤖 AI is analyzing {state.file.name}...
+          <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
+            <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
+            <p className="text-sm text-blue-800 dark:text-blue-300 flex items-center justify-center gap-1.5">
+              <Sparkles className="w-4 h-4" />
+              AI is analyzing {state.file.name}...
             </p>
-            <p className="text-xs text-blue-600 mt-1">
+            <p className="text-xs text-blue-600 dark:text-blue-400/70 mt-1">
               This may take 10-30 seconds depending on file size
             </p>
           </div>
@@ -255,14 +257,14 @@ export function DeviceSignalsSection({
         )}
 
         {state.status === 'error' && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-800 font-medium">
+          <div className="rounded-lg border border-red-200 dark:border-red-400/30 bg-red-50 dark:bg-red-950/20 p-4">
+            <p className="text-sm text-red-800 dark:text-red-300 font-medium">
               Error parsing file
             </p>
-            <p className="text-xs text-red-600 mt-1">{state.error}</p>
+            <p className="text-xs text-red-600 dark:text-red-400/70 mt-1">{state.error}</p>
             <Button
               onClick={reset}
-              variant="outline"
+              variant="neutral"
               size="sm"
               className="mt-3 text-xs"
             >
@@ -278,7 +280,10 @@ export function DeviceSignalsSection({
           onClick={() => setShowManualInput(!showManualInput)}
           className="w-full px-4 py-3 bg-muted/50 hover:bg-muted flex items-center justify-between text-sm font-medium transition-colors"
         >
-          <span>📝 Or paste CSV manually</span>
+          <span className="flex items-center gap-1.5">
+            <FileText className="w-4 h-4" />
+            Or paste CSV manually
+          </span>
           {showManualInput ? (
             <ChevronUp className="w-4 h-4" />
           ) : (
@@ -290,8 +295,9 @@ export function DeviceSignalsSection({
           <div className="p-4 space-y-4">
             {/* Prompt per ChatGPT */}
             <details className="rounded-lg border border-border bg-muted/30 p-3">
-              <summary className="cursor-pointer text-sm font-medium">
-                🤖 AI Prompt Helper
+              <summary className="cursor-pointer text-sm font-medium flex items-center gap-1.5">
+                <Wand2 className="w-3.5 h-3.5 text-primary" />
+                AI Prompt Helper
               </summary>
               <pre className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
                 {template.promptText}
@@ -331,16 +337,16 @@ export function DeviceSignalsSection({
 
       {/* Warnings */}
       {parseWarnings.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <div className="rounded-lg border border-amber-200 dark:border-amber-400/30 bg-amber-50 dark:bg-amber-950/20 p-4">
           <div className="flex items-center gap-2">
             <Badge variant="destructive" className="bg-amber-600">
               {parseWarnings.length}
             </Badge>
-            <span className="text-sm font-semibold text-amber-900">
+            <span className="text-sm font-semibold text-amber-900 dark:text-amber-300">
               Warnings
             </span>
           </div>
-          <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-amber-800">
+          <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-amber-800 dark:text-amber-300/80">
             {parseWarnings.map((w, i) => (
               <li key={i}>{w}</li>
             ))}
@@ -354,7 +360,8 @@ export function DeviceSignalsSection({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Badge variant="default" className="bg-emerald-600">
-                ✓ PARSED
+                <Check className="w-3 h-3 mr-1" />
+                PARSED
               </Badge>
               <span className="text-sm font-medium text-foreground">
                 {deviceSignals.length} signals ready

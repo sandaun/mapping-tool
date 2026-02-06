@@ -217,9 +217,9 @@ IMPORTANT:
 
 // Confidence level thresholds
 export const CONFIDENCE_LEVELS = {
-  high: { min: 0.8, label: 'High', color: 'green', emoji: '🟢' },
-  medium: { min: 0.6, max: 0.8, label: 'Medium', color: 'yellow', emoji: '🟡' },
-  low: { max: 0.6, label: 'Low', color: 'red', emoji: '🔴' },
+  high: { min: 0.8, label: 'High', color: 'green' },
+  medium: { min: 0.6, max: 0.8, label: 'Medium', color: 'yellow' },
+  low: { max: 0.6, label: 'Low', color: 'red' },
 } as const;
 
 // Get confidence level for a score

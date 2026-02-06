@@ -425,7 +425,7 @@ export function ResultsSection({
           variant="secondary-action"
           className="text-xs"
         >
-          {busy ? 'Exporting...' : 'Export Template'}
+          Export Template
         </Button>
         {originalIbmaps && (
           <Button
