@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import type { RawWorkbook } from '@/lib/excel/raw';
 import type { ImportResponse, ProtocolsMetadata } from '@/types/page.types';
 import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
@@ -46,6 +46,22 @@ export function useFileImport() {
     null,
   );
 
+  // Delayed busy: avoids visual blink on fast loads
+  const busyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const BUSY_DELAY_MS = 150;
+
+  const startBusy = useCallback(() => {
+    busyTimerRef.current = setTimeout(() => setBusy(true), BUSY_DELAY_MS);
+  }, []);
+
+  const stopBusy = useCallback(() => {
+    if (busyTimerRef.current) {
+      clearTimeout(busyTimerRef.current);
+      busyTimerRef.current = null;
+    }
+    setBusy(false);
+  }, []);
+
   async function importArrayBufferAsFile(
     arrayBuffer: ArrayBuffer,
     filename: string,
@@ -53,8 +69,7 @@ export function useFileImport() {
     baseXlsxHref?: string,
   ) {
     setError(null);
-    setBusy(true);
-    setOriginalIbmaps(null); // Reset on new import
+    startBusy();
 
     const importXlsxArrayBuffer = async (
       buffer: ArrayBuffer,
@@ -226,17 +241,18 @@ export function useFileImport() {
 
       setRaw(data.raw);
       setProtocols(data.protocols);
+      setOriginalIbmaps(null); // Not an ibmaps file
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setError(message);
     } finally {
-      setBusy(false);
+      stopBusy();
     }
   }
 
   async function exportWorkbook() {
     if (!raw) return;
-    setBusy(true);
+    startBusy();
     setError(null);
 
     try {
@@ -267,7 +283,7 @@ export function useFileImport() {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setError(message);
     } finally {
-      setBusy(false);
+      stopBusy();
     }
   }
 

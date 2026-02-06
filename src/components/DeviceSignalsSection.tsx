@@ -180,13 +180,7 @@ export function DeviceSignalsSection({
   };
 
   return (
-    <section className="rounded-xl border border-border bg-card p-6 shadow-sm space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">Input Device Signals</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Upload a device manual or paste CSV with signals.
-        </p>
-      </div>
+    <div className="space-y-6">
 
       {/* Saved Data Indicator */}
       {hasSavedData && (
@@ -305,7 +299,7 @@ export function DeviceSignalsSection({
               <Button
                 type="button"
                 onClick={onCopyPrompt}
-                variant="outline"
+                variant="neutral"
                 size="sm"
                 className="mt-3 text-xs"
               >
@@ -392,6 +386,6 @@ export function DeviceSignalsSection({
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }
