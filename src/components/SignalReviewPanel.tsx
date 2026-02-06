@@ -160,9 +160,11 @@ export function SignalReviewPanel({
                 low: 'text-red-400',
               };
               return (
-                <span className={`font-medium ${colorMap[level] ?? ''}`}>
-                  {String(value)}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className={`text-sm font-medium ${colorMap[level] ?? ''}`}>
+                    {String(value)}
+                  </span>
+                </div>
               );
             }
             return undefined;

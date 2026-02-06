@@ -403,8 +403,8 @@ export function ResultsSection({
   return (
     <div className="space-y-4">
       {pendingExport && (
-        <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950">
-          <p className="text-blue-700 dark:text-blue-300">
+        <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-3 text-sm">
+          <p className="text-blue-800 dark:text-blue-300">
             {pendingExport.signalsCount} signals pending export
           </p>
         </div>

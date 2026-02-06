@@ -43,25 +43,30 @@ export const PROVIDER_INFO: Record<
   },
 };
 
+// Default model per provider from environment
+const PROVIDER_DEFAULT_MODELS: Record<AIProvider, string> = {
+  openai: 'gpt-4o',
+  groq: 'llama-3.3-70b-versatile',
+  cerebras: 'llama-3.3-70b',
+};
+
 // Get the AI model instance based on provider
 export function getAIModel(
   provider: AIProvider = DEFAULT_PROVIDER,
   model?: string,
 ): LanguageModel {
-  // Priority: 1) explicit model param, 2) AI_MODEL env, 3) provider default
-  const modelToUse = model || process.env.AI_MODEL;
+  // AI_MODEL env only applies to the DEFAULT_PROVIDER (avoid cross-provider model mismatch)
+  const envModel = provider === DEFAULT_PROVIDER ? process.env.AI_MODEL : undefined;
+  const modelToUse = model || envModel || PROVIDER_DEFAULT_MODELS[provider];
 
   switch (provider) {
     case 'groq':
-      // Use: explicit > env > default Groq model
-      return groq(modelToUse || 'llama-3.3-70b-versatile');
+      return groq(modelToUse);
     case 'cerebras':
-      // Use: explicit > env > default Cerebras model
-      return cerebras(modelToUse || 'llama-3.3-70b');
+      return cerebras(modelToUse);
     case 'openai':
     default:
-      // Use: explicit > env > default OpenAI model
-      return openai(modelToUse || 'gpt-4o');
+      return openai(modelToUse);
   }
 }
 
