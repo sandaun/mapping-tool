@@ -13,13 +13,16 @@ import {
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { EditableRow } from '@/types/overrides';
+import type { ReactNode } from 'react';
 
 type EditableTableProps = {
   data: EditableRow[];
   onDelete?: (signalId: string) => void;
+  /** Optional custom cell renderer. Return undefined to use default rendering. */
+  renderCell?: (columnKey: string, value: unknown, row: EditableRow) => ReactNode | undefined;
 };
 
-export function EditableTable({ data, onDelete }: EditableTableProps) {
+export function EditableTable({ data, onDelete, renderCell }: EditableTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   // Generate columns dynamically from data
@@ -27,13 +30,15 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
     if (data.length === 0) return [];
 
     const firstRow = data[0];
-    const fields = Object.keys(firstRow).filter((key) => key !== 'id');
+    const fields = Object.keys(firstRow).filter((key) => key !== 'id' && !key.startsWith('_'));
 
     const dataColumns: ColumnDef<EditableRow>[] = fields.map((field) => ({
       accessorKey: field,
       header: field,
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row: tableRow }) => {
         const value = getValue() as string | number;
+        const custom = renderCell?.(field, value, tableRow.original);
+        if (custom !== undefined) return custom;
 
         return (
           <div className="flex items-center justify-between">

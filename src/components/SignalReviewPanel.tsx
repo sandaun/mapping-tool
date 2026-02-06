@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Check, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Check, AlertTriangle, RefreshCw, CircleCheck, CircleMinus, CircleAlert, FileText } from 'lucide-react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import { EditableTable } from './EditableTable';
 import { Button } from '@/components/ui/button';
@@ -46,13 +46,19 @@ const signalsToEditableRows = (
       dataType = signal.dpt;
     }
 
-    // Map confidence to visual indicator
-    const confidenceLabel =
+    // Map confidence to colored HTML-safe label
+    const confidenceLevel =
       signal.confidence >= 0.8
-        ? '🟢 High'
+        ? 'high'
         : signal.confidence >= 0.6
-          ? '🟡 Medium'
-          : '🔴 Low';
+          ? 'medium'
+          : 'low';
+
+    const confidenceLabels = {
+      high: 'High',
+      medium: 'Medium',
+      low: 'Low',
+    };
 
     return {
       id: `signal-${index}`,
@@ -60,7 +66,8 @@ const signalsToEditableRows = (
       Type: type,
       Address: String(address),
       Data: dataType,
-      Confidence: confidenceLabel,
+      Confidence: confidenceLabels[confidenceLevel],
+      _confidenceLevel: confidenceLevel,
     };
   });
 };
@@ -84,45 +91,54 @@ export function SignalReviewPanel({
   return (
     <div className="w-full space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="font-semibold text-foreground">📄 {fileName}</h3>
-          <p className="text-sm text-muted-foreground">
-            {signals.length} signals found
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-sm">
-          <Badge
-            variant="outline"
-            className="bg-emerald-50 text-emerald-700 border-emerald-200"
-          >
-            🟢 {highConfidenceCount}
-          </Badge>
-          <Badge
-            variant="outline"
-            className="bg-amber-50 text-amber-700 border-amber-200"
-          >
-            🟡 {mediumConfidenceCount}
-          </Badge>
-          {lowConfidenceCount > 0 && (
+      <div className="rounded-lg border border-border bg-muted/30 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <FileText className="w-4 h-4" />
+              <span className="truncate max-w-48">{fileName}</span>
+            </div>
+            <span className="text-border">|</span>
+            <span className="text-sm font-semibold text-foreground">
+              {signals.length} signals
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <Badge
               variant="outline"
-              className="bg-red-50 text-red-700 border-red-200"
+              className="bg-emerald-50 text-emerald-500 border-emerald-200 dark:border-emerald-400/40 text-xs px-1.5 py-0.5 dark:bg-muted/30"
             >
-              🔴 {lowConfidenceCount}
+              <CircleCheck className="w-3 h-3 mr-1" />
+              {highConfidenceCount}
             </Badge>
-          )}
+            <Badge
+              variant="outline"
+              className="bg-amber-50 text-amber-400 border-amber-200 dark:border-amber-400/40 dark:bg-muted/30 text-xs px-1.5 py-0.5"
+            >
+              <CircleMinus className="w-3 h-3 mr-1" />
+              {mediumConfidenceCount}
+            </Badge>
+            {lowConfidenceCount > 0 && (
+              <Badge
+                variant="outline"
+                className="bg-red-50 text-red-400 border-red-200 dark:bg-muted/30 dark:border-red-400/40 text-xs px-1.5 py-0.5"
+              >
+                <CircleAlert className="w-3 h-3 mr-1" />
+                {lowConfidenceCount}
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Warnings */}
       {warnings.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+        <div className="rounded-lg border border-amber-200 dark:border-amber-400/30 bg-amber-50 dark:bg-amber-950/20 p-3">
           <div className="flex items-start gap-2">
-            <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+            <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <div className="space-y-1">
               {warnings.map((warning, i) => (
-                <p key={i} className="text-sm text-amber-800">
+                <p key={i} className="text-sm text-amber-800 dark:text-amber-300">
                   {warning}
                 </p>
               ))}
@@ -131,9 +147,29 @@ export function SignalReviewPanel({
         </div>
       )}
 
-      {/* Signals Table - using EditableTable for consistency */}
+      {/* Signals Table - using EditableTable with colored confidence */}
       <div className="max-h-80 overflow-auto">
-        <EditableTable data={tableData} />
+        <EditableTable
+          data={tableData}
+          renderCell={(columnKey, value, row) => {
+            if (columnKey === 'Confidence') {
+              const level = (row as Record<string, unknown>)._confidenceLevel as string;
+              const colorMap: Record<string, string> = {
+                high: 'text-emerald-500',
+                medium: 'text-amber-400',
+                low: 'text-red-400',
+              };
+              return (
+                <div className="flex items-center justify-between">
+                  <span className={`text-sm font-medium ${colorMap[level] ?? ''}`}>
+                    {String(value)}
+                  </span>
+                </div>
+              );
+            }
+            return undefined;
+          }}
+        />
       </div>
 
       {/* Actions */}
@@ -145,8 +181,9 @@ export function SignalReviewPanel({
 
         <div className="flex items-center gap-3">
           {lowConfidenceCount > 0 && (
-            <p className="text-sm text-amber-700">
-              ⚠️ {lowConfidenceCount} signal(s) may need review
+            <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              {lowConfidenceCount} signal(s) may need review
             </p>
           )}
           <Button onClick={onAccept} variant="primary-action" size="sm">
