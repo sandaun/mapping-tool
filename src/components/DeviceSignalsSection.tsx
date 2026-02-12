@@ -10,7 +10,8 @@ import { EditableTable } from './EditableTable';
 import { FileUploader } from './FileUploader';
 import { SignalReviewPanel } from './SignalReviewPanel';
 import { useAIParser } from '@/hooks/useAIParser';
-import { Loader2, ChevronDown, ChevronUp, Save, Sparkles, FileText, Wand2, Check } from 'lucide-react';
+import { Loader2, ChevronDown, ChevronUp, Save, Sparkles, FileText, Wand2, Check, Zap } from 'lucide-react';
+import { NumberStepper } from '@/components/ui/NumberStepper';
 
 type DeviceSignalsSectionProps = {
   template: Template;
@@ -19,8 +20,8 @@ type DeviceSignalsSectionProps = {
   onParseCSV: () => void;
   parseAndAddSignals: (csv: string) => void;
   onCopyPrompt: () => void;
-  onGenerateSignals: () => void;
-  generateWithSignals: (signals: DeviceSignal[]) => void;
+  onGenerateSignals: (deviceCount?: number) => void;
+  generateWithSignals: (signals: DeviceSignal[], deviceCount?: number) => void;
   onClearSignals: () => void;
   deviceSignals: DeviceSignal[];
   parseWarnings: string[];
@@ -42,6 +43,7 @@ export function DeviceSignalsSection({
   busy,
 }: DeviceSignalsSectionProps) {
   const [showManualInput, setShowManualInput] = useState(false);
+  const [deviceCount, setDeviceCount] = useState(1);
 
   // Check for saved data on mount using lazy initializer (avoids useEffect + setState)
   const [hasSavedData, setHasSavedData] = useState(() => {
@@ -69,6 +71,9 @@ export function DeviceSignalsSection({
   const isParsed = deviceSignals.length > 0;
   const canClear =
     isParsed || csvInput.trim().length > 0 || parseWarnings.length > 0;
+
+  // Hide device multiplier for KNX flows (KNX uses group addresses, not devices)
+  const isKNXFlow = template.id.includes('knx');
 
   // Convert device signals to EditableRow format for table
   const signalsTableData: EditableRow[] = useMemo(() => {
@@ -108,7 +113,7 @@ export function DeviceSignalsSection({
     const signals = acceptSignals();
     if (signals) {
       // Generate directly with the AI-parsed signals (no intermediate state)
-      generateWithSignals(signals);
+      generateWithSignals(signals, deviceCount);
 
       reset();
 
@@ -253,6 +258,9 @@ export function DeviceSignalsSection({
                 reset();
               }
             }}
+            deviceCount={deviceCount}
+            onDeviceCountChange={setDeviceCount}
+            templateId={template.id}
           />
         )}
 
@@ -368,13 +376,23 @@ export function DeviceSignalsSection({
               </span>
             </div>
             <div className="flex items-center gap-2">
+              {!isKNXFlow && (
+                <NumberStepper
+                  value={deviceCount}
+                  onChange={setDeviceCount}
+                  label="Devices"
+                  min={1}
+                  max={99}
+                />
+              )}
               <Button
-                onClick={onGenerateSignals}
+                onClick={() => onGenerateSignals(deviceCount)}
                 disabled={busy}
                 variant="primary-action"
                 size="sm"
               >
-                Generate Signals
+                <Zap className="w-3.5 h-3.5" />
+              {!isKNXFlow && deviceCount > 1 ? `Accept & Generate ${deviceCount} devices` : 'Accept & Generate'}
               </Button>
               <Button
                 onClick={onClearSignals}

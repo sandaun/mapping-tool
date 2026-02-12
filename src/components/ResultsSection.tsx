@@ -461,7 +461,6 @@ export function ResultsSection({
         overrides={overrides}
         onDelete={handleDelete}
         onReset={handleReset}
-        onExport={handleExport}
       />
     </div>
   );

@@ -17,7 +17,6 @@ type SignalsPreviewDialogProps = {
   overrides: Override[];
   onDelete: (signalId: string) => void;
   onReset: () => void;
-  onExport: () => void;
 };
 
 export function SignalsPreviewDialog({
@@ -27,7 +26,6 @@ export function SignalsPreviewDialog({
   overrides,
   onDelete,
   onReset,
-  onExport,
 }: SignalsPreviewDialogProps) {
   const deletedCount = overrides.filter((o) => o.type === 'delete').length;
   const totalSignals = signals.length;
@@ -59,13 +57,6 @@ export function SignalsPreviewDialog({
             onClick={() => onOpenChange(false)}
           >
             Close
-          </Button>
-          <Button
-            onClick={onExport}
-            variant="secondary-action"
-            className="text-xs"
-          >
-            Export Template
           </Button>
         </DialogFooter>
       </DialogContent>

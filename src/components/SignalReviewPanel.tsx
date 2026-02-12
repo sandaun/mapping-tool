@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Check, AlertTriangle, RefreshCw, CircleCheck, CircleMinus, CircleAlert, FileText } from 'lucide-react';
+import { AlertTriangle, RefreshCw, CircleCheck, CircleMinus, CircleAlert, FileText, Copy } from 'lucide-react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import { EditableTable } from './EditableTable';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { NumberStepper } from '@/components/ui/NumberStepper';
 import type { EditableRow } from '@/types/overrides';
 
 type SignalWithConfidence = DeviceSignal & { confidence: number };
@@ -16,6 +17,9 @@ interface SignalReviewPanelProps {
   fileName: string;
   onAccept: () => void;
   onRetry: () => void;
+  deviceCount: number;
+  onDeviceCountChange: (count: number) => void;
+  templateId: string;
 }
 
 /**
@@ -78,7 +82,12 @@ export function SignalReviewPanel({
   fileName,
   onAccept,
   onRetry,
+  deviceCount,
+  onDeviceCountChange,
+  templateId,
 }: SignalReviewPanelProps) {
+  // Hide device multiplier for KNX flows (KNX uses group addresses, not devices)
+  const isKNXFlow = templateId.includes('knx');
   const lowConfidenceCount = signals.filter((s) => s.confidence < 0.6).length;
   const mediumConfidenceCount = signals.filter(
     (s) => s.confidence >= 0.6 && s.confidence < 0.8,
@@ -186,9 +195,18 @@ export function SignalReviewPanel({
               {lowConfidenceCount} signal(s) may need review
             </p>
           )}
+          {!isKNXFlow && (
+            <NumberStepper
+              value={deviceCount}
+              onChange={onDeviceCountChange}
+              label="Devices"
+              min={1}
+              max={99}
+            />
+          )}
           <Button onClick={onAccept} variant="primary-action" size="sm">
-            <Check className="w-4 h-4 mr-2" />
-            Accept & Generate
+            <Copy className="w-3.5 h-3.5 mr-1.5" />
+            {!isKNXFlow && deviceCount > 1 ? `Accept & Generate ${deviceCount} devices` : 'Accept & Generate'}
           </Button>
         </div>
       </div>
