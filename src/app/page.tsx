@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useMemo, useState, useCallback } from 'react';
-import { applyOverridesToWorkbook } from '@/lib/overrides';
-import { useFileImport } from '@/hooks/useFileImport';
-import { useTemplateManager } from '@/hooks/useTemplateManager';
-import { useSignalsWorkflow } from '@/hooks/useSignalsWorkflow';
-import { TemplateSelector } from '@/components/TemplateSelector';
-import { ProtocolsInfo } from '@/components/ProtocolsInfo';
-import { DeviceSignalsSection } from '@/components/DeviceSignalsSection';
-import { ResultsSection } from '@/components/ResultsSection';
-import { ErrorDisplay } from '@/components/ErrorDisplay';
-import { Header } from '@/components/Header';
-import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
-import { StepSection } from '@/components/ui/StepSection';
-import type { Override } from '@/types/overrides';
-import type { TemplateId } from '@/types/page.types';
+import { useMemo, useState, useCallback } from "react";
+import { applyOverridesToWorkbook } from "@/lib/overrides";
+import { useFileImport } from "@/hooks/useFileImport";
+import { useTemplateManager } from "@/hooks/useTemplateManager";
+import { useSignalsWorkflow } from "@/hooks/useSignalsWorkflow";
+import { TemplateSelector } from "@/components/TemplateSelector";
+import { ProtocolsInfo } from "@/components/ProtocolsInfo";
+import { SignalsInputSection } from "@/components/SignalsInputSection";
+import { ResultsSection } from "@/components/ResultsSection";
+import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { Header } from "@/components/Header";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { StepSection } from "@/components/ui/StepSection";
+import type { Override } from "@/types/overrides";
+import type { TemplateId } from "@/types/page.types";
 
 export default function Home() {
   // File import management
@@ -47,7 +47,7 @@ export default function Home() {
   const {
     csvInput,
     deviceSignals,
-    parseWarnings,
+    inputWarnings,
     pendingExport,
     setCsvInput,
     parseAndAddSignals,
@@ -109,12 +109,12 @@ export default function Home() {
 
       // Update timestamp to current date
       const signalsSheet = workbookToExport.sheets.find(
-        (s) => s.name === 'Signals',
+        (s) => s.name === "Signals",
       );
       if (signalsSheet) {
         // Find the row that contains 'Timestamp' in column A
         const timestampRowIndex = signalsSheet.rows.findIndex(
-          (row) => row[0] === 'Timestamp',
+          (row) => row[0] === "Timestamp",
         );
         if (timestampRowIndex !== -1) {
           signalsSheet.rows[timestampRowIndex][1] =
@@ -122,27 +122,27 @@ export default function Home() {
         }
       }
 
-      const res = await fetch('/api/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(workbookToExport),
       });
 
       if (!res.ok) {
-        throw new Error('Error exportant.');
+        throw new Error("Error exportant.");
       }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'export.xlsx';
+      a.download = "export.xlsx";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch (e) {
-      console.error('Export error:', e);
+      console.error("Export error:", e);
     }
   };
 
@@ -191,7 +191,7 @@ export default function Home() {
             title="Import Device Signals"
             description="Parse signals from CSV or AI-extracted data."
           >
-            <DeviceSignalsSection
+            <SignalsInputSection
               template={selectedTemplate}
               csvInput={csvInput}
               onCsvInputChange={setCsvInput}
@@ -202,7 +202,7 @@ export default function Home() {
               generateWithSignals={generateWithSignals}
               onClearSignals={handleClearSignals}
               deviceSignals={deviceSignals}
-              parseWarnings={parseWarnings}
+              inputWarnings={inputWarnings}
               busy={busy}
             />
           </StepSection>
@@ -216,7 +216,7 @@ export default function Home() {
           <StepSection
             stepNumber={3}
             title="Generated Output"
-            description={`Sheets: ${sheetNames.join(', ')}`}
+            description={`Sheets: ${sheetNames.join(", ")}`}
           >
             <ResultsSection
               raw={raw}

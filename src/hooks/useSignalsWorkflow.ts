@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
-import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
-import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
-import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
-import { generateKNXFromBACnet } from '@/lib/actions/generateKNXFromBACnet';
-import { generateBACnetServerFromKNX } from '@/lib/actions/generateBACnetServerFromKNX';
-import { generateModbusFromKNX } from '@/lib/actions/generateModbusFromKNX';
-import type { RawWorkbook } from '@/lib/excel/raw';
-import type { Template } from '@/types/page.types';
+import { useState } from "react";
+import { parseDeviceSignalsCSV, type DeviceSignal } from "@/lib/deviceSignals";
+import { generateBACnetFromModbus } from "@/lib/actions/generateBACnetFromModbus";
+import { generateModbusFromBACnet } from "@/lib/actions/generateModbusFromBACnet";
+import { generateKNXFromModbus } from "@/lib/actions/generateKNXFromModbus";
+import { generateKNXFromBACnet } from "@/lib/actions/generateKNXFromBACnet";
+import { generateBACnetServerFromKNX } from "@/lib/actions/generateBACnetServerFromKNX";
+import { generateModbusFromKNX } from "@/lib/actions/generateModbusFromKNX";
+import type { RawWorkbook } from "@/lib/excel/raw";
+import type { Template } from "@/types/page.types";
 
 type PendingExport = {
   signalsCount: number;
@@ -23,9 +23,9 @@ export const useSignalsWorkflow = (
   raw: RawWorkbook | null,
   setRaw: (workbook: RawWorkbook) => void,
 ) => {
-  const [csvInput, setCsvInput] = useState('');
+  const [csvInput, setCsvInput] = useState("");
   const [deviceSignals, setDeviceSignals] = useState<DeviceSignal[]>([]);
-  const [parseWarnings, setParseWarnings] = useState<string[]>([]);
+  const [inputWarnings, setInputWarnings] = useState<string[]>([]);
   const [pendingExport, setPendingExport] = useState<PendingExport>(null);
 
   /**
@@ -33,16 +33,16 @@ export const useSignalsWorkflow = (
    * Pure function that doesn't depend on state
    */
   const parseAndAddSignals = (csv: string) => {
-    setParseWarnings([]);
+    setInputWarnings([]);
 
     if (!csv.trim()) {
-      setParseWarnings(['El CSV està buit.']);
+      setInputWarnings(["El CSV està buit."]);
       return;
     }
 
     const result = parseDeviceSignalsCSV(csv, template.id);
     setDeviceSignals((prev) => [...prev, ...result.signals]);
-    setParseWarnings(result.warnings);
+    setInputWarnings(result.warnings);
   };
 
   /**
@@ -57,8 +57,8 @@ export const useSignalsWorkflow = (
    */
   const handleClearSignals = () => {
     setDeviceSignals([]);
-    setParseWarnings([]);
-    setCsvInput('');
+    setInputWarnings([]);
+    setCsvInput("");
   };
 
   /**
@@ -69,7 +69,7 @@ export const useSignalsWorkflow = (
     generateWithSignals(deviceSignals, deviceCount);
 
     // Clear after generating (already done in generateWithSignals? No, it doesn't clear)
-    setCsvInput('');
+    setCsvInput("");
     setDeviceSignals([]);
   };
 
@@ -81,17 +81,17 @@ export const useSignalsWorkflow = (
     signals: DeviceSignal[],
     workbook: RawWorkbook,
   ) => {
-    if (template.id === 'bacnet-server__modbus-master') {
-      return generateBACnetFromModbus(signals, workbook, 'simple');
-    } else if (template.id === 'modbus-slave__bacnet-client') {
-      return generateModbusFromBACnet(signals, workbook, 'simple');
-    } else if (template.id === 'knx__modbus-master') {
+    if (template.id === "bacnet-server__modbus-master") {
+      return generateBACnetFromModbus(signals, workbook, "simple");
+    } else if (template.id === "modbus-slave__bacnet-client") {
+      return generateModbusFromBACnet(signals, workbook, "simple");
+    } else if (template.id === "knx__modbus-master") {
       return generateKNXFromModbus(signals, workbook);
-    } else if (template.id === 'knx__bacnet-client') {
+    } else if (template.id === "knx__bacnet-client") {
       return generateKNXFromBACnet(signals, workbook);
-    } else if (template.id === 'modbus-slave__knx') {
+    } else if (template.id === "modbus-slave__knx") {
       return generateModbusFromKNX(signals, workbook);
-    } else if (template.id === 'bacnet-server__knx') {
+    } else if (template.id === "bacnet-server__knx") {
       return generateBACnetServerFromKNX(signals, workbook);
     }
     throw new Error(`Gateway type not implemented yet: ${template.id}`);
@@ -123,15 +123,15 @@ export const useSignalsWorkflow = (
       setRaw(currentWorkbook);
 
       if (allWarnings.length > 0) {
-        setParseWarnings((prev) => [...prev, ...allWarnings]);
+        setInputWarnings((prev) => [...prev, ...allWarnings]);
       }
 
       // Determinar target sheet segons template
-      const targetSheet = template.id.includes('bacnet-server')
-        ? 'BACnet Server'
-        : template.id.includes('modbus')
-          ? 'Modbus Master'
-          : 'KNX';
+      const targetSheet = template.id.includes("bacnet-server")
+        ? "BACnet Server"
+        : template.id.includes("modbus")
+          ? "Modbus Master"
+          : "KNX";
 
       // Mostrar badge persistent
       setPendingExport((prev) => ({
@@ -139,8 +139,8 @@ export const useSignalsWorkflow = (
         targetSheet,
       }));
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Error desconegut';
-      setParseWarnings((prev) => [...prev, message]);
+      const message = e instanceof Error ? e.message : "Error desconegut";
+      setInputWarnings((prev) => [...prev, message]);
     }
   };
 
@@ -152,7 +152,7 @@ export const useSignalsWorkflow = (
     // State
     csvInput,
     deviceSignals,
-    parseWarnings,
+    inputWarnings,
     pendingExport,
     // Actions
     setCsvInput,
