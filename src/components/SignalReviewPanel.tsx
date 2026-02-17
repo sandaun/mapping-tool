@@ -1,13 +1,21 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { AlertTriangle, RefreshCw, CircleCheck, CircleMinus, CircleAlert, FileText, Copy } from 'lucide-react';
-import type { DeviceSignal } from '@/lib/deviceSignals';
-import { EditableTable } from './EditableTable';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { NumberStepper } from '@/components/ui/NumberStepper';
-import type { EditableRow } from '@/types/overrides';
+import { useMemo } from "react";
+import {
+  AlertTriangle,
+  RefreshCw,
+  CircleCheck,
+  CircleMinus,
+  CircleAlert,
+  FileText,
+  Copy,
+} from "lucide-react";
+import type { DeviceSignal } from "@/lib/deviceSignals";
+import { EditableTable } from "./EditableTable";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { NumberStepper } from "@/components/ui/NumberStepper";
+import type { EditableRow } from "@/types/overrides";
 
 type SignalWithConfidence = DeviceSignal & { confidence: number };
 
@@ -30,22 +38,22 @@ const signalsToEditableRows = (
 ): EditableRow[] => {
   return signals.map((signal, index) => {
     // Determine type and address based on signal type
-    let type = '-';
-    let address: string | number = '-';
-    let dataType = '-';
+    let type = "-";
+    let address: string | number = "-";
+    let dataType = "-";
 
-    if ('registerType' in signal) {
+    if ("registerType" in signal) {
       // Modbus
       type = signal.registerType;
       address = signal.address;
       dataType = signal.dataType;
-    } else if ('objectType' in signal) {
+    } else if ("objectType" in signal) {
       // BACnet
       type = signal.objectType;
       address = signal.instance;
-    } else if ('groupAddress' in signal) {
+    } else if ("groupAddress" in signal) {
       // KNX
-      type = 'KNX';
+      type = "KNX";
       address = signal.groupAddress;
       dataType = signal.dpt;
     }
@@ -53,15 +61,15 @@ const signalsToEditableRows = (
     // Map confidence to colored HTML-safe label
     const confidenceLevel =
       signal.confidence >= 0.8
-        ? 'high'
+        ? "high"
         : signal.confidence >= 0.6
-          ? 'medium'
-          : 'low';
+          ? "medium"
+          : "low";
 
     const confidenceLabels = {
-      high: 'High',
-      medium: 'Medium',
-      low: 'Low',
+      high: "High",
+      medium: "Medium",
+      low: "Low",
     };
 
     return {
@@ -87,7 +95,7 @@ export function SignalReviewPanel({
   templateId,
 }: SignalReviewPanelProps) {
   // Hide device multiplier for KNX flows (KNX uses group addresses, not devices)
-  const isKNXFlow = templateId.includes('knx');
+  const isKNXFlow = templateId.includes("knx");
   const lowConfidenceCount = signals.filter((s) => s.confidence < 0.6).length;
   const mediumConfidenceCount = signals.filter(
     (s) => s.confidence >= 0.6 && s.confidence < 0.8,
@@ -147,7 +155,10 @@ export function SignalReviewPanel({
             <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <div className="space-y-1">
               {warnings.map((warning, i) => (
-                <p key={i} className="text-sm text-amber-800 dark:text-amber-300">
+                <p
+                  key={i}
+                  className="text-sm text-amber-800 dark:text-amber-300"
+                >
                   {warning}
                 </p>
               ))}
@@ -161,16 +172,19 @@ export function SignalReviewPanel({
         <EditableTable
           data={tableData}
           renderCell={(columnKey, value, row) => {
-            if (columnKey === 'Confidence') {
-              const level = (row as Record<string, unknown>)._confidenceLevel as string;
+            if (columnKey === "Confidence") {
+              const level = (row as Record<string, unknown>)
+                ._confidenceLevel as string;
               const colorMap: Record<string, string> = {
-                high: 'text-emerald-500',
-                medium: 'text-amber-400',
-                low: 'text-red-400',
+                high: "text-emerald-500",
+                medium: "text-amber-400",
+                low: "text-red-400",
               };
               return (
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium ${colorMap[level] ?? ''}`}>
+                  <span
+                    className={`text-sm font-medium ${colorMap[level] ?? ""}`}
+                  >
                     {String(value)}
                   </span>
                 </div>
@@ -206,7 +220,7 @@ export function SignalReviewPanel({
           )}
           <Button onClick={onAccept} variant="primary-action" size="sm">
             <Copy className="w-3.5 h-3.5 mr-1.5" />
-            {!isKNXFlow && deviceCount > 1 ? `Accept & Generate ${deviceCount} devices` : 'Accept & Generate'}
+            Accept & Generate
           </Button>
         </div>
       </div>

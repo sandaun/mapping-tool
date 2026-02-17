@@ -1,17 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
-import type { DeviceSignal } from '@/lib/deviceSignals';
-import type { Template } from '@/types/page.types';
-import type { EditableRow } from '@/types/overrides';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { EditableTable } from './EditableTable';
-import { FileUploader } from './FileUploader';
-import { SignalReviewPanel } from './SignalReviewPanel';
-import { useAIParser } from '@/hooks/useAIParser';
-import { Loader2, ChevronDown, ChevronUp, Save, Sparkles, FileText, Wand2, Check, Zap } from 'lucide-react';
-import { NumberStepper } from '@/components/ui/NumberStepper';
+import { useState, useMemo } from "react";
+import type { DeviceSignal } from "@/lib/deviceSignals";
+import type { Template } from "@/types/page.types";
+import type { EditableRow } from "@/types/overrides";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { EditableTable } from "./EditableTable";
+import { FileUploader } from "./FileUploader";
+import { SignalReviewPanel } from "./SignalReviewPanel";
+import { useAIParser } from "@/hooks/useAIParser";
+import {
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  Save,
+  Sparkles,
+  FileText,
+  Wand2,
+  Check,
+  Zap,
+} from "lucide-react";
+import { NumberStepper } from "@/components/ui/NumberStepper";
 
 type DeviceSignalsSectionProps = {
   template: Template;
@@ -27,6 +37,24 @@ type DeviceSignalsSectionProps = {
   parseWarnings: string[];
   busy: boolean;
 };
+
+type AIProvider = "openai" | "groq" | "cerebras";
+
+const PROVIDER_LABEL: Record<AIProvider, string> = {
+  openai: "OpenAI",
+  groq: "Groq",
+  cerebras: "Cerebras",
+};
+
+function isAIProvider(value: unknown): value is AIProvider {
+  return value === "openai" || value === "groq" || value === "cerebras";
+}
+
+function shouldUseOpenAIForFile(file: File): boolean {
+  return (
+    file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+  );
+}
 
 export function DeviceSignalsSection({
   template,
@@ -44,11 +72,12 @@ export function DeviceSignalsSection({
 }: DeviceSignalsSectionProps) {
   const [showManualInput, setShowManualInput] = useState(false);
   const [deviceCount, setDeviceCount] = useState(1);
+  const [analyzingProvider, setAnalyzingProvider] = useState("AI");
 
   // Check for saved data on mount using lazy initializer (avoids useEffect + setState)
   const [hasSavedData, setHasSavedData] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const saved = localStorage.getItem('ai-parsed-signals');
+    if (typeof window === "undefined") return false;
+    const saved = localStorage.getItem("ai-parsed-signals");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -57,10 +86,10 @@ export function DeviceSignalsSection({
         if (age < MAX_AGE) {
           return true;
         } else {
-          localStorage.removeItem('ai-parsed-signals');
+          localStorage.removeItem("ai-parsed-signals");
         }
       } catch {
-        localStorage.removeItem('ai-parsed-signals');
+        localStorage.removeItem("ai-parsed-signals");
       }
     }
     return false;
@@ -73,38 +102,59 @@ export function DeviceSignalsSection({
     isParsed || csvInput.trim().length > 0 || parseWarnings.length > 0;
 
   // Hide device multiplier for KNX flows (KNX uses group addresses, not devices)
-  const isKNXFlow = template.id.includes('knx');
+  const isKNXFlow = template.id.includes("knx");
 
   // Convert device signals to EditableRow format for table
   const signalsTableData: EditableRow[] = useMemo(() => {
     return deviceSignals.map((sig, index) => {
-      let type = '—';
-      let address: string | number = '—';
+      let type = "—";
+      let address: string | number = "—";
 
-      if ('objectType' in sig) {
+      if ("objectType" in sig) {
         type = sig.objectType;
         address = sig.instance;
-      } else if ('registerType' in sig) {
+      } else if ("registerType" in sig) {
         type = sig.registerType;
         address = sig.address;
-      } else if ('dpt' in sig) {
+      } else if ("dpt" in sig) {
         type = sig.dpt;
-        address = 'groupAddress' in sig ? sig.groupAddress : '—';
+        address = "groupAddress" in sig ? sig.groupAddress : "—";
       }
 
       return {
         id: `signal-${index}`,
-        Device: 'deviceId' in sig ? sig.deviceId : '—',
+        Device: "deviceId" in sig ? sig.deviceId : "—",
         Name: sig.signalName,
         Type: type,
         Address: String(address),
-        Units: 'units' in sig ? (sig.units ?? '—') : '—',
+        Units: "units" in sig ? (sig.units ?? "—") : "—",
       };
     });
   }, [deviceSignals]);
 
+  const resolveProviderLabel = async (file: File): Promise<string> => {
+    if (shouldUseOpenAIForFile(file)) return PROVIDER_LABEL.openai;
+
+    try {
+      const response = await fetch("/api/parse-file", { method: "GET" });
+      if (!response.ok) return "AI";
+
+      const data: unknown = await response.json();
+      const provider =
+        typeof data === "object" && data !== null
+          ? (data as { currentProvider?: unknown }).currentProvider
+          : undefined;
+
+      if (!isAIProvider(provider)) return "AI";
+      return PROVIDER_LABEL[provider];
+    } catch {
+      return "AI";
+    }
+  };
+
   // Handle file upload
   const handleFileSelect = async (file: File) => {
+    setAnalyzingProvider(await resolveProviderLabel(file));
     await parseFile(file, template.id);
   };
 
@@ -120,10 +170,10 @@ export function DeviceSignalsSection({
       // Save to localStorage with timestamp
       const timestamp = Date.now();
       localStorage.setItem(
-        'ai-parsed-signals',
+        "ai-parsed-signals",
         JSON.stringify({
           signals,
-          fileName: state.status === 'review' ? state.fileName : 'unknown',
+          fileName: state.status === "review" ? state.fileName : "unknown",
           timestamp,
         }),
       );
@@ -132,7 +182,7 @@ export function DeviceSignalsSection({
 
   // Handle loading saved signals
   const handleLoadSaved = () => {
-    const saved = localStorage.getItem('ai-parsed-signals');
+    const saved = localStorage.getItem("ai-parsed-signals");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -141,52 +191,51 @@ export function DeviceSignalsSection({
         parseAndAddSignals(csv);
         setHasSavedData(false); // Hide banner after loading
       } catch {
-        localStorage.removeItem('ai-parsed-signals');
+        localStorage.removeItem("ai-parsed-signals");
       }
     }
   };
 
   // Convert signals to CSV format
   const convertSignalsToCSV = (signals: DeviceSignal[]): string => {
-    if (signals.length === 0) return '';
+    if (signals.length === 0) return "";
 
     // Get first signal to determine type
     const firstSignal = signals[0];
 
-    if ('registerType' in firstSignal) {
+    if ("registerType" in firstSignal) {
       // Modbus
       const headers =
-        'deviceId,signalName,registerType,address,dataType,units,description,mode,factor';
+        "deviceId,signalName,registerType,address,dataType,units,description,mode,factor";
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.deviceId},${sig.signalName},${sig.registerType},${sig.address},${sig.dataType},${sig.units || ''},${sig.description || ''},${sig.mode || ''},${sig.factor || ''}`;
+        return `${sig.deviceId},${sig.signalName},${sig.registerType},${sig.address},${sig.dataType},${sig.units || ""},${sig.description || ""},${sig.mode || ""},${sig.factor || ""}`;
       });
-      return [headers, ...rows].join('\n');
-    } else if ('objectType' in firstSignal) {
+      return [headers, ...rows].join("\n");
+    } else if ("objectType" in firstSignal) {
       // BACnet
       const headers =
-        'deviceId,signalName,objectType,instance,units,description';
+        "deviceId,signalName,objectType,instance,units,description";
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.deviceId},${sig.signalName},${sig.objectType},${sig.instance},${sig.units || ''},${sig.description || ''}`;
+        return `${sig.deviceId},${sig.signalName},${sig.objectType},${sig.instance},${sig.units || ""},${sig.description || ""}`;
       });
-      return [headers, ...rows].join('\n');
-    } else if ('groupAddress' in firstSignal) {
+      return [headers, ...rows].join("\n");
+    } else if ("groupAddress" in firstSignal) {
       // KNX - already in format
-      const headers = 'signalName,groupAddress,dpt,description';
+      const headers = "signalName,groupAddress,dpt,description";
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.signalName},${sig.groupAddress},${sig.dpt},${sig.description || ''}`;
+        return `${sig.signalName},${sig.groupAddress},${sig.dpt},${sig.description || ""}`;
       });
-      return [headers, ...rows].join('\n');
+      return [headers, ...rows].join("\n");
     }
 
-    return '';
+    return "";
   };
 
   return (
     <div className="space-y-6">
-
       {/* Saved Data Indicator */}
       {hasSavedData && (
         <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-3 flex items-center justify-between">
@@ -214,11 +263,11 @@ export function DeviceSignalsSection({
           AI-Powered File Upload
         </h3>
 
-        {state.status === 'idle' && (
+        {state.status === "idle" && (
           <FileUploader onFileSelect={handleFileSelect} disabled={busy} />
         )}
 
-        {state.status === 'uploading' && (
+        {state.status === "uploading" && (
           <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
             <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
             <p className="text-sm text-blue-800 dark:text-blue-300">
@@ -233,12 +282,12 @@ export function DeviceSignalsSection({
           </div>
         )}
 
-        {state.status === 'parsing' && (
+        {state.status === "parsing" && (
           <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
             <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
             <p className="text-sm text-blue-800 dark:text-blue-300 flex items-center justify-center gap-1.5">
               <Sparkles className="w-4 h-4" />
-              AI is analyzing {state.file.name}...
+              {analyzingProvider} is analyzing {state.file.name}...
             </p>
             <p className="text-xs text-blue-600 dark:text-blue-400/70 mt-1">
               This may take 10-30 seconds depending on file size
@@ -246,14 +295,14 @@ export function DeviceSignalsSection({
           </div>
         )}
 
-        {state.status === 'review' && (
+        {state.status === "review" && (
           <SignalReviewPanel
             signals={state.signals}
             warnings={state.warnings}
             fileName={state.fileName}
             onAccept={handleAcceptSignals}
             onRetry={() => {
-              if (state.status === 'review') {
+              if (state.status === "review") {
                 // Find the file from localStorage or require re-upload
                 reset();
               }
@@ -264,12 +313,14 @@ export function DeviceSignalsSection({
           />
         )}
 
-        {state.status === 'error' && (
+        {state.status === "error" && (
           <div className="rounded-lg border border-red-200 dark:border-red-400/30 bg-red-50 dark:bg-red-950/20 p-4">
             <p className="text-sm text-red-800 dark:text-red-300 font-medium">
               Error parsing file
             </p>
-            <p className="text-xs text-red-600 dark:text-red-400/70 mt-1">{state.error}</p>
+            <p className="text-xs text-red-600 dark:text-red-400/70 mt-1">
+              {state.error}
+            </p>
             <Button
               onClick={reset}
               variant="neutral"
@@ -367,7 +418,10 @@ export function DeviceSignalsSection({
         <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Badge variant="default" className="bg-emerald-600">
+              <Badge
+                variant="outline"
+                className="border-secondary bg-transparent text-secondary"
+              >
                 <Check className="w-3 h-3 mr-1" />
                 PARSED
               </Badge>
@@ -392,7 +446,7 @@ export function DeviceSignalsSection({
                 size="sm"
               >
                 <Zap className="w-3.5 h-3.5" />
-              {!isKNXFlow && deviceCount > 1 ? `Accept & Generate ${deviceCount} devices` : 'Accept & Generate'}
+                Accept & Generate
               </Button>
               <Button
                 onClick={onClearSignals}

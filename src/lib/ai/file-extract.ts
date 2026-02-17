@@ -1,7 +1,7 @@
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 export interface ExtractedContent {
-  type: 'file' | 'text';
+  type: "file" | "text";
   data?: string; // For file: data URI, for text: plain text
   mediaType?: string;
   text?: string; // Alternative for text content
@@ -12,16 +12,16 @@ export interface ExtractedContent {
  */
 export async function extractExcelText(buffer: Buffer): Promise<string> {
   try {
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
+    const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetsText = workbook.SheetNames.map((name) => {
       const sheet = workbook.Sheets[name];
       const csv = XLSX.utils.sheet_to_csv(sheet);
       return `=== Sheet: ${name} ===\n${csv}`;
-    }).join('\n\n');
+    }).join("\n\n");
     return sheetsText;
   } catch (error) {
-    console.error('Excel extraction error:', error);
-    throw new Error('Failed to extract text from Excel');
+    console.error("Excel extraction error:", error);
+    throw new Error("Failed to extract text from Excel");
   }
 }
 
@@ -35,16 +35,16 @@ const MAX_TEXT_LENGTH = 100_000; // ~25k tokens for most models
  */
 export function cleanExtractedText(text: string): string {
   let cleaned = text
-    .replace(/\n{3,}/g, '\n\n') // Limit consecutive newlines
-    .replace(/\s+$/gm, '') // Remove trailing whitespace
-    .replace(/^\d+$/gm, '') // Remove lines that are just numbers (likely page numbers)
+    .replace(/\n{3,}/g, "\n\n") // Limit consecutive newlines
+    .replace(/\s+$/gm, "") // Remove trailing whitespace
+    .replace(/^\d+$/gm, "") // Remove lines that are just numbers (likely page numbers)
     .trim();
 
   // Truncate if too long
   if (cleaned.length > MAX_TEXT_LENGTH) {
     cleaned =
       cleaned.substring(0, MAX_TEXT_LENGTH) +
-      '\n\n[... content truncated due to length ...]';
+      "\n\n[... content truncated due to length ...]";
   }
 
   return cleaned;
@@ -55,23 +55,23 @@ export function cleanExtractedText(text: string): string {
  */
 export function needsTextExtraction(
   mimeType: string,
-  provider: 'openai' | 'groq' | 'cerebras',
+  provider: "openai" | "groq" | "cerebras",
 ): boolean {
   // OpenAI supports vision for PDFs and images
-  if (provider === 'openai') {
+  if (provider === "openai") {
     const nativeFileTypes = [
-      'application/pdf',
-      'image/png',
-      'image/jpeg',
-      'image/webp',
-      'image/gif',
+      "application/pdf",
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/gif",
     ];
     return !nativeFileTypes.includes(mimeType);
   }
 
   // Groq and Cerebras don't support vision, so everything needs text extraction
   // except plain text files which are already text
-  const textTypes = ['text/plain', 'text/csv'];
+  const textTypes = ["text/plain", "text/csv"];
   return !textTypes.includes(mimeType);
 }
 
@@ -80,20 +80,20 @@ export function needsTextExtraction(
  */
 export async function prepareFileForAI(
   file: File,
-  provider: 'openai' | 'groq' | 'cerebras',
+  provider: "openai" | "groq" | "cerebras",
 ): Promise<ExtractedContent> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  const mimeType = file.type || 'application/octet-stream';
+  const mimeType = file.type || "application/octet-stream";
 
   // Check if we need to extract text
   const requiresExtraction = needsTextExtraction(mimeType, provider);
 
-  if (!requiresExtraction && provider === 'openai') {
+  if (!requiresExtraction && provider === "openai") {
     // For OpenAI with native vision support - send as data URI
-    const base64 = buffer.toString('base64');
+    const base64 = buffer.toString("base64");
     return {
-      type: 'file',
+      type: "file",
       data: `data:${mimeType};base64,${base64}`,
       mediaType: mimeType,
     };
@@ -102,27 +102,27 @@ export async function prepareFileForAI(
   // For non-vision providers or text-based files - extract content
   let textContent: string;
 
-  if (mimeType === 'application/pdf' || file.name.endsWith('.pdf')) {
+  if (mimeType === "application/pdf" || file.name.endsWith(".pdf")) {
     // PDFs should always go to OpenAI with vision (hybrid strategy)
     // If we're here, something went wrong with provider routing
     throw new Error(
-      'PDF text extraction attempted but PDFs should use OpenAI vision. This is a routing error.',
+      "PDF text extraction attempted but PDFs should use OpenAI vision. This is a routing error.",
     );
   } else if (
-    mimeType.includes('spreadsheet') ||
-    mimeType.includes('excel') ||
-    file.name.endsWith('.xlsx') ||
-    file.name.endsWith('.xls')
+    mimeType.includes("spreadsheet") ||
+    mimeType.includes("excel") ||
+    file.name.endsWith(".xlsx") ||
+    file.name.endsWith(".xls")
   ) {
     textContent = await extractExcelText(buffer);
   } else {
     // Plain text, CSV, etc.
-    const decoder = new TextDecoder('utf-8');
+    const decoder = new TextDecoder("utf-8");
     textContent = decoder.decode(bytes);
   }
 
   return {
-    type: 'text',
+    type: "text",
     text: textContent,
   };
 }
@@ -134,32 +134,33 @@ export async function prepareFileForAI(
 export async function buildAIMessageContent(
   file: File,
   prompt: string,
-  provider: 'openai' | 'groq' | 'cerebras',
+  provider: "openai" | "groq" | "cerebras",
 ): Promise<
   Array<
-    | { type: 'text'; text: string }
-    | { type: 'file'; data: string; mediaType: string }
+    | { type: "text"; text: string }
+    | { type: "file"; data: string; mediaType: string }
   >
 > {
   const content = await prepareFileForAI(file, provider);
 
-  if (content.type === 'file' && content.data && content.mediaType) {
+  if (content.type === "file" && content.data && content.mediaType) {
     // File-based content (OpenAI vision)
     return [
-      { type: 'text', text: prompt },
-      { type: 'file', data: content.data, mediaType: content.mediaType },
+      { type: "text", text: prompt },
+      { type: "file", data: content.data, mediaType: content.mediaType },
     ];
   } else {
     // Text-based content (all providers)
+    const cleanedText = cleanExtractedText(content.text ?? "");
     const fullPrompt = `${prompt}
 
 File: ${file.name}
-Type: ${file.type || 'unknown'}
+Type: ${file.type || "unknown"}
 
 --- CONTENT START ---
-${content.text}
+${cleanedText}
 --- CONTENT END ---`;
 
-    return [{ type: 'text', text: fullPrompt }];
+    return [{ type: "text", text: fullPrompt }];
   }
 }
