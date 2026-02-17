@@ -1,7 +1,7 @@
-import type { RawWorkbook, CellValue } from './excel/raw';
-import type { Override, EditableRow } from '@/types/overrides';
-import { findSignalsSheet } from './actions/utils/common';
-import { EDITABLE_COLUMNS } from '@/constants/editableColumns';
+import type { RawWorkbook, CellValue } from "./excel/raw";
+import type { Override, EditableRow } from "@/types/overrides";
+import { findSignalsSheet } from "./actions/utils/common";
+import { EDITABLE_COLUMNS } from "@/constants/editableColumns";
 
 /**
  * Applies a list of overrides to a list of rows.
@@ -14,16 +14,16 @@ export function applyOverrides<T extends EditableRow>(
   let result = [...rows];
 
   for (const override of overrides) {
-    if (override.type === 'delete') {
+    if (override.type === "delete") {
       result = result.filter((row) => row.id !== override.signalId);
-    } else if (override.type === 'edit') {
+    } else if (override.type === "edit") {
       result = result.map((row) => {
         if (row.id === override.signalId) {
           return { ...row, [override.field]: override.value };
         }
         return row;
       });
-    } else if (override.type === 'reorder') {
+    } else if (override.type === "reorder") {
       // Reorder logic (if needed later)
       // const [moved] = result.splice(override.fromIndex, 1);
       // result.splice(override.toIndex, 0, moved);
@@ -31,6 +31,42 @@ export function applyOverrides<T extends EditableRow>(
   }
 
   return result;
+}
+
+/**
+ * Templates where BACnet instances are server-managed and must be
+ * renumbered contiguously per BACnet object type after deletions.
+ */
+const BACNET_SERVER_TEMPLATES = new Set([
+  "bacnet-server__modbus-master",
+  "bacnet-server__knx",
+]);
+
+/**
+ * Renumber # (and BACnet Instance where applicable) after overrides.
+ * Pure function — does NOT mutate input or change row IDs.
+ */
+export function renumberSignals(
+  rows: EditableRow[],
+  templateId: string,
+): EditableRow[] {
+  if (rows.length === 0) return rows;
+
+  const renumberInstances = BACNET_SERVER_TEMPLATES.has(templateId);
+
+  if (renumberInstances) {
+    const nextInstanceByType = new Map<string, number>();
+    return rows.map((row, index) => {
+      const typeKey = String(row["Type"] ?? "")
+        .split(":")[0]
+        .trim();
+      const instance = nextInstanceByType.get(typeKey) ?? 0;
+      nextInstanceByType.set(typeKey, instance + 1);
+      return { ...row, "#": index, Instance: instance };
+    });
+  }
+
+  return rows.map((row, index) => ({ ...row, "#": index }));
 }
 
 /**
@@ -46,7 +82,7 @@ function findHeaderRowIndex(
   const scanLimit = Math.min(rows.length, 30);
 
   for (let i = 0; i < scanLimit; i++) {
-    const rowValues = rows[i].map((c) => String(c || '').trim());
+    const rowValues = rows[i].map((c) => String(c || "").trim());
 
     // Count how many expected columns are present in this row
     const matchCount = expectedColumns.reduce((count, col) => {
@@ -90,7 +126,7 @@ export function extractSignalsFromWorkbook(
   }
 
   const headers = sheet.rows[headerRowIndex].map((cell) =>
-    String(cell || '').trim(),
+    String(cell || "").trim(),
   );
   const dataRows = sheet.rows.slice(headerRowIndex + 1);
 
@@ -114,9 +150,9 @@ export function extractSignalsFromWorkbook(
     });
 
     // Create a better ID from the row content
-    const name = rowObj['Name'] || '';
-    const type = rowObj['Type'] || '';
-    const instance = rowObj['Instance'] || rowObj['Address'] || '';
+    const name = rowObj["Name"] || "";
+    const type = rowObj["Type"] || "";
+    const instance = rowObj["Instance"] || rowObj["Address"] || "";
 
     if (name) {
       rowObj.id = `${name}_${type}_${instance}_${index}`;
@@ -151,7 +187,7 @@ export function applyOverridesToWorkbook(
   }
 
   const headers = sheet.rows[headerRowIndex].map((cell) =>
-    String(cell || '').trim(),
+    String(cell || "").trim(),
   );
   const dataRows = sheet.rows.slice(headerRowIndex + 1);
 
@@ -166,19 +202,19 @@ export function applyOverridesToWorkbook(
   // Generate IDs for all rows (using same logic as extractSignalsFromWorkbook)
   const rowIdMap = new Map<string, number>(); // id -> original row index in dataRows
   dataRows.forEach((row, index) => {
-    const nameIdx = columnIndices.get('Name');
-    const typeIdx = columnIndices.get('Type');
-    const instanceIdx = columnIndices.get('Instance');
-    const addressIdx = columnIndices.get('Address');
+    const nameIdx = columnIndices.get("Name");
+    const typeIdx = columnIndices.get("Type");
+    const instanceIdx = columnIndices.get("Instance");
+    const addressIdx = columnIndices.get("Address");
 
-    const name = nameIdx !== undefined ? String(row[nameIdx] || '') : '';
-    const type = typeIdx !== undefined ? String(row[typeIdx] || '') : '';
+    const name = nameIdx !== undefined ? String(row[nameIdx] || "") : "";
+    const type = typeIdx !== undefined ? String(row[typeIdx] || "") : "";
     const instance =
       instanceIdx !== undefined
-        ? String(row[instanceIdx] || '')
+        ? String(row[instanceIdx] || "")
         : addressIdx !== undefined
-          ? String(row[addressIdx] || '')
-          : '';
+          ? String(row[addressIdx] || "")
+          : "";
 
     const id = name ? `${name}_${type}_${instance}_${index}` : `row-${index}`;
     rowIdMap.set(id, index);
@@ -189,12 +225,12 @@ export function applyOverridesToWorkbook(
   const editedCells = new Map<string, CellValue>(); // "rowIndex_colName" -> newValue
 
   for (const override of overrides) {
-    if (override.type === 'delete') {
+    if (override.type === "delete") {
       const rowIndex = rowIdMap.get(override.signalId);
       if (rowIndex !== undefined) {
         deletedIndices.add(rowIndex);
       }
-    } else if (override.type === 'edit') {
+    } else if (override.type === "edit") {
       const rowIndex = rowIdMap.get(override.signalId);
       if (rowIndex !== undefined) {
         const key = `${rowIndex}_${override.field}`;
@@ -232,6 +268,46 @@ export function applyOverridesToWorkbook(
     sheet.rows[headerRowIndex], // Header row
     ...newDataRows, // Data rows
   ];
+
+  // Renumber # columns (internal + external) and BACnet Instance
+  const hashIndices: number[] = [];
+  headers.forEach((h, i) => {
+    if (h === "#") hashIndices.push(i);
+  });
+
+  const renumberInstances = [
+    "bacnet-server__modbus-master",
+    "bacnet-server__knx",
+  ].includes(templateId);
+
+  const instanceColIdx = columnIndices.get("Instance");
+  const typeColIdx = columnIndices.get("Type");
+
+  if (
+    renumberInstances &&
+    instanceColIdx !== undefined &&
+    typeColIdx !== undefined
+  ) {
+    const nextInstanceByType = new Map<string, number>();
+    const dataStart = headerRowIndex + 1;
+    for (let i = dataStart; i < finalRows.length; i++) {
+      const row = finalRows[i];
+      // Renumber #
+      for (const hi of hashIndices) row[hi] = i - dataStart;
+      // Renumber Instance per Type
+      const typeKey = String(row[typeColIdx] ?? "")
+        .split(":")[0]
+        .trim();
+      const inst = nextInstanceByType.get(typeKey) ?? 0;
+      nextInstanceByType.set(typeKey, inst + 1);
+      row[instanceColIdx] = inst;
+    }
+  } else {
+    const dataStart = headerRowIndex + 1;
+    for (let i = dataStart; i < finalRows.length; i++) {
+      for (const hi of hashIndices) finalRows[i][hi] = i - dataStart;
+    }
+  }
 
   sheet.rows = finalRows;
   return newWorkbook;

@@ -1,32 +1,44 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { extractSignalsFromWorkbook } from '@/lib/overrides';
-import { applyOverrides, applyOverridesToWorkbook } from '@/lib/overrides';
-import { SignalsPreviewDialog } from '@/components/SignalsPreviewDialog';
-import type { RawWorkbook } from '@/lib/excel/raw';
-import type { Override } from '@/types/overrides';
-import type { IbmapsState } from '@/hooks/useFileImport';
-import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapters/bac-mbm';
-import { workbookRowsToKnxRawSignals } from '@/lib/ibmaps/reverseAdapters/knx-mbm';
-import { workbookRowsToBACKNXSignals } from '@/lib/ibmaps/reverseAdapters/bac-knx';
-import { workbookRowsToMBSKNXSignals } from '@/lib/ibmaps/reverseAdapters/mbs-knx';
-import { workbookRowsToKNXBACSignals } from '@/lib/ibmaps/reverseAdapters/knx-bac';
-import { workbookRowsToMBSBACSignals } from '@/lib/ibmaps/reverseAdapters/mbs-bac';
-import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generators/bac-mbm';
-import { addModbusSignals_KNX_MBM } from '@/lib/ibmaps/generators/knx-mbm';
-import { addKNXSignals_BAC_KNX } from '@/lib/ibmaps/generators/bac-knx';
-import { addSignals_MBS_KNX } from '@/lib/ibmaps/generators/mbs-knx';
-import { addSignals_KNX_BAC } from '@/lib/ibmaps/generators/knx-bac';
-import { addSignals_MBS_BAC } from '@/lib/ibmaps/generators/mbs-bac';
-import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
-import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
-import { parseIbmapsSignals_BAC_KNX } from '@/lib/ibmaps/parsers/bac-knx';
-import { parseIbmapsSignals_MBS_KNX } from '@/lib/ibmaps/parsers/mbs-knx';
-import { parseIbmapsSignals_KNX_BAC } from '@/lib/ibmaps/parsers/knx-bac';
-import { parseIbmapsSignals_MBS_BAC } from '@/lib/ibmaps/parsers/mbs-bac';
-import type { IbmapsDevice, RawSignal, KNXRawSignal, BACKNXRawSignal, MBSKNXRawSignal, KNXBACRawSignal, MBSBACRawSignal, BACnetClientDevice } from '@/lib/ibmaps/types';
+import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  extractSignalsFromWorkbook,
+  applyOverrides,
+  renumberSignals,
+} from "@/lib/overrides";
+import { SignalsPreviewDialog } from "@/components/SignalsPreviewDialog";
+import type { RawWorkbook } from "@/lib/excel/raw";
+import type { Override } from "@/types/overrides";
+import type { IbmapsState } from "@/hooks/useFileImport";
+import { workbookRowsToRawSignals } from "@/lib/ibmaps/reverseAdapters/bac-mbm";
+import { workbookRowsToKnxRawSignals } from "@/lib/ibmaps/reverseAdapters/knx-mbm";
+import { workbookRowsToBACKNXSignals } from "@/lib/ibmaps/reverseAdapters/bac-knx";
+import { workbookRowsToMBSKNXSignals } from "@/lib/ibmaps/reverseAdapters/mbs-knx";
+import { workbookRowsToKNXBACSignals } from "@/lib/ibmaps/reverseAdapters/knx-bac";
+import { workbookRowsToMBSBACSignals } from "@/lib/ibmaps/reverseAdapters/mbs-bac";
+import { addModbusSignals_BAC_MBM } from "@/lib/ibmaps/generators/bac-mbm";
+import { addModbusSignals_KNX_MBM } from "@/lib/ibmaps/generators/knx-mbm";
+import { addKNXSignals_BAC_KNX } from "@/lib/ibmaps/generators/bac-knx";
+import { addSignals_MBS_KNX } from "@/lib/ibmaps/generators/mbs-knx";
+import { addSignals_KNX_BAC } from "@/lib/ibmaps/generators/knx-bac";
+import { addSignals_MBS_BAC } from "@/lib/ibmaps/generators/mbs-bac";
+import { parseIbmapsSignals_BAC_MBM } from "@/lib/ibmaps/parsers/bac-mbm";
+import { parseIbmapsSignals_KNX_MBM } from "@/lib/ibmaps/parsers/knx-mbm";
+import { parseIbmapsSignals_BAC_KNX } from "@/lib/ibmaps/parsers/bac-knx";
+import { parseIbmapsSignals_MBS_KNX } from "@/lib/ibmaps/parsers/mbs-knx";
+import { parseIbmapsSignals_KNX_BAC } from "@/lib/ibmaps/parsers/knx-bac";
+import { parseIbmapsSignals_MBS_BAC } from "@/lib/ibmaps/parsers/mbs-bac";
+import type {
+  IbmapsDevice,
+  RawSignal,
+  KNXRawSignal,
+  BACKNXRawSignal,
+  MBSKNXRawSignal,
+  KNXBACRawSignal,
+  MBSBACRawSignal,
+  BACnetClientDevice,
+} from "@/lib/ibmaps/types";
 
 type ResultsSectionProps = {
   raw: RawWorkbook;
@@ -56,14 +68,38 @@ export function ResultsSection({
     [raw, templateId],
   );
 
-  // Apply overrides to get displayed signals
+  // Apply overrides to get displayed signals, then renumber
   const displayedSignals = useMemo(
-    () => applyOverrides(extractedSignals, overrides),
-    [extractedSignals, overrides],
+    () =>
+      renumberSignals(applyOverrides(extractedSignals, overrides), templateId),
+    [extractedSignals, overrides, templateId],
   );
 
+  const addDeleteOverrides = (signalIds: string[]) => {
+    if (signalIds.length === 0) return;
+
+    setOverrides((prev) => {
+      const alreadyDeleted = new Set(
+        prev
+          .filter((override) => override.type === "delete")
+          .map((override) => override.signalId),
+      );
+
+      const uniqueNewDeletes = signalIds
+        .filter((signalId) => !alreadyDeleted.has(signalId))
+        .map((signalId) => ({ type: "delete" as const, signalId }));
+
+      if (uniqueNewDeletes.length === 0) return prev;
+      return [...prev, ...uniqueNewDeletes];
+    });
+  };
+
   const handleDelete = (signalId: string) => {
-    setOverrides((prev) => [...prev, { type: 'delete', signalId }]);
+    addDeleteOverrides([signalId]);
+  };
+
+  const handleDeleteMany = (signalIds: string[]) => {
+    addDeleteOverrides(signalIds);
   };
 
   const handleReset = () => {
@@ -81,19 +117,19 @@ export function ResultsSection({
     try {
       // If no pending export (no new signals), just download the original ibmaps
       if (!pendingExport) {
-        const blob = new Blob([originalIbmaps.content], { type: 'text/xml' });
+        const blob = new Blob([originalIbmaps.content], { type: "text/xml" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         const filenameMap: Record<string, string> = {
-          'bacnet-server__modbus-master': 'IN-BAC-MBM.ibmaps',
-          'knx__modbus-master': 'IN-KNX-MBM.ibmaps',
-          'bacnet-server__knx': 'IN-BAC-KNX.ibmaps',
-          'modbus-slave__knx': 'IN-MBS-KNX.ibmaps',
-          'knx__bacnet-client': 'IN-KNX-BAC.ibmaps',
-          'modbus-slave__bacnet-client': 'IN-MBS-BAC.ibmaps',
+          "bacnet-server__modbus-master": "IN-BAC-MBM.ibmaps",
+          "knx__modbus-master": "IN-KNX-MBM.ibmaps",
+          "bacnet-server__knx": "IN-BAC-KNX.ibmaps",
+          "modbus-slave__knx": "IN-MBS-KNX.ibmaps",
+          "knx__bacnet-client": "IN-KNX-BAC.ibmaps",
+          "modbus-slave__bacnet-client": "IN-MBS-BAC.ibmaps",
         };
-        a.download = filenameMap[templateId] || 'export.ibmaps';
+        a.download = filenameMap[templateId] || "export.ibmaps";
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -101,24 +137,28 @@ export function ResultsSection({
         return;
       }
 
-      const workbookWithOverrides = applyOverridesToWorkbook(
-        raw,
-        overrides,
-        templateId,
-      );
+      // Use UNMODIFIED raw workbook to extract new signal rows.
+      // Delete overrides are applied by filtering (not mutating the workbook)
+      // to avoid shifting row positions and causing duplicate/misaligned signals.
+      const signalsSheet = raw.sheets.find((s) => s.name === "Signals");
+      if (!signalsSheet) throw new Error("Signals sheet not found");
 
-      // Get Signals sheet
-      const signalsSheet = workbookWithOverrides.sheets.find(
-        (s) => s.name === 'Signals',
-      );
-      if (!signalsSheet) throw new Error('Signals sheet not found');
-
-      // Calculate range for the newest rows at the bottom of the sheet
       const totalRows = signalsSheet.rows.length;
       const count = pendingExport.signalsCount;
       const startIdx = totalRows - count;
 
-      if (startIdx < 0) throw new Error('Invalid row count calculation');
+      if (startIdx < 0) throw new Error("Invalid row count calculation");
+
+      // Identify which new signals survive delete overrides
+      const allExtracted = extractSignalsFromWorkbook(raw, templateId);
+      const newExtracted = allExtracted.slice(-count);
+      const deletedIds = new Set(
+        overrides.filter((o) => o.type === "delete").map((o) => o.signalId),
+      );
+      const keepMask = newExtracted.map((s) => !deletedIds.has(s.id));
+
+      const filterSurviving = <T,>(signals: T[]): T[] =>
+        signals.filter((_, i) => keepMask[i]);
 
       // Find max device index for new device creation
       const maxDeviceIndex = originalIbmaps.devices.reduce(
@@ -131,13 +171,14 @@ export function ResultsSection({
       let newXml: string;
 
       // Route based on template type
-      if (templateId === 'knx__modbus-master') {
+      if (templateId === "knx__modbus-master") {
         // KNX → Modbus Master flow
-        const newSignals = workbookRowsToKnxRawSignals(
+        const allNewSignals = workbookRowsToKnxRawSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const baseSignals = parseIbmapsSignals_KNX_MBM(
           originalIbmaps.content,
@@ -175,13 +216,14 @@ export function ResultsSection({
           normalizedSignals,
           newDevices,
         );
-      } else if (templateId === 'bacnet-server__knx') {
+      } else if (templateId === "bacnet-server__knx") {
         // BACnet Server → KNX flow
-        const newSignals = workbookRowsToBACKNXSignals(
+        const allNewSignals = workbookRowsToBACKNXSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const baseSignals = parseIbmapsSignals_BAC_KNX(
           originalIbmaps.content,
@@ -190,24 +232,40 @@ export function ResultsSection({
           (max, s) => Math.max(max, s.idxExternal),
           -1,
         );
+
+        // Renumber BACnet instances per type to keep them contiguous
+        const nextInstByType = new Map<number, number>();
+        for (const s of baseSignals) {
+          const cur = nextInstByType.get(s.bacnet.type) ?? -1;
+          nextInstByType.set(s.bacnet.type, Math.max(cur, s.bacnet.instance));
+        }
+        for (const [t, m] of nextInstByType) nextInstByType.set(t, m + 1);
+
         const normalizedSignals: BACKNXRawSignal[] = newSignals.map(
-          (signal, index) => ({
-            ...signal,
-            idxExternal: baseMaxId + 1 + index,
-          }),
+          (signal, index) => {
+            const type = signal.bacnet.type;
+            const instance = nextInstByType.get(type) ?? 0;
+            nextInstByType.set(type, instance + 1);
+            return {
+              ...signal,
+              idxExternal: baseMaxId + 1 + index,
+              bacnet: { ...signal.bacnet, instance },
+            };
+          },
         );
 
         newXml = addKNXSignals_BAC_KNX(
           originalIbmaps.content,
           normalizedSignals,
         );
-      } else if (templateId === 'modbus-slave__knx') {
+      } else if (templateId === "modbus-slave__knx") {
         // Modbus Slave → KNX flow
-        const newSignals = workbookRowsToMBSKNXSignals(
+        const allNewSignals = workbookRowsToMBSKNXSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const baseSignals = parseIbmapsSignals_MBS_KNX(
           originalIbmaps.content,
@@ -223,17 +281,15 @@ export function ResultsSection({
           }),
         );
 
-        newXml = addSignals_MBS_KNX(
-          originalIbmaps.content,
-          normalizedSignals,
-        );
-      } else if (templateId === 'knx__bacnet-client') {
+        newXml = addSignals_MBS_KNX(originalIbmaps.content, normalizedSignals);
+      } else if (templateId === "knx__bacnet-client") {
         // KNX → BACnet Client flow
-        const newSignals = workbookRowsToKNXBACSignals(
+        const allNewSignals = workbookRowsToKNXBACSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const parseResult = parseIbmapsSignals_KNX_BAC(originalIbmaps.content);
         const baseSignals = parseResult.signals;
@@ -264,27 +320,30 @@ export function ResultsSection({
         );
 
         // Create new BACnet device
-        const newBacnetDevices: BACnetClientDevice[] = [{
-          index: newDeviceIdx,
-          name: `Device ${newDeviceIdx}`,
-          enabled: true,
-          ip: '192.168.100.10',
-          port: 47808,
-          objInstance: newDeviceIdx,
-        }];
+        const newBacnetDevices: BACnetClientDevice[] = [
+          {
+            index: newDeviceIdx,
+            name: `Device ${newDeviceIdx}`,
+            enabled: true,
+            ip: "192.168.100.10",
+            port: 47808,
+            objInstance: newDeviceIdx,
+          },
+        ];
 
         newXml = addSignals_KNX_BAC(
           originalIbmaps.content,
           normalizedSignals,
           newBacnetDevices,
         );
-      } else if (templateId === 'modbus-slave__bacnet-client') {
+      } else if (templateId === "modbus-slave__bacnet-client") {
         // Modbus Slave → BACnet Client flow
-        const newSignals = workbookRowsToMBSBACSignals(
+        const allNewSignals = workbookRowsToMBSBACSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const parseResult = parseIbmapsSignals_MBS_BAC(originalIbmaps.content);
         const baseSignals = parseResult.signals;
@@ -315,14 +374,16 @@ export function ResultsSection({
         );
 
         // Create new BACnet device
-        const newBacnetDevices: BACnetClientDevice[] = [{
-          index: newDeviceIdx,
-          name: `Device ${newDeviceIdx}`,
-          enabled: true,
-          ip: '192.168.100.10',
-          port: 47808,
-          objInstance: newDeviceIdx,
-        }];
+        const newBacnetDevices: BACnetClientDevice[] = [
+          {
+            index: newDeviceIdx,
+            name: `Device ${newDeviceIdx}`,
+            enabled: true,
+            ip: "192.168.100.10",
+            port: 47808,
+            objInstance: newDeviceIdx,
+          },
+        ];
 
         newXml = addSignals_MBS_BAC(
           originalIbmaps.content,
@@ -331,11 +392,12 @@ export function ResultsSection({
         );
       } else {
         // BACnet → Modbus Master flow (default)
-        const newSignals = workbookRowsToRawSignals(
+        const allNewSignals = workbookRowsToRawSignals(
           signalsSheet,
           startIdx,
           count,
         );
+        const newSignals = filterSurviving(allNewSignals);
 
         const baseSignals = parseIbmapsSignals_BAC_MBM(
           originalIbmaps.content,
@@ -344,11 +406,26 @@ export function ResultsSection({
           (max: number, s: RawSignal) => Math.max(max, s.idxExternal),
           -1,
         );
+
+        // Renumber BACnet instances per type to keep them contiguous
+        const nextInstByType = new Map<number, number>();
+        for (const s of baseSignals) {
+          const cur = nextInstByType.get(s.bacnet.type) ?? -1;
+          nextInstByType.set(s.bacnet.type, Math.max(cur, s.bacnet.instance));
+        }
+        for (const [t, m] of nextInstByType) nextInstByType.set(t, m + 1);
+
         const normalizedSignals: RawSignal[] = newSignals.map(
-          (signal, index) => ({
-            ...signal,
-            idxExternal: baseMaxId + 1 + index,
-          }),
+          (signal, index) => {
+            const type = signal.bacnet.type;
+            const instance = nextInstByType.get(type) ?? 0;
+            nextInstByType.set(type, instance + 1);
+            return {
+              ...signal,
+              idxExternal: baseMaxId + 1 + index,
+              bacnet: { ...signal.bacnet, instance },
+            };
+          },
         );
 
         // Check if we need to create a new device
@@ -376,27 +453,27 @@ export function ResultsSection({
       }
 
       // Download file
-      const blob = new Blob([newXml], { type: 'text/xml' });
+      const blob = new Blob([newXml], { type: "text/xml" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       // Dynamic filename based on template
       const filenameMap: Record<string, string> = {
-        'bacnet-server__modbus-master': 'IN-BAC-MBM-UPDATED.ibmaps',
-        'knx__modbus-master': 'IN-KNX-MBM-UPDATED.ibmaps',
-        'bacnet-server__knx': 'IN-BAC-KNX-UPDATED.ibmaps',
-        'modbus-slave__knx': 'IN-MBS-KNX-UPDATED.ibmaps',
-        'knx__bacnet-client': 'IN-KNX-BAC-UPDATED.ibmaps',
-        'modbus-slave__bacnet-client': 'IN-MBS-BAC-UPDATED.ibmaps',
+        "bacnet-server__modbus-master": "IN-BAC-MBM-UPDATED.ibmaps",
+        "knx__modbus-master": "IN-KNX-MBM-UPDATED.ibmaps",
+        "bacnet-server__knx": "IN-BAC-KNX-UPDATED.ibmaps",
+        "modbus-slave__knx": "IN-MBS-KNX-UPDATED.ibmaps",
+        "knx__bacnet-client": "IN-KNX-BAC-UPDATED.ibmaps",
+        "modbus-slave__bacnet-client": "IN-MBS-BAC-UPDATED.ibmaps",
       };
-      a.download = filenameMap[templateId] || 'UPDATED.ibmaps';
+      a.download = filenameMap[templateId] || "UPDATED.ibmaps";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch (e) {
-      console.error('Export error:', e);
-      alert('Error exporting IBMAPS (check console)');
+      console.error("Export error:", e);
+      alert("Error exporting IBMAPS (check console)");
     }
   };
 
@@ -460,6 +537,7 @@ export function ResultsSection({
         signals={displayedSignals}
         overrides={overrides}
         onDelete={handleDelete}
+        onDeleteMany={handleDeleteMany}
         onReset={handleReset}
       />
     </div>
