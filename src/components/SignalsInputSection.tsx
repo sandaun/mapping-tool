@@ -223,8 +223,9 @@ export function SignalsInputSection({
   };
 
   const handleLoadFromLibrary = (record: SignalLibraryRecord) => {
-    const csv = convertSignalsToCSV(record.signals);
-    parseAndAddSignals(csv);
+    // Signals from library are already DeviceSignal[] — bypass CSV round-trip
+    // which is lossy (commas in values break parsing, template mismatch risks)
+    generateWithSignals(record.signals, deviceCount);
   };
 
   const handleLoadSaved = () => {
