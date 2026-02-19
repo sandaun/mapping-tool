@@ -208,3 +208,73 @@ export async function POST(request: Request) {
     return Response.json({ error: message }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/signal-library?id=<uuid>
+ */
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) {
+      return Response.json({ error: 'id is required' }, { status: 400 });
+    }
+
+    const supabase = getWriteClient();
+    const { error } = await supabase
+      .from('signal_library')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.json({ deleted: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return Response.json({ error: message }, { status: 500 });
+  }
+}
+
+/**
+ * PATCH /api/signal-library
+ *
+ * Body (JSON): { id, manufacturer?, model? }
+ */
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, manufacturer, model } = body;
+
+    if (!id) {
+      return Response.json({ error: 'id is required' }, { status: 400 });
+    }
+
+    const updates: Record<string, string> = {};
+    if (manufacturer?.trim()) updates.manufacturer = manufacturer.trim();
+    if (model?.trim()) updates.model = model.trim();
+
+    if (Object.keys(updates).length === 0) {
+      return Response.json({ error: 'Nothing to update' }, { status: 400 });
+    }
+
+    const supabase = getWriteClient();
+    const { data, error } = await supabase
+      .from('signal_library')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      return Response.json({ error: error.message }, { status: 500 });
+    }
+
+    return Response.json({ record: data as SignalLibraryRecord });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return Response.json({ error: message }, { status: 500 });
+  }
+}

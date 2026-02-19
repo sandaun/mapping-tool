@@ -10,9 +10,12 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Save, SkipForward } from 'lucide-react';
+import { Loader2, Save, SkipForward, Pencil } from 'lucide-react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
-import type { SignalInputType } from '@/types/signal-library';
+import type {
+  SignalInputType,
+  SignalLibraryRecord,
+} from '@/types/signal-library';
 
 type SaveToLibraryDialogProps = {
   open: boolean;
@@ -31,6 +34,10 @@ type SaveToLibraryDialogProps = {
   sourceFileName?: string;
   sourceFileType?: string;
   sourceFileSize?: number;
+  /** If set, dialog enters "edit" mode — only manufacturer/model can be changed */
+  editRecord?: SignalLibraryRecord;
+  /** Called after a successful save/edit so the parent can refresh */
+  onSaved?: () => void;
 };
 
 export function SaveToLibraryDialog({
@@ -47,9 +54,14 @@ export function SaveToLibraryDialog({
   sourceFileName,
   sourceFileType,
   sourceFileSize,
+  editRecord,
+  onSaved,
 }: SaveToLibraryDialogProps) {
-  const [manufacturer, setManufacturer] = useState(defaultManufacturer ?? '');
-  const [model, setModel] = useState(defaultModel ?? '');
+  const isEditMode = !!editRecord;
+  const [manufacturer, setManufacturer] = useState(
+    editRecord?.manufacturer ?? defaultManufacturer ?? '',
+  );
+  const [model, setModel] = useState(editRecord?.model ?? defaultModel ?? '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -58,8 +70,8 @@ export function SaveToLibraryDialog({
   // Reset state when dialog opens
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
-      setManufacturer(defaultManufacturer ?? '');
-      setModel(defaultModel ?? '');
+      setManufacturer(editRecord?.manufacturer ?? defaultManufacturer ?? '');
+      setModel(editRecord?.model ?? defaultModel ?? '');
       setError(null);
       setSuccess(false);
       setDuplicate(false);
@@ -79,6 +91,30 @@ export function SaveToLibraryDialog({
     setDuplicate(false);
 
     try {
+      if (isEditMode) {
+        // PATCH mode — update manufacturer/model only
+        const res = await fetch('/api/signal-library', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editRecord.id,
+            manufacturer: manufacturer.trim(),
+            model: model.trim(),
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || 'Failed to update');
+        }
+
+        setSuccess(true);
+        onSaved?.();
+        setTimeout(() => handleOpenChange(false), 1200);
+        return;
+      }
+
+      // POST mode — create new record
       const res = await fetch('/api/signal-library', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -111,6 +147,7 @@ export function SaveToLibraryDialog({
       }
 
       setSuccess(true);
+      onSaved?.();
       setTimeout(() => handleOpenChange(false), 1200);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error');
@@ -124,12 +161,17 @@ export function SaveToLibraryDialog({
       <DialogContent className="sm:max-w-md border-slate-400 dark:border-slate-600">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Save className="w-5 h-5 text-primary" />
-            Save to Library
+            {isEditMode ? (
+              <Pencil className="w-5 h-5 text-primary" />
+            ) : (
+              <Save className="w-5 h-5 text-primary" />
+            )}
+            {isEditMode ? 'Edit Record' : 'Save to Library'}
           </DialogTitle>
           <DialogDescription>
-            Save these {signals.length} {inputType} signals so you can reuse
-            them later without re-parsing.
+            {isEditMode
+              ? `Update manufacturer/model for this ${inputType} record.`
+              : `Save these ${signals.length} ${inputType} signals so you can reuse them later without re-parsing.`}
           </DialogDescription>
         </DialogHeader>
 
@@ -201,15 +243,27 @@ export function SaveToLibraryDialog({
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-slate-200 dark:border-slate-700">
-          <Button
-            variant="neutral"
-            size="sm"
-            onClick={() => handleOpenChange(false)}
-            disabled={saving}
-          >
-            <SkipForward className="w-3.5 h-3.5 mr-1" />
-            Skip
-          </Button>
+          {!isEditMode && (
+            <Button
+              variant="neutral"
+              size="sm"
+              onClick={() => handleOpenChange(false)}
+              disabled={saving}
+            >
+              <SkipForward className="w-3.5 h-3.5 mr-1" />
+              Skip
+            </Button>
+          )}
+          {isEditMode && (
+            <Button
+              variant="neutral"
+              size="sm"
+              onClick={() => handleOpenChange(false)}
+              disabled={saving}
+            >
+              Cancel
+            </Button>
+          )}
           <Button
             variant="primary-action"
             size="sm"
@@ -220,10 +274,12 @@ export function SaveToLibraryDialog({
           >
             {saving ? (
               <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+            ) : isEditMode ? (
+              <Pencil className="w-3.5 h-3.5 mr-1.5" />
             ) : (
               <Save className="w-3.5 h-3.5 mr-1.5" />
             )}
-            {saving ? 'Saving...' : 'Save to Library'}
+            {saving ? 'Saving...' : isEditMode ? 'Update' : 'Save to Library'}
           </Button>
         </DialogFooter>
       </DialogContent>
