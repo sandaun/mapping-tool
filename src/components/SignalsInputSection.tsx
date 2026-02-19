@@ -222,6 +222,20 @@ export function SignalsInputSection({
     }
   };
 
+  const handleManualGenerate = () => {
+    // Capture signals before onGenerateSignals clears them
+    if (deviceSignals.length > 0 && inputType !== 'knx') {
+      setSaveDialogMeta({
+        signals: [...deviceSignals],
+        manufacturer: null,
+        model: null,
+        inputType,
+      });
+      setShowSaveDialog(true);
+    }
+    onGenerateSignals(deviceCount);
+  };
+
   const handleLoadFromLibrary = (record: SignalLibraryRecord) => {
     // Signals from library are already DeviceSignal[] — bypass CSV round-trip
     // which is lossy (commas in values break parsing, template mismatch risks)
@@ -486,7 +500,7 @@ export function SignalsInputSection({
                 />
               )}
               <Button
-                onClick={() => onGenerateSignals(deviceCount)}
+                onClick={handleManualGenerate}
                 disabled={busy}
                 variant="primary-action"
                 size="sm"

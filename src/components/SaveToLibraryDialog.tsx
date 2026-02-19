@@ -121,7 +121,7 @@ export function SaveToLibraryDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md border-slate-400 dark:border-slate-600">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Save className="w-5 h-5 text-primary" />
@@ -135,7 +135,7 @@ export function SaveToLibraryDialog({
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
+            <label className="text-sm font-medium text-foreground mb-1 block">
               Manufacturer / Brand
             </label>
             <input
@@ -149,7 +149,7 @@ export function SaveToLibraryDialog({
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
+            <label className="text-sm font-medium text-foreground mb-1 block">
               Model / Reference
             </label>
             <input
@@ -200,7 +200,7 @@ export function SaveToLibraryDialog({
           )}
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-slate-200 dark:border-slate-700">
           <Button
             variant="neutral"
             size="sm"

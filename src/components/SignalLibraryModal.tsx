@@ -107,7 +107,7 @@ export function SignalLibraryModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col">
+      <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col border-slate-400 dark:border-slate-600">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Library className="w-5 h-5 text-primary" />
@@ -155,7 +155,7 @@ export function SignalLibraryModal({
                   className={`w-full text-left rounded-lg border p-3 transition-colors ${
                     selectedId === record.id
                       ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                      : 'border-border hover:border-primary/50 hover:bg-muted/30'
+                      : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-500 dark:hover:bg-slate-800/50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -197,8 +197,8 @@ export function SignalLibraryModal({
 
           {/* Preview of selected record */}
           {selectedRecord && previewData.length > 0 && (
-            <div className="mt-4 rounded-lg border border-border bg-muted/20 p-3 space-y-2">
-              <p className="text-xs font-medium text-muted-foreground">
+            <div className="mt-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-3 space-y-2">
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                 Preview — {selectedRecord.signals.length} signals
               </p>
               <div className="max-h-40 overflow-auto">
@@ -208,7 +208,7 @@ export function SignalLibraryModal({
           )}
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0 pt-2 border-t border-border">
+        <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-slate-200 dark:border-slate-700">
           <Button
             variant="neutral"
             size="sm"
