@@ -3,7 +3,7 @@
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import type { Template } from '@/types/page.types';
 import { useSignalsInput } from '@/hooks/useSignalsInput';
-import { SignalLibraryModal } from '@/components/SignalLibraryModal';
+import { SignalLibraryModal } from '@/components/signal-library';
 import { SaveToLibraryDialog } from '@/components/SaveToLibraryDialog';
 import { SavedSignalsBanner } from './SavedSignalsBanner';
 import { AIUploadSection } from './AIUploadSection';
