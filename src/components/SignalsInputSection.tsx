@@ -1,15 +1,21 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import type { DeviceSignal } from "@/lib/deviceSignals";
-import type { Template } from "@/types/page.types";
-import type { EditableRow } from "@/types/overrides";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { EditableTable } from "./EditableTable";
-import { FileUploader } from "./FileUploader";
-import { AISignalReviewPanel } from "./AISignalReviewPanel";
-import { useAIParser } from "@/hooks/useAIParser";
+import { useState, useMemo } from 'react';
+import type { DeviceSignal } from '@/lib/deviceSignals';
+import type { Template, TemplateId } from '@/types/page.types';
+import type { EditableRow } from '@/types/overrides';
+import type {
+  SignalInputType,
+  SignalLibraryRecord,
+} from '@/types/signal-library';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { EditableTable } from './EditableTable';
+import { FileUploader } from './FileUploader';
+import { AISignalReviewPanel } from './AISignalReviewPanel';
+import { SignalLibraryModal } from './SignalLibraryModal';
+import { SaveToLibraryDialog } from './SaveToLibraryDialog';
+import { useAIParser } from '@/hooks/useAIParser';
 import {
   Loader2,
   ChevronDown,
@@ -20,8 +26,18 @@ import {
   Wand2,
   Check,
   Zap,
-} from "lucide-react";
-import { NumberStepper } from "@/components/ui/NumberStepper";
+  Library,
+} from 'lucide-react';
+import { NumberStepper } from '@/components/ui/NumberStepper';
+
+const TEMPLATE_INPUT_TYPE: Record<TemplateId, SignalInputType> = {
+  'bacnet-server__modbus-master': 'modbus',
+  'knx__modbus-master': 'modbus',
+  'modbus-slave__bacnet-client': 'bacnet',
+  'knx__bacnet-client': 'bacnet',
+  'modbus-slave__knx': 'knx',
+  'bacnet-server__knx': 'knx',
+};
 
 type SignalsInputSectionProps = {
   template: Template;
@@ -38,21 +54,21 @@ type SignalsInputSectionProps = {
   busy: boolean;
 };
 
-type AIProvider = "openai" | "groq" | "cerebras";
+type AIProvider = 'openai' | 'groq' | 'cerebras';
 
 const PROVIDER_LABEL: Record<AIProvider, string> = {
-  openai: "OpenAI",
-  groq: "Groq",
-  cerebras: "Cerebras",
+  openai: 'OpenAI',
+  groq: 'Groq',
+  cerebras: 'Cerebras',
 };
 
 function isAIProvider(value: unknown): value is AIProvider {
-  return value === "openai" || value === "groq" || value === "cerebras";
+  return value === 'openai' || value === 'groq' || value === 'cerebras';
 }
 
 function shouldUseOpenAIForFile(file: File): boolean {
   return (
-    file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")
+    file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
   );
 }
 
@@ -72,11 +88,27 @@ export function SignalsInputSection({
 }: SignalsInputSectionProps) {
   const [showManualInput, setShowManualInput] = useState(false);
   const [deviceCount, setDeviceCount] = useState(1);
-  const [analyzingProvider, setAnalyzingProvider] = useState("AI");
+  const [analyzingProvider, setAnalyzingProvider] = useState('AI');
+  const [showLibraryModal, setShowLibraryModal] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveDialogMeta, setSaveDialogMeta] = useState<{
+    signals: DeviceSignal[];
+    manufacturer: string | null;
+    model: string | null;
+    inputType: SignalInputType;
+    provider?: string;
+    warnings?: string[];
+    confidenceStats?: { high: number; medium: number; low: number };
+    fileName?: string;
+    fileType?: string;
+    fileSize?: number;
+  } | null>(null);
+
+  const inputType = TEMPLATE_INPUT_TYPE[template.id as TemplateId] ?? 'modbus';
 
   const [hasSavedData, setHasSavedData] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const saved = localStorage.getItem("ai-parsed-signals");
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem('ai-parsed-signals');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -85,10 +117,10 @@ export function SignalsInputSection({
         if (age < MAX_AGE) {
           return true;
         } else {
-          localStorage.removeItem("ai-parsed-signals");
+          localStorage.removeItem('ai-parsed-signals');
         }
       } catch {
-        localStorage.removeItem("ai-parsed-signals");
+        localStorage.removeItem('ai-parsed-signals');
       }
     }
     return false;
@@ -100,31 +132,31 @@ export function SignalsInputSection({
   const canClear =
     isParsed || csvInput.trim().length > 0 || inputWarnings.length > 0;
 
-  const isKNXFlow = template.id.includes("knx");
+  const isKNXFlow = template.id.includes('knx');
 
   const signalsTableData: EditableRow[] = useMemo(() => {
     return deviceSignals.map((sig, index) => {
-      let type = "—";
-      let address: string | number = "—";
+      let type = '—';
+      let address: string | number = '—';
 
-      if ("objectType" in sig) {
+      if ('objectType' in sig) {
         type = sig.objectType;
         address = sig.instance;
-      } else if ("registerType" in sig) {
+      } else if ('registerType' in sig) {
         type = sig.registerType;
         address = sig.address;
-      } else if ("dpt" in sig) {
+      } else if ('dpt' in sig) {
         type = sig.dpt;
-        address = "groupAddress" in sig ? sig.groupAddress : "—";
+        address = 'groupAddress' in sig ? sig.groupAddress : '—';
       }
 
       return {
         id: `signal-${index}`,
-        Device: "deviceId" in sig ? sig.deviceId : "—",
+        Device: 'deviceId' in sig ? sig.deviceId : '—',
         Name: sig.signalName,
         Type: type,
         Address: String(address),
-        Units: "units" in sig ? (sig.units ?? "—") : "—",
+        Units: 'units' in sig ? (sig.units ?? '—') : '—',
       };
     });
   }, [deviceSignals]);
@@ -133,19 +165,19 @@ export function SignalsInputSection({
     if (shouldUseOpenAIForFile(file)) return PROVIDER_LABEL.openai;
 
     try {
-      const response = await fetch("/api/parse-file", { method: "GET" });
-      if (!response.ok) return "AI";
+      const response = await fetch('/api/parse-file', { method: 'GET' });
+      if (!response.ok) return 'AI';
 
       const data: unknown = await response.json();
       const provider =
-        typeof data === "object" && data !== null
+        typeof data === 'object' && data !== null
           ? (data as { currentProvider?: unknown }).currentProvider
           : undefined;
 
-      if (!isAIProvider(provider)) return "AI";
+      if (!isAIProvider(provider)) return 'AI';
       return PROVIDER_LABEL[provider];
     } catch {
-      return "AI";
+      return 'AI';
     }
   };
 
@@ -159,22 +191,59 @@ export function SignalsInputSection({
     if (signals) {
       generateWithSignals(signals, deviceCount);
 
+      // Trigger save-to-library dialog with AI metadata
+      if (state.status === 'review' && inputType !== 'knx') {
+        setSaveDialogMeta({
+          signals,
+          manufacturer: state.manufacturer,
+          model: state.model,
+          inputType,
+          provider: state.metadata?.provider,
+          warnings: state.warnings,
+          confidenceStats: state.metadata?.confidenceStats,
+          fileName: state.metadata?.fileName,
+          fileType: state.metadata?.fileType,
+          fileSize: state.metadata?.fileSize,
+        });
+        setShowSaveDialog(true);
+      }
+
       reset();
 
       const timestamp = Date.now();
       localStorage.setItem(
-        "ai-parsed-signals",
+        'ai-parsed-signals',
         JSON.stringify({
           signals,
-          fileName: state.status === "review" ? state.fileName : "unknown",
+          fileName: state.status === 'review' ? state.fileName : 'unknown',
           timestamp,
         }),
       );
     }
   };
 
+  const handleManualGenerate = () => {
+    // Capture signals before onGenerateSignals clears them
+    if (deviceSignals.length > 0 && inputType !== 'knx') {
+      setSaveDialogMeta({
+        signals: [...deviceSignals],
+        manufacturer: null,
+        model: null,
+        inputType,
+      });
+      setShowSaveDialog(true);
+    }
+    onGenerateSignals(deviceCount);
+  };
+
+  const handleLoadFromLibrary = (record: SignalLibraryRecord) => {
+    // Signals from library are already DeviceSignal[] — bypass CSV round-trip
+    // which is lossy (commas in values break parsing, template mismatch risks)
+    generateWithSignals(record.signals, deviceCount);
+  };
+
   const handleLoadSaved = () => {
-    const saved = localStorage.getItem("ai-parsed-signals");
+    const saved = localStorage.getItem('ai-parsed-signals');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -182,42 +251,42 @@ export function SignalsInputSection({
         parseAndAddSignals(csv);
         setHasSavedData(false);
       } catch {
-        localStorage.removeItem("ai-parsed-signals");
+        localStorage.removeItem('ai-parsed-signals');
       }
     }
   };
 
   const convertSignalsToCSV = (signals: DeviceSignal[]): string => {
-    if (signals.length === 0) return "";
+    if (signals.length === 0) return '';
 
     const firstSignal = signals[0];
 
-    if ("registerType" in firstSignal) {
+    if ('registerType' in firstSignal) {
       const headers =
-        "deviceId,signalName,registerType,address,dataType,units,description,mode,factor";
+        'deviceId,signalName,registerType,address,dataType,units,description,mode,factor';
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.deviceId},${sig.signalName},${sig.registerType},${sig.address},${sig.dataType},${sig.units || ""},${sig.description || ""},${sig.mode || ""},${sig.factor || ""}`;
+        return `${sig.deviceId},${sig.signalName},${sig.registerType},${sig.address},${sig.dataType},${sig.units || ''},${sig.description || ''},${sig.mode || ''},${sig.factor || ''}`;
       });
-      return [headers, ...rows].join("\n");
-    } else if ("objectType" in firstSignal) {
+      return [headers, ...rows].join('\n');
+    } else if ('objectType' in firstSignal) {
       const headers =
-        "deviceId,signalName,objectType,instance,units,description";
+        'deviceId,signalName,objectType,instance,units,description';
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.deviceId},${sig.signalName},${sig.objectType},${sig.instance},${sig.units || ""},${sig.description || ""}`;
+        return `${sig.deviceId},${sig.signalName},${sig.objectType},${sig.instance},${sig.units || ''},${sig.description || ''}`;
       });
-      return [headers, ...rows].join("\n");
-    } else if ("groupAddress" in firstSignal) {
-      const headers = "signalName,groupAddress,dpt,description";
+      return [headers, ...rows].join('\n');
+    } else if ('groupAddress' in firstSignal) {
+      const headers = 'signalName,groupAddress,dpt,description';
       const rows = signals.map((s) => {
         const sig = s as typeof firstSignal;
-        return `${sig.signalName},${sig.groupAddress},${sig.dpt},${sig.description || ""}`;
+        return `${sig.signalName},${sig.groupAddress},${sig.dpt},${sig.description || ''}`;
       });
-      return [headers, ...rows].join("\n");
+      return [headers, ...rows].join('\n');
     }
 
-    return "";
+    return '';
   };
 
   return (
@@ -245,13 +314,25 @@ export function SignalsInputSection({
         <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
           <Sparkles className="w-4 h-4 text-primary" />
           AI-Powered File Upload
+          {inputType !== 'knx' && (
+            <Button
+              variant="neutral"
+              size="sm"
+              className="ml-auto text-xs"
+              onClick={() => setShowLibraryModal(true)}
+              disabled={busy}
+            >
+              <Library className="w-3.5 h-3.5 mr-1" />
+              Load from Library
+            </Button>
+          )}
         </h3>
 
-        {state.status === "idle" && (
+        {state.status === 'idle' && (
           <FileUploader onFileSelect={handleFileSelect} disabled={busy} />
         )}
 
-        {state.status === "uploading" && (
+        {state.status === 'uploading' && (
           <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
             <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
             <p className="text-sm text-blue-800 dark:text-blue-300">
@@ -266,7 +347,7 @@ export function SignalsInputSection({
           </div>
         )}
 
-        {state.status === "parsing" && (
+        {state.status === 'parsing' && (
           <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
             <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
             <p className="text-sm text-blue-800 dark:text-blue-300 flex items-center justify-center gap-1.5">
@@ -279,14 +360,14 @@ export function SignalsInputSection({
           </div>
         )}
 
-        {state.status === "review" && (
+        {state.status === 'review' && (
           <AISignalReviewPanel
             signals={state.signals}
             aiWarnings={state.warnings}
             fileName={state.fileName}
             onAccept={handleAcceptSignals}
             onRetry={() => {
-              if (state.status === "review") {
+              if (state.status === 'review') {
                 reset();
               }
             }}
@@ -296,7 +377,7 @@ export function SignalsInputSection({
           />
         )}
 
-        {state.status === "error" && (
+        {state.status === 'error' && (
           <div className="rounded-lg border border-red-200 dark:border-red-400/30 bg-red-50 dark:bg-red-950/20 p-4">
             <p className="text-sm text-red-800 dark:text-red-300 font-medium">
               Error parsing file
@@ -419,7 +500,7 @@ export function SignalsInputSection({
                 />
               )}
               <Button
-                onClick={() => onGenerateSignals(deviceCount)}
+                onClick={handleManualGenerate}
                 disabled={busy}
                 variant="primary-action"
                 size="sm"
@@ -442,6 +523,32 @@ export function SignalsInputSection({
             <EditableTable data={signalsTableData} />
           </div>
         </div>
+      )}
+
+      {/* Signal Library Modal */}
+      <SignalLibraryModal
+        open={showLibraryModal}
+        onOpenChange={setShowLibraryModal}
+        inputType={inputType}
+        onLoad={handleLoadFromLibrary}
+      />
+
+      {/* Save to Library Dialog */}
+      {saveDialogMeta && (
+        <SaveToLibraryDialog
+          open={showSaveDialog}
+          onOpenChange={setShowSaveDialog}
+          signals={saveDialogMeta.signals}
+          inputType={saveDialogMeta.inputType}
+          defaultManufacturer={saveDialogMeta.manufacturer}
+          defaultModel={saveDialogMeta.model}
+          parserProvider={saveDialogMeta.provider}
+          parseWarnings={saveDialogMeta.warnings}
+          confidenceStats={saveDialogMeta.confidenceStats}
+          sourceFileName={saveDialogMeta.fileName}
+          sourceFileType={saveDialogMeta.fileType}
+          sourceFileSize={saveDialogMeta.fileSize}
+        />
       )}
     </div>
   );

@@ -120,16 +120,52 @@ export const ModbusSignalsResponseSchema = z.object({
   signals: z
     .array(ModbusSignalSchema)
     .describe('Array of extracted Modbus signals'),
+  manufacturer: z
+    .string()
+    .nullable()
+    .describe(
+      'Device manufacturer/brand if clearly present in the document. Set to null if not detected.',
+    ),
+  model: z
+    .string()
+    .nullable()
+    .describe(
+      'Device model/reference if clearly present in the document. Set to null if not detected.',
+    ),
 });
 
 export const BACnetSignalsResponseSchema = z.object({
   signals: z
     .array(BACnetSignalSchema)
     .describe('Array of extracted BACnet signals'),
+  manufacturer: z
+    .string()
+    .nullable()
+    .describe(
+      'Device manufacturer/brand if clearly present in the document. Set to null if not detected.',
+    ),
+  model: z
+    .string()
+    .nullable()
+    .describe(
+      'Device model/reference if clearly present in the document. Set to null if not detected.',
+    ),
 });
 
 export const KNXSignalsResponseSchema = z.object({
   signals: z.array(KNXSignalSchema).describe('Array of extracted KNX signals'),
+  manufacturer: z
+    .string()
+    .nullable()
+    .describe(
+      'Device manufacturer/brand if clearly present in the document. Set to null if not detected.',
+    ),
+  model: z
+    .string()
+    .nullable()
+    .describe(
+      'Device model/reference if clearly present in the document. Set to null if not detected.',
+    ),
 });
 
 // Type exports
