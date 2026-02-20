@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { EditableTable } from '@/components/EditableTable';
@@ -28,10 +29,33 @@ export function ParsedSignalsPanel({
   onGenerate,
   onClear,
 }: ParsedSignalsPanelProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const prevCountRef = useRef(0);
+
+  // Auto-scroll into view when signals first appear (0 → N)
+  useEffect(() => {
+    const wasEmpty = prevCountRef.current === 0;
+    prevCountRef.current = signalsCount;
+
+    if (wasEmpty && signalsCount > 0 && panelRef.current) {
+      // Small delay to let the DOM render before scrolling
+      const timer = setTimeout(() => {
+        panelRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [signalsCount]);
+
   if (signalsCount === 0) return null;
 
   return (
-    <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+    <div
+      ref={panelRef}
+      className="rounded-lg border border-border bg-muted/30 p-4 space-y-3"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Badge

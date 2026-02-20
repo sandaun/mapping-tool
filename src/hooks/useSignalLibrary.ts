@@ -12,7 +12,7 @@ import type { EditableRow } from '@/types/overrides';
 export interface UseSignalLibraryParams {
   open: boolean;
   inputType: SignalInputType;
-  onLoad: (record: SignalLibraryRecord) => void;
+  onLoad: (record: SignalLibraryRecord, deviceCount: number) => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -31,6 +31,7 @@ export function useSignalLibrary({
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [deviceCount, setDeviceCount] = useState(1);
 
   // Inline delete confirmation
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -112,10 +113,10 @@ export function useSignalLibrary({
 
   const handleLoad = useCallback(() => {
     if (selectedRecord) {
-      onLoad(selectedRecord);
+      onLoad(selectedRecord, deviceCount);
       onOpenChange(false);
     }
-  }, [selectedRecord, onLoad, onOpenChange]);
+  }, [selectedRecord, onLoad, onOpenChange, deviceCount]);
 
   const handleSearchKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -177,6 +178,10 @@ export function useSignalLibrary({
     editRecord,
     setEditRecord,
     fetchRecords,
+
+    // Device count
+    deviceCount,
+    setDeviceCount,
 
     // Actions
     handleLoad,

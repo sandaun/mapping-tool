@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { applyOverridesToWorkbook } from '@/lib/overrides';
 import { useFileImport } from '@/hooks/useFileImport';
 import { useTemplateManager } from '@/hooks/useTemplateManager';
@@ -58,6 +58,28 @@ export default function Home() {
     resetPendingExport,
   } = useSignalsWorkflow(selectedTemplate, raw, setRaw);
 
+  // ---------------------------------------------------------------------------
+  // Collapse state for steps
+  // ---------------------------------------------------------------------------
+
+  const [step1Collapsed, setStep1Collapsed] = useState(false);
+  const [step2Collapsed, setStep2Collapsed] = useState(false);
+
+  // Track previous pendingExport to detect transitions from null → non-null
+  const prevPendingExportRef = useRef(pendingExport);
+  useEffect(() => {
+    const wasNull = prevPendingExportRef.current === null;
+    const isNow = pendingExport !== null;
+
+    if (wasNull && isNow) {
+      // Signals just got generated → collapse steps 1 and 2
+      setStep1Collapsed(true);
+      setStep2Collapsed(true);
+    }
+
+    prevPendingExportRef.current = pendingExport;
+  }, [pendingExport]);
+
   // Handle template change with confirmation
   const handleTemplateChange = useCallback(
     (templateId: TemplateId) => {
@@ -67,6 +89,7 @@ export default function Home() {
       } else {
         // No pending changes - proceed directly
         setTemplateId(templateId);
+        setStep1Collapsed(true);
       }
     },
     [pendingExport, setTemplateId],
@@ -78,6 +101,9 @@ export default function Home() {
       resetPendingExport();
       setTemplateId(pendingTemplateId);
       setPendingTemplateId(null);
+      // Expand steps again when changing template
+      setStep1Collapsed(false);
+      setStep2Collapsed(false);
     }
   }, [pendingTemplateId, resetPendingExport, setTemplateId]);
 
@@ -172,6 +198,10 @@ export default function Home() {
           stepNumber={1}
           title="Gateway Templates"
           description="Select a gateway type to automatically load the template."
+          collapsible={!!raw}
+          collapsed={step1Collapsed}
+          onCollapsedChange={setStep1Collapsed}
+          collapsedLabel={selectedTemplate.label}
         >
           <TemplateSelector
             selectedTemplateId={selectedTemplateId}
@@ -190,6 +220,9 @@ export default function Home() {
             stepNumber={2}
             title="Import Device Signals"
             description="Parse signals from CSV or AI-extracted data."
+            collapsible
+            collapsed={step2Collapsed}
+            onCollapsedChange={setStep2Collapsed}
           >
             <SignalsInputSection
               template={selectedTemplate}

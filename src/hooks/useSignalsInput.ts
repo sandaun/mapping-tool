@@ -238,10 +238,10 @@ export function useSignalsInput(params: UseSignalsInputParams) {
   }, [deviceSignals, inputType, onGenerateSignals, deviceCount]);
 
   const handleLoadFromLibrary = useCallback(
-    (record: SignalLibraryRecord) => {
-      generateWithSignals(record.signals, deviceCount);
+    (record: SignalLibraryRecord, libraryDeviceCount: number) => {
+      generateWithSignals(record.signals, libraryDeviceCount);
     },
-    [generateWithSignals, deviceCount],
+    [generateWithSignals],
   );
 
   const handleLoadSaved = useCallback(() => {

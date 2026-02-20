@@ -92,6 +92,7 @@ export function SignalsInputSection(props: SignalsInputSectionProps) {
         onOpenChange={state.setShowLibraryModal}
         inputType={state.inputType}
         onLoad={state.handleLoadFromLibrary}
+        isKNXFlow={state.isKNXFlow}
       />
 
       {/* Save to Library Dialog */}
