@@ -56,8 +56,11 @@ export async function GET(request: Request) {
 
     if (q) {
       const norm = q.trim().toLowerCase().replace(/\s+/g, ' ');
+      // Escape double-quotes inside the value, then wrap in quotes
+      // to prevent PostgREST filter injection via reserved chars (, . : ( ) ")
+      const escaped = norm.replace(/"/g, '\\"');
       query = query.or(
-        `manufacturer_norm.ilike.%${norm}%,model_norm.ilike.%${norm}%`,
+        `manufacturer_norm.ilike."%${escaped}%",model_norm.ilike."%${escaped}%"`,
       );
     }
 
