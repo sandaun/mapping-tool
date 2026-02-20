@@ -8,7 +8,7 @@ import { useSignalsWorkflow } from '@/hooks/useSignalsWorkflow';
 import { TemplateSelector } from '@/components/TemplateSelector';
 import { ProtocolsInfo } from '@/components/ProtocolsInfo';
 import { SignalsInputSection } from '@/components/signals-input';
-import { ResultsSection } from '@/components/ResultsSection';
+import { ResultsSection } from '@/components/results-section';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
 import { Header } from '@/components/Header';
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
