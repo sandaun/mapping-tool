@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -67,9 +67,10 @@ export function SaveToLibraryDialog({
   const [success, setSuccess] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
 
-  // Reset state when dialog opens
-  const handleOpenChange = (isOpen: boolean) => {
-    if (isOpen) {
+  // Reset all form state whenever the dialog opens — covers both user-initiated
+  // and programmatic opens (where Radix onOpenChange is NOT called).
+  useEffect(() => {
+    if (open) {
       setManufacturer(editRecord?.manufacturer ?? defaultManufacturer ?? '');
       setModel(editRecord?.model ?? defaultModel ?? '');
       setError(null);
@@ -77,6 +78,13 @@ export function SaveToLibraryDialog({
       setDuplicate(false);
       setSaving(false);
     }
+    // We intentionally react only to `open` — the other deps are read at
+    // the moment the effect fires but should not trigger it independently.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Forward open/close to parent; state reset is handled by the useEffect above.
+  const handleOpenChange = (isOpen: boolean) => {
     onOpenChange(isOpen);
   };
 

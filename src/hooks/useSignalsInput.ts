@@ -258,6 +258,11 @@ export function useSignalsInput(params: UseSignalsInputParams) {
     }
   }, [parseAndAddSignals]);
 
+  const handleSaveDialogOpenChange = useCallback((isOpen: boolean) => {
+    setShowSaveDialog(isOpen);
+    if (!isOpen) setSaveDialogMeta(null);
+  }, []);
+
   // -----------------------------------------------------------------------
   // Public API
   // -----------------------------------------------------------------------
@@ -276,7 +281,7 @@ export function useSignalsInput(params: UseSignalsInputParams) {
     showLibraryModal,
     setShowLibraryModal,
     showSaveDialog,
-    setShowSaveDialog,
+    handleSaveDialogOpenChange,
     saveDialogMeta,
     hasSavedData,
 

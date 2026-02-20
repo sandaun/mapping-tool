@@ -98,7 +98,7 @@ export function SignalsInputSection(props: SignalsInputSectionProps) {
       {state.saveDialogMeta && (
         <SaveToLibraryDialog
           open={state.showSaveDialog}
-          onOpenChange={state.setShowSaveDialog}
+          onOpenChange={state.handleSaveDialogOpenChange}
           signals={state.saveDialogMeta.signals}
           inputType={state.saveDialogMeta.inputType}
           defaultManufacturer={state.saveDialogMeta.manufacturer}

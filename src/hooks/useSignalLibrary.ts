@@ -43,31 +43,37 @@ export function useSignalLibrary({
 
   // ------ API calls ------
 
-  const fetchRecords = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({ inputType });
-      if (search.trim()) params.set('q', search.trim());
+  const fetchRecords = useCallback(
+    async (searchQuery = '') => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams({ inputType });
+        if (searchQuery.trim()) params.set('q', searchQuery.trim());
 
-      const res = await fetch(`/api/signal-library?${params}`);
-      if (!res.ok) throw new Error('Failed to fetch library');
+        const res = await fetch(`/api/signal-library?${params}`);
+        if (!res.ok) throw new Error('Failed to fetch library');
 
-      const data = await res.json();
-      setRecords(data.records ?? []);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error loading library');
-    } finally {
-      setLoading(false);
-    }
-  }, [inputType, search]);
+        const data = await res.json();
+        setRecords(data.records ?? []);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Error loading library');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [inputType],
+  );
 
   useEffect(() => {
     if (open) {
       fetchRecords();
+      setSearch('');
       setSelectedId(null);
       setConfirmDeleteId(null);
     }
+    // Only react to open/close and inputType changes (via fetchRecords).
+    // search is intentionally excluded — search is triggered on Enter.
   }, [open, fetchRecords]);
 
   // ------ Derived data ------
@@ -114,10 +120,10 @@ export function useSignalLibrary({
   const handleSearchKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-        fetchRecords();
+        fetchRecords(search);
       }
     },
-    [fetchRecords],
+    [fetchRecords, search],
   );
 
   const handleToggleSelect = useCallback((id: string) => {
