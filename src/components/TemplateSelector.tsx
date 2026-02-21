@@ -5,7 +5,6 @@ import { useRef } from 'react';
 type TemplateSelectorProps = {
   selectedTemplateId: TemplateId;
   onTemplateChange: (id: TemplateId) => void;
-  onLoadTemplate: (templateId: TemplateId) => void;
   onCustomFileSelect: (file: File) => void;
   busy: boolean;
 };
@@ -13,15 +12,13 @@ type TemplateSelectorProps = {
 export function TemplateSelector({
   selectedTemplateId,
   onTemplateChange,
-  onLoadTemplate,
   onCustomFileSelect,
   busy,
 }: TemplateSelectorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleTemplateClick = async (templateId: TemplateId) => {
+  const handleTemplateClick = (templateId: TemplateId) => {
     onTemplateChange(templateId);
-    await onLoadTemplate(templateId);
   };
 
   const handleCustomClick = () => {

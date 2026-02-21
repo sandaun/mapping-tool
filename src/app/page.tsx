@@ -1,195 +1,53 @@
-'use client';
+"use client";
 
-import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
-import { applyOverridesToWorkbook } from '@/lib/overrides';
-import { useFileImport } from '@/hooks/useFileImport';
-import { useTemplateManager } from '@/hooks/useTemplateManager';
-import { useSignalsWorkflow } from '@/hooks/useSignalsWorkflow';
-import { TemplateSelector } from '@/components/TemplateSelector';
-import { ProtocolsInfo } from '@/components/ProtocolsInfo';
-import { SignalsInputSection } from '@/components/signals-input';
-import { ResultsSection } from '@/components/results-section';
-import { ErrorDisplay } from '@/components/ErrorDisplay';
-import { Header } from '@/components/Header';
-import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
-import { StepSection } from '@/components/ui/StepSection';
-import type { Override } from '@/types/overrides';
-import type { TemplateId } from '@/types/page.types';
+import { usePageOrchestrator } from "@/hooks/usePageOrchestrator";
+import { TemplateSelector } from "@/components/TemplateSelector";
+import { ProtocolsInfo } from "@/components/ProtocolsInfo";
+import { SignalsInputSection } from "@/components/signals-input";
+import { ResultsSection } from "@/components/results-section";
+import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { Header } from "@/components/Header";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { StepSection } from "@/components/ui/StepSection";
+
+// ---------------------------------------------------------------------------
+// Page (orchestrator — zero business logic)
+// ---------------------------------------------------------------------------
 
 export default function Home() {
-  // File import management
-  const {
-    raw,
-    setRaw,
-    protocols,
-    error,
-    busy,
-    importArrayBufferAsFile,
-    originalIbmaps,
-  } = useFileImport();
-
-  // Pending template change for confirmation dialog
-  const [pendingTemplateId, setPendingTemplateId] = useState<TemplateId | null>(
-    null,
-  );
-
-  // Template management - we'll handle confirmation in page.tsx
-  const {
-    selectedTemplateId,
-    selectedTemplate,
-    handleTemplateChange: setTemplateId,
-    loadTemplate,
-    loadCustomFile,
-  } = useTemplateManager(importArrayBufferAsFile, false);
-
-  // Signals workflow management
-  const {
-    csvInput,
-    deviceSignals,
-    inputWarnings,
-    pendingExport,
-    setCsvInput,
-    parseAndAddSignals,
-    handleParseCSV,
-    handleClearSignals,
-    handleGenerateSignals,
-    generateWithSignals,
-    resetPendingExport,
-  } = useSignalsWorkflow(selectedTemplate, raw, setRaw);
-
-  // ---------------------------------------------------------------------------
-  // Collapse state for steps
-  // ---------------------------------------------------------------------------
-
-  const [step1Collapsed, setStep1Collapsed] = useState(false);
-  const [step2Collapsed, setStep2Collapsed] = useState(false);
-
-  // Track previous pendingExport to detect transitions from null → non-null
-  const prevPendingExportRef = useRef(pendingExport);
-  useEffect(() => {
-    const wasNull = prevPendingExportRef.current === null;
-    const isNow = pendingExport !== null;
-
-    if (wasNull && isNow) {
-      // Signals just got generated → collapse steps 1 and 2
-      setStep1Collapsed(true);
-      setStep2Collapsed(true);
-    }
-
-    prevPendingExportRef.current = pendingExport;
-  }, [pendingExport]);
-
-  // Handle template change with confirmation
-  const handleTemplateChange = useCallback(
-    (templateId: TemplateId) => {
-      if (pendingExport) {
-        // There are pending changes - ask for confirmation
-        setPendingTemplateId(templateId);
-      } else {
-        // No pending changes - proceed directly
-        setTemplateId(templateId);
-        setStep1Collapsed(true);
-      }
-    },
-    [pendingExport, setTemplateId],
-  );
-
-  // Confirm template change
-  const handleConfirmTemplateChange = useCallback(() => {
-    if (pendingTemplateId) {
-      resetPendingExport();
-      setTemplateId(pendingTemplateId);
-      setPendingTemplateId(null);
-      // Expand steps again when changing template
-      setStep1Collapsed(false);
-      setStep2Collapsed(false);
-    }
-  }, [pendingTemplateId, resetPendingExport, setTemplateId]);
-
-  // Cancel template change
-  const handleCancelTemplateChange = useCallback(() => {
-    setPendingTemplateId(null);
-  }, []);
-
-  // Computed values
-  const sheetNames = useMemo(
-    () => (raw ? raw.sheets.map((s) => s.name) : []),
-    [raw],
-  );
-
-  // Event handlers
-  const handleCopyPrompt = () => {
-    navigator.clipboard.writeText(selectedTemplate.promptText);
-  };
-
-  const handleExport = async (overrides: Override[]) => {
-    if (!raw) return;
-
-    try {
-      const workbookToExport = applyOverridesToWorkbook(
-        raw,
-        overrides,
-        selectedTemplateId,
-      );
-
-      // Update timestamp to current date
-      const signalsSheet = workbookToExport.sheets.find(
-        (s) => s.name === 'Signals',
-      );
-      if (signalsSheet) {
-        // Find the row that contains 'Timestamp' in column A
-        const timestampRowIndex = signalsSheet.rows.findIndex(
-          (row) => row[0] === 'Timestamp',
-        );
-        if (timestampRowIndex !== -1) {
-          signalsSheet.rows[timestampRowIndex][1] =
-            new Date().toLocaleDateString();
-        }
-      }
-
-      const res = await fetch('/api/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workbookToExport),
-      });
-
-      if (!res.ok) {
-        throw new Error('Error exportant.');
-      }
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'export.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error('Export error:', e);
-    }
-  };
+  const state = usePageOrchestrator();
 
   return (
     <div className="bg-background">
       <Header />
 
-      {/* Loading overlay during template/file loading */}
-      <LoadingOverlay visible={busy} message="Loading template..." />
+      <LoadingOverlay visible={state.busy} message="Loading template..." />
 
       {/* Confirmation dialog for template change with pending signals */}
       <ConfirmDialog
-        open={pendingTemplateId !== null}
-        onOpenChange={(open) => !open && handleCancelTemplateChange()}
+        open={state.pendingTemplateId !== null}
+        onOpenChange={(open) => !open && state.handleCancelTemplateChange()}
         title="Unsaved changes"
-        description={`You have ${pendingExport?.signalsCount ?? 0} signals pending export. Changing template will discard them. Continue?`}
+        description={`You have ${state.pendingExport?.signalsCount ?? 0} signals pending export. Changing template will discard them. Continue?`}
         confirmText="Discard & Change"
         cancelText="Keep editing"
         confirmVariant="danger"
-        onConfirm={handleConfirmTemplateChange}
-        onCancel={handleCancelTemplateChange}
+        onConfirm={state.handleConfirmTemplateChange}
+        onCancel={state.handleCancelTemplateChange}
+      />
+
+      {/* Confirmation dialog for Reset Signals */}
+      <ConfirmDialog
+        open={state.showResetConfirm}
+        onOpenChange={(open) => !open && state.setShowResetConfirm(false)}
+        title="Reset signals"
+        description={`You have ${state.pendingExport?.signalsCount ?? 0} signals pending export. Resetting will reload the template and discard all generated signals. Continue?`}
+        confirmText="Reset"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={state.handleConfirmReset}
+        onCancel={() => state.setShowResetConfirm(false)}
       />
 
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
@@ -198,67 +56,65 @@ export default function Home() {
           stepNumber={1}
           title="Gateway Templates"
           description="Select a gateway type to automatically load the template."
-          collapsible={!!raw}
-          collapsed={step1Collapsed}
-          onCollapsedChange={setStep1Collapsed}
-          collapsedLabel={selectedTemplate.label}
+          collapsible={!!state.raw}
+          collapsed={state.step1Collapsed}
+          onCollapsedChange={state.setStep1Collapsed}
+          collapsedLabel={state.selectedTemplate.label}
         >
           <TemplateSelector
-            selectedTemplateId={selectedTemplateId}
-            onTemplateChange={handleTemplateChange}
-            onLoadTemplate={loadTemplate}
-            onCustomFileSelect={loadCustomFile}
-            busy={busy}
+            selectedTemplateId={state.selectedTemplateId}
+            onTemplateChange={state.handleTemplateChange}
+            onCustomFileSelect={state.loadCustomFile}
+            busy={state.busy}
           />
 
-          <ProtocolsInfo protocols={protocols} />
+          <ProtocolsInfo protocols={state.protocols} />
         </StepSection>
 
         {/* Step 2: Import device signals */}
-        {raw && (
+        {state.raw && (
           <StepSection
             stepNumber={2}
             title="Import Device Signals"
             description="Parse signals from CSV or AI-extracted data."
             collapsible
-            collapsed={step2Collapsed}
-            onCollapsedChange={setStep2Collapsed}
+            collapsed={state.step2Collapsed}
+            onCollapsedChange={state.setStep2Collapsed}
           >
             <SignalsInputSection
-              template={selectedTemplate}
-              csvInput={csvInput}
-              onCsvInputChange={setCsvInput}
-              onParseCSV={handleParseCSV}
-              parseAndAddSignals={parseAndAddSignals}
-              onCopyPrompt={handleCopyPrompt}
-              onGenerateSignals={handleGenerateSignals}
-              generateWithSignals={generateWithSignals}
-              onClearSignals={handleClearSignals}
-              deviceSignals={deviceSignals}
-              inputWarnings={inputWarnings}
-              busy={busy}
+              template={state.selectedTemplate}
+              csvInput={state.csvInput}
+              onCsvInputChange={state.setCsvInput}
+              onParseCSV={state.handleParseCSV}
+              parseAndAddSignals={state.parseAndAddSignals}
+              onCopyPrompt={state.handleCopyPrompt}
+              onGenerateSignals={state.handleGenerateSignals}
+              generateWithSignals={state.generateWithSignals}
+              onClearSignals={state.handleClearSignals}
+              deviceSignals={state.deviceSignals}
+              inputWarnings={state.inputWarnings}
+              busy={state.busy}
             />
           </StepSection>
         )}
 
-        {/* Errors */}
-        <ErrorDisplay error={error} />
+        <ErrorDisplay error={state.error} />
 
         {/* Step 3: Results */}
-        {raw && (
+        {state.raw && (
           <StepSection
             stepNumber={3}
             title="Generated Output"
-            description={`Sheets: ${sheetNames.join(', ')}`}
+            description={`Sheets: ${state.sheetNames.join(", ")}`}
           >
             <ResultsSection
-              raw={raw}
-              onExport={handleExport}
-              onReset={resetPendingExport}
-              busy={busy}
-              pendingExport={pendingExport}
-              templateId={selectedTemplateId}
-              originalIbmaps={originalIbmaps}
+              raw={state.raw}
+              onExport={state.handleExport}
+              onReset={state.handleResetRequest}
+              busy={state.busy}
+              pendingExport={state.pendingExport}
+              templateId={state.selectedTemplateId}
+              originalIbmaps={state.originalIbmaps}
             />
           </StepSection>
         )}
