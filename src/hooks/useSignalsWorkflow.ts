@@ -157,7 +157,7 @@ export const useSignalsWorkflow = (
         targetSheet,
       }));
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Error desconegut';
+      const message = e instanceof Error ? e.message : 'Unknown error';
       setInputWarnings((prev) => [...prev, message]);
     }
   };
