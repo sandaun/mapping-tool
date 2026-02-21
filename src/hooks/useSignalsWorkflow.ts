@@ -43,7 +43,7 @@ export const useSignalsWorkflow = (
     setInputWarnings([]);
 
     if (!csv.trim()) {
-      setInputWarnings(['El CSV està buit.']);
+      setInputWarnings(['CSV is empty or contains only headers.']);
       return;
     }
 
