@@ -43,25 +43,31 @@ export const PROVIDER_INFO: Record<
   },
 };
 
+// Default model per provider from environment
+const PROVIDER_DEFAULT_MODELS: Record<AIProvider, string> = {
+  openai: 'gpt-4o',
+  groq: 'llama-3.3-70b-versatile',
+  cerebras: 'llama3.1-8b',
+};
+
 // Get the AI model instance based on provider
 export function getAIModel(
   provider: AIProvider = DEFAULT_PROVIDER,
   model?: string,
 ): LanguageModel {
-  // Priority: 1) explicit model param, 2) AI_MODEL env, 3) provider default
-  const modelToUse = model || process.env.AI_MODEL;
+  // AI_MODEL env only applies to the DEFAULT_PROVIDER (avoid cross-provider model mismatch)
+  const envModel =
+    provider === DEFAULT_PROVIDER ? process.env.AI_MODEL : undefined;
+  const modelToUse = model || envModel || PROVIDER_DEFAULT_MODELS[provider];
 
   switch (provider) {
     case 'groq':
-      // Use: explicit > env > default Groq model
-      return groq(modelToUse || 'llama-3.3-70b-versatile');
+      return groq(modelToUse);
     case 'cerebras':
-      // Use: explicit > env > default Cerebras model
-      return cerebras(modelToUse || 'llama-3.3-70b');
+      return cerebras(modelToUse);
     case 'openai':
     default:
-      // Use: explicit > env > default OpenAI model
-      return openai(modelToUse || 'gpt-4o');
+      return openai(modelToUse);
   }
 }
 
@@ -179,6 +185,7 @@ For each signal, extract:
 IMPORTANT:
 - Extract ALL signals found in the document
 - Use confidence scores: high (>0.8), medium (0.6-0.8), low (<0.6)
+- Also detect manufacturer/brand and model/reference when clearly present
 - Do not invent data`,
 
   bacnet: `You are a building automation engineer extracting BACnet signals from device documentation.
@@ -197,6 +204,7 @@ For each signal, extract:
 IMPORTANT:
 - Extract ALL signals found in the document
 - Use confidence scores: high (>0.8), medium (0.6-0.8), low (<0.6)
+- Also detect manufacturer/brand and model/reference when clearly present
 - Do not invent data`,
 
   knx: `You are a building automation engineer extracting KNX signals from ETS exports or documentation.
@@ -212,14 +220,15 @@ For each signal, extract:
 IMPORTANT:
 - Skip entries with incomplete addresses like "2/-/-"
 - Use confidence scores: high (>0.8), medium (0.6-0.8), low (<0.6)
+- Also detect manufacturer/brand and model/reference when clearly present
 - Do not invent data`,
 } as const;
 
 // Confidence level thresholds
 export const CONFIDENCE_LEVELS = {
-  high: { min: 0.8, label: 'High', color: 'green', emoji: '🟢' },
-  medium: { min: 0.6, max: 0.8, label: 'Medium', color: 'yellow', emoji: '🟡' },
-  low: { max: 0.6, label: 'Low', color: 'red', emoji: '🔴' },
+  high: { min: 0.8, label: 'High', color: 'green' },
+  medium: { min: 0.6, max: 0.8, label: 'Medium', color: 'yellow' },
+  low: { max: 0.6, label: 'Low', color: 'red' },
 } as const;
 
 // Get confidence level for a score

@@ -22,6 +22,7 @@ export type Template = {
   id: TemplateId;
   label: string;
   href: string;
+  baseXlsxHref?: string;
   expectedSheets: readonly string[];
   promptText: string;
 };

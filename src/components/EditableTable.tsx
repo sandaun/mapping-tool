@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,36 +8,68 @@ import {
   getFilteredRowModel,
   flexRender,
   type ColumnDef,
+  type RowSelectionState,
   type SortingState,
-} from '@tanstack/react-table';
-import { Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import type { EditableRow } from '@/types/overrides';
+} from "@tanstack/react-table";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { EditableRow } from "@/types/overrides";
+import type { ReactNode } from "react";
 
 type EditableTableProps = {
   data: EditableRow[];
   onDelete?: (signalId: string) => void;
+  enableSelection?: boolean;
+  selectedRowIds?: string[];
+  onSelectedRowIdsChange?: (signalIds: string[]) => void;
+  /** Optional custom cell renderer. Return undefined to use default rendering. */
+  renderCell?: (
+    columnKey: string,
+    value: unknown,
+    row: EditableRow,
+  ) => ReactNode | undefined;
 };
 
-export function EditableTable({ data, onDelete }: EditableTableProps) {
+export function EditableTable({
+  data,
+  onDelete,
+  enableSelection = false,
+  selectedRowIds,
+  onSelectedRowIdsChange,
+  renderCell,
+}: EditableTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const lastClickedRowIdRef = useRef<string | null>(null);
+
+  const rowSelection = useMemo<RowSelectionState>(() => {
+    if (!enableSelection || !selectedRowIds) return {};
+
+    return selectedRowIds.reduce<RowSelectionState>((acc, signalId) => {
+      acc[signalId] = true;
+      return acc;
+    }, {});
+  }, [enableSelection, selectedRowIds]);
 
   // Generate columns dynamically from data
   const columns = useMemo<ColumnDef<EditableRow>[]>(() => {
     if (data.length === 0) return [];
 
     const firstRow = data[0];
-    const fields = Object.keys(firstRow).filter((key) => key !== 'id');
+    const fields = Object.keys(firstRow).filter(
+      (key) => key !== "id" && !key.startsWith("_"),
+    );
 
     const dataColumns: ColumnDef<EditableRow>[] = fields.map((field) => ({
       accessorKey: field,
       header: field,
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row: tableRow }) => {
         const value = getValue() as string | number;
+        const custom = renderCell?.(field, value, tableRow.original);
+        if (custom !== undefined) return custom;
 
         return (
           <div className="flex items-center justify-between">
-            <span className="text-sm">{String(value ?? '')}</span>
+            <span className="text-sm">{String(value ?? "")}</span>
           </div>
         );
       },
@@ -46,14 +78,17 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
     // Only add actions column if onDelete is provided
     if (onDelete) {
       const actionsColumn: ColumnDef<EditableRow> = {
-        id: 'actions',
-        header: 'Actions',
+        id: "actions",
+        header: "Actions",
         cell: ({ row }) => (
           <Button
             size="sm"
             variant="ghost"
             className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
-            onClick={() => onDelete(row.original.id)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(row.original.id);
+            }}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -63,7 +98,7 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
     }
 
     return dataColumns;
-  }, [data, onDelete]);
+  }, [data, onDelete, renderCell]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -72,9 +107,24 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getRowId: (row) => row.id,
+    enableRowSelection: enableSelection,
     onSortingChange: setSorting,
+    onRowSelectionChange: (updater) => {
+      if (!enableSelection || !onSelectedRowIdsChange) return;
+
+      const nextSelection =
+        typeof updater === "function" ? updater(rowSelection) : updater;
+
+      const nextSelectedSignalIds = Object.keys(nextSelection).filter(
+        (key) => nextSelection[key],
+      );
+
+      onSelectedRowIdsChange(nextSelectedSignalIds);
+    },
     state: {
       sorting,
+      rowSelection,
     },
   });
 
@@ -104,8 +154,8 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
                       <div
                         className={
                           header.column.getCanSort()
-                            ? 'cursor-pointer select-none hover:text-foreground'
-                            : ''
+                            ? "cursor-pointer select-none hover:text-foreground"
+                            : ""
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -114,8 +164,8 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
                           header.getContext(),
                         )}
                         {{
-                          asc: ' ↑',
-                          desc: ' ↓',
+                          asc: " ↑",
+                          desc: " ↓",
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
@@ -128,7 +178,47 @@ export function EditableTable({ data, onDelete }: EditableTableProps) {
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="border-b border-border last:border-0 hover:bg-muted/30"
+                className={`border-b border-border last:border-0 ${
+                  enableSelection ? "cursor-pointer select-none" : ""
+                } ${
+                  row.getIsSelected()
+                    ? "bg-primary/10 hover:bg-primary/15"
+                    : "hover:bg-muted/30"
+                }`}
+                onClick={(e) => {
+                  if (!enableSelection || !onSelectedRowIdsChange) return;
+
+                  if (e.shiftKey && lastClickedRowIdRef.current) {
+                    const visibleRows = table.getRowModel().rows;
+                    const lastIdx = visibleRows.findIndex(
+                      (r) => r.id === lastClickedRowIdRef.current,
+                    );
+                    const currentIdx = visibleRows.findIndex(
+                      (r) => r.id === row.id,
+                    );
+
+                    if (lastIdx !== -1 && currentIdx !== -1) {
+                      const start = Math.min(lastIdx, currentIdx);
+                      const end = Math.max(lastIdx, currentIdx);
+                      const currentIds = new Set(selectedRowIds ?? []);
+                      const isDeselecting = currentIds.has(row.id);
+
+                      for (let i = start; i <= end; i++) {
+                        if (isDeselecting) {
+                          currentIds.delete(visibleRows[i].id);
+                        } else {
+                          currentIds.add(visibleRows[i].id);
+                        }
+                      }
+
+                      onSelectedRowIdsChange([...currentIds]);
+                      return;
+                    }
+                  }
+
+                  row.toggleSelected();
+                  lastClickedRowIdRef.current = row.id;
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-4 py-2">

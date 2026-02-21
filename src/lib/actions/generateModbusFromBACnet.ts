@@ -35,9 +35,9 @@ const populateModbusColumns = (
   row[findCol('Format')] = getModbusFormat(dataType, bacnetSignal.objectType);
   row[findCol('Address')] = address;
   row[findCol('Bit')] =
-    bacnetSignal.objectType === 'BV' ? '0' : EXCEL_VALUES.EMPTY_KNX;
+    bacnetSignal.objectType === 'BV' ? '0' : '-';
   row[findCol('Read / Write')] = readWrite;
-  row[findCol('String Length')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('String Length')] = '-';
 };
 
 /**
@@ -61,7 +61,7 @@ const populateBACnetColumns = (
   row[findCol('Type')] = formatBACnetType(bacnetSignal.objectType);
   row[findCol('Instance')] = bacnetSignal.instance;
   row[findCol('Conv. Id')] = EXCEL_VALUES.EMPTY_KNX;
-  row[findCol('Conversions')] = EXCEL_VALUES.EMPTY_KNX;
+  row[findCol('Conversions')] = '-';
 };
 
 /**

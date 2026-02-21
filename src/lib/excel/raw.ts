@@ -106,14 +106,13 @@ export function workbookArrayBufferToRaw(
   return { sheets };
 }
 
-export function rawToXlsxBuffer(raw: RawWorkbook): Buffer {
+export function rawToXlsxBuffer(raw: RawWorkbook, includeHeaders: boolean = true): Buffer {
   const workbook = XLSX.utils.book_new();
 
   for (const sheet of raw.sheets) {
-    const aoa: unknown[][] = [
-      sheet.headers.map((h) => (h === null ? null : h)),
-      ...sheet.rows,
-    ];
+    const aoa: unknown[][] = includeHeaders
+      ? [sheet.headers.map((h) => (h === null ? null : h)), ...sheet.rows]
+      : [...sheet.rows];
 
     const ws = XLSX.utils.aoa_to_sheet(aoa, { sheetStubs: true });
     XLSX.utils.book_append_sheet(workbook, ws, sheet.name);

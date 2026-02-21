@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { parseDeviceSignalsCSV, type DeviceSignal } from '@/lib/deviceSignals';
+import {
+  parseDeviceSignalsCSV,
+  detectSignalProtocol,
+  getProtocolLabel,
+  type DeviceSignal,
+} from '@/lib/deviceSignals';
+import { TEMPLATE_INPUT_TYPE } from '@/lib/ai-providers';
+import type { TemplateId } from '@/types/page.types';
 import { generateBACnetFromModbus } from '@/lib/actions/generateBACnetFromModbus';
 import { generateModbusFromBACnet } from '@/lib/actions/generateModbusFromBACnet';
 import { generateKNXFromModbus } from '@/lib/actions/generateKNXFromModbus';
@@ -25,7 +32,7 @@ export const useSignalsWorkflow = (
 ) => {
   const [csvInput, setCsvInput] = useState('');
   const [deviceSignals, setDeviceSignals] = useState<DeviceSignal[]>([]);
-  const [parseWarnings, setParseWarnings] = useState<string[]>([]);
+  const [inputWarnings, setInputWarnings] = useState<string[]>([]);
   const [pendingExport, setPendingExport] = useState<PendingExport>(null);
 
   /**
@@ -33,16 +40,27 @@ export const useSignalsWorkflow = (
    * Pure function that doesn't depend on state
    */
   const parseAndAddSignals = (csv: string) => {
-    setParseWarnings([]);
+    setInputWarnings([]);
 
     if (!csv.trim()) {
-      setParseWarnings(['El CSV està buit.']);
+      setInputWarnings(['CSV is empty or contains only headers.']);
       return;
+    }
+
+    // Detect protocol mismatch before parsing
+    const detected = detectSignalProtocol(csv);
+    const expectedType = TEMPLATE_INPUT_TYPE[template.id as TemplateId];
+    const mismatchWarnings: string[] = [];
+
+    if (detected !== 'unknown' && expectedType && detected !== expectedType) {
+      mismatchWarnings.push(
+        `Protocol mismatch: the signals appear to be ${getProtocolLabel(detected)} format, but the selected template expects ${getProtocolLabel(expectedType)} signals. Please verify you're using the correct template or signal format.`,
+      );
     }
 
     const result = parseDeviceSignalsCSV(csv, template.id);
     setDeviceSignals((prev) => [...prev, ...result.signals]);
-    setParseWarnings(result.warnings);
+    setInputWarnings([...mismatchWarnings, ...result.warnings]);
   };
 
   /**
@@ -57,16 +75,16 @@ export const useSignalsWorkflow = (
    */
   const handleClearSignals = () => {
     setDeviceSignals([]);
-    setParseWarnings([]);
+    setInputWarnings([]);
     setCsvInput('');
   };
 
   /**
    * Generate signals and update workbook (uses current deviceSignals state)
    */
-  const handleGenerateSignals = () => {
+  const handleGenerateSignals = (deviceCount: number = 1) => {
     if (deviceSignals.length === 0) return;
-    generateWithSignals(deviceSignals);
+    generateWithSignals(deviceSignals, deviceCount);
 
     // Clear after generating (already done in generateWithSignals? No, it doesn't clear)
     setCsvInput('');
@@ -74,36 +92,56 @@ export const useSignalsWorkflow = (
   };
 
   /**
-   * Generate signals directly with provided signals (bypasses deviceSignals state)
-   * Used for AI workflow where we don't need the intermediate preview
+   * Dispatch signal generation to the correct action based on gateway type.
+   * Pure helper — does NOT mutate state.
    */
-  const generateWithSignals = (signals: DeviceSignal[]) => {
+  const dispatchGeneration = (
+    signals: DeviceSignal[],
+    workbook: RawWorkbook,
+  ) => {
+    if (template.id === 'bacnet-server__modbus-master') {
+      return generateBACnetFromModbus(signals, workbook, 'simple');
+    } else if (template.id === 'modbus-slave__bacnet-client') {
+      return generateModbusFromBACnet(signals, workbook, 'simple');
+    } else if (template.id === 'knx__modbus-master') {
+      return generateKNXFromModbus(signals, workbook);
+    } else if (template.id === 'knx__bacnet-client') {
+      return generateKNXFromBACnet(signals, workbook);
+    } else if (template.id === 'modbus-slave__knx') {
+      return generateModbusFromKNX(signals, workbook);
+    } else if (template.id === 'bacnet-server__knx') {
+      return generateBACnetServerFromKNX(signals, workbook);
+    }
+    throw new Error(`Gateway type not implemented yet: ${template.id}`);
+  };
+
+  /**
+   * Generate signals directly with provided signals (bypasses deviceSignals state).
+   * When deviceCount > 1, iterates N times — each pass reads the updated workbook
+   * so IDs, instances, and device numbers auto-increment correctly.
+   */
+  const generateWithSignals = (
+    signals: DeviceSignal[],
+    deviceCount: number = 1,
+  ) => {
     if (!raw || signals.length === 0) return;
 
     try {
-      let result;
+      let currentWorkbook = raw;
+      let totalRowsAdded = 0;
+      const allWarnings: string[] = [];
 
-      // Dispatch to correct action based on gateway type
-      if (template.id === 'bacnet-server__modbus-master') {
-        result = generateBACnetFromModbus(signals, raw, 'simple');
-      } else if (template.id === 'modbus-slave__bacnet-client') {
-        result = generateModbusFromBACnet(signals, raw, 'simple');
-      } else if (template.id === 'knx__modbus-master') {
-        result = generateKNXFromModbus(signals, raw);
-      } else if (template.id === 'knx__bacnet-client') {
-        result = generateKNXFromBACnet(signals, raw);
-      } else if (template.id === 'modbus-slave__knx') {
-        result = generateModbusFromKNX(signals, raw);
-      } else if (template.id === 'bacnet-server__knx') {
-        result = generateBACnetServerFromKNX(signals, raw);
-      } else {
-        throw new Error(`Gateway type not implemented yet: ${template.id}`);
+      for (let i = 0; i < deviceCount; i++) {
+        const result = dispatchGeneration(signals, currentWorkbook);
+        currentWorkbook = result.updatedWorkbook;
+        totalRowsAdded += result.rowsAdded;
+        allWarnings.push(...result.warnings);
       }
 
-      setRaw(result.updatedWorkbook);
+      setRaw(currentWorkbook);
 
-      if (result.warnings.length > 0) {
-        setParseWarnings((prev) => [...prev, ...result.warnings]);
+      if (allWarnings.length > 0) {
+        setInputWarnings((prev) => [...prev, ...allWarnings]);
       }
 
       // Determinar target sheet segons template
@@ -115,12 +153,12 @@ export const useSignalsWorkflow = (
 
       // Mostrar badge persistent
       setPendingExport((prev) => ({
-        signalsCount: (prev?.signalsCount ?? 0) + result.rowsAdded,
+        signalsCount: (prev?.signalsCount ?? 0) + totalRowsAdded,
         targetSheet,
       }));
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Error desconegut';
-      setParseWarnings((prev) => [...prev, message]);
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      setInputWarnings((prev) => [...prev, message]);
     }
   };
 
@@ -132,7 +170,7 @@ export const useSignalsWorkflow = (
     // State
     csvInput,
     deviceSignals,
-    parseWarnings,
+    inputWarnings,
     pendingExport,
     // Actions
     setCsvInput,

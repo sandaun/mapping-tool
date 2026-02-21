@@ -35,6 +35,64 @@ export type ParseResult = {
   warnings: string[];
 };
 
+// ---------------------------------------------------------------------------
+// Protocol detection from CSV headers
+// ---------------------------------------------------------------------------
+
+export type DetectedProtocol = 'modbus' | 'bacnet' | 'knx' | 'unknown';
+
+const MODBUS_MARKERS = ['registertype', 'datatype', 'address'];
+const BACNET_MARKERS = ['objecttype', 'instance'];
+const KNX_MARKERS = ['groupaddress', 'dpt'];
+
+/**
+ * Detect the signal protocol from CSV text by analysing headers and content.
+ * Returns the detected protocol or 'unknown' if it can't be determined.
+ */
+export function detectSignalProtocol(csvText: string): DetectedProtocol {
+  const lines = csvText.trim().split('\n');
+  if (lines.length === 0) return 'unknown';
+
+  const firstLine = lines[0].toLowerCase();
+
+  // Check headers first
+  const headers = firstLine.split(',').map((h) => h.trim());
+
+  const hasModbus =
+    MODBUS_MARKERS.filter((m) => headers.includes(m)).length >= 2;
+  const hasBACnet =
+    BACNET_MARKERS.filter((m) => headers.includes(m)).length >= 2;
+  const hasKNX = KNX_MARKERS.filter((m) => headers.includes(m)).length >= 1;
+
+  if (hasModbus) return 'modbus';
+  if (hasBACnet) return 'bacnet';
+  if (hasKNX) return 'knx';
+
+  // Heuristic: check for ETS-style KNX format (no standard headers, GA pattern like "2/1/0")
+  if (lines.length >= 2) {
+    const sampleLine = lines[1];
+    if (/\d+\/\d+\/\d+/.test(sampleLine) && /DPST|DPT/i.test(sampleLine)) {
+      return 'knx';
+    }
+  }
+
+  return 'unknown';
+}
+
+const PROTOCOL_LABELS: Record<DetectedProtocol, string> = {
+  modbus: 'Modbus',
+  bacnet: 'BACnet',
+  knx: 'KNX',
+  unknown: 'Unknown',
+};
+
+/**
+ * Get a human‑readable label for a detected protocol.
+ */
+export function getProtocolLabel(protocol: DetectedProtocol): string {
+  return PROTOCOL_LABELS[protocol];
+}
+
 function normalizeModbusRegisterType(raw: string): string {
   const value = raw.trim().toLowerCase();
 
@@ -88,7 +146,7 @@ export function parseDeviceSignalsCSV(
     | 'knx__modbus-master'
     | 'knx__bacnet-client'
     | 'modbus-slave__knx'
-    | 'bacnet-server__knx'
+    | 'bacnet-server__knx',
 ): ParseResult {
   // Special handling for ETS CSV format (modbus-slave__knx and bacnet-server__knx)
   if (
@@ -102,7 +160,7 @@ export function parseDeviceSignalsCSV(
   if (lines.length < 2) {
     return {
       signals: [],
-      warnings: ['El CSV està buit o només té capçaleres.'],
+      warnings: ['CSV is empty or contains only headers.'],
     };
   }
 
@@ -127,9 +185,7 @@ export function parseDeviceSignalsCSV(
     ];
     const missing = requiredCols.filter((col) => !headers.includes(col));
     if (missing.length > 0) {
-      warnings.push(
-        `Falten columnes obligatòries per Modbus: ${missing.join(', ')}`
-      );
+      warnings.push(`Missing required Modbus columns: ${missing.join(', ')}`);
       return { signals: [], warnings };
     }
 
@@ -168,9 +224,9 @@ export function parseDeviceSignalsCSV(
         !dataTypeRaw
       ) {
         warnings.push(
-          `Fila ${
+          `Row ${
             i + 2
-          }: camps obligatoris buits (deviceId, signalName, registerType, address, dataType).`
+          }: required fields are empty (deviceId, signalName, registerType, address, dataType).`,
         );
         continue;
       }
@@ -178,7 +234,7 @@ export function parseDeviceSignalsCSV(
       const address = parseInt(addressRaw, 10);
       if (isNaN(address)) {
         warnings.push(
-          `Fila ${i + 2}: address "${addressRaw}" no és un número.`
+          `Row ${i + 2}: address "${addressRaw}" is not a valid number.`,
         );
         continue;
       }
@@ -211,9 +267,7 @@ export function parseDeviceSignalsCSV(
     const requiredCols = ['deviceId', 'signalName', 'objectType', 'instance'];
     const missing = requiredCols.filter((col) => !headers.includes(col));
     if (missing.length > 0) {
-      warnings.push(
-        `Falten columnes obligatòries per BACnet: ${missing.join(', ')}`
-      );
+      warnings.push(`Missing required BACnet columns: ${missing.join(', ')}`);
       return { signals: [], warnings };
     }
 
@@ -240,9 +294,9 @@ export function parseDeviceSignalsCSV(
 
       if (!deviceId || !signalName || !objectType || !instanceRaw) {
         warnings.push(
-          `Fila ${
+          `Row ${
             i + 2
-          }: camps obligatoris buits (deviceId, signalName, objectType, instance).`
+          }: required fields are empty (deviceId, signalName, objectType, instance).`,
         );
         continue;
       }
@@ -250,7 +304,7 @@ export function parseDeviceSignalsCSV(
       const instance = parseInt(instanceRaw, 10);
       if (isNaN(instance)) {
         warnings.push(
-          `Fila ${i + 2}: instance "${instanceRaw}" no és un número.`
+          `Row ${i + 2}: instance "${instanceRaw}" is not a valid number.`,
         );
         continue;
       }
@@ -268,7 +322,7 @@ export function parseDeviceSignalsCSV(
   }
 
   if (signals.length === 0 && warnings.length === 0) {
-    warnings.push("No s'han pogut parsejar senyals.");
+    warnings.push('No signals could be parsed from the input.');
   }
 
   return { signals, warnings };
@@ -310,7 +364,7 @@ function parseETSCSVFormat(csvText: string): ParseResult {
     const dpt = normalizeDPT(dptRaw);
     if (!dpt) {
       warnings.push(
-        `Signal "${signalName}" no té DPT vàlid (${dptRaw}), s'omet.`
+        `Signal "${signalName}" has no valid DPT (${dptRaw}), skipped.`,
       );
       continue;
     }
@@ -324,7 +378,7 @@ function parseETSCSVFormat(csvText: string): ParseResult {
 
   if (signals.length === 0) {
     warnings.push(
-      "No s'han trobat signals vàlids al CSV d'ETS. Verifica el format."
+      'No valid signals found in the ETS CSV. Please verify the format.',
     );
   }
 

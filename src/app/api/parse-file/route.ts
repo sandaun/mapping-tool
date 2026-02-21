@@ -180,6 +180,8 @@ export async function POST(request: Request) {
     return Response.json({
       signals,
       warnings,
+      manufacturer: result.object.manufacturer ?? null,
+      model: result.object.model ?? null,
       metadata: {
         fileName: file.name,
         fileType: file.type,
@@ -194,13 +196,36 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown AI parsing error';
+
     // Log detailed error for debugging
     console.error('AI parsing error:', {
       name: error instanceof Error ? error.name : 'Unknown',
-      message: error instanceof Error ? error.message : String(error),
+      message: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
       error,
     });
+
+    // AI provider returned content that couldn't be converted to the requested schema
+    // (frequent with complex/unstructured files on non-vision providers)
+    if (
+      error instanceof Error &&
+      (error.name === 'NoObjectGeneratedError' ||
+        errorMessage.includes('No object generated') ||
+        errorMessage.includes('could not generate') ||
+        errorMessage.includes('schema'))
+    ) {
+      return Response.json(
+        {
+          error:
+            'The AI could not return a valid structured result for this file. Try with OpenAI or simplify the input file.',
+          code: 'UNSTRUCTURED_AI_OUTPUT',
+          message: errorMessage,
+        },
+        { status: 422 },
+      );
+    }
 
     // Handle specific error types
     if (error instanceof z.ZodError) {
@@ -228,14 +253,14 @@ export async function POST(request: Request) {
     // Check for API key issues
     if (
       error instanceof Error &&
-      (error.message.includes('API key') || error.message.includes('401'))
+      (errorMessage.includes('API key') || errorMessage.includes('401'))
     ) {
       return Response.json(
         {
           error:
             'API key is invalid or missing. Please check your configuration.',
           code: 'AUTH_ERROR',
-          message: error.message,
+          message: errorMessage,
         },
         { status: 401 },
       );
@@ -246,7 +271,7 @@ export async function POST(request: Request) {
         error:
           'Failed to parse file with AI. Please try again or use manual CSV input.',
         code: 'AI_ERROR',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: errorMessage,
       },
       { status: 500 },
     );

@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Platform="2" CreatedBy="IntesisMAPS" OEMCode="0" ProjectName="IN-MBS-KNX.ibmaps" ProjectDescription="Intesis KNX to Modbus Slave Gateway" DeviceOrderCode="IN701KNXxxx0000" ToolVersion="5.0.1217.9763" InternalProtocol="Modbus Slave" ExternalProtocol="KNX">
+  <Columns>
+    <InternalColumns>
+      <Column Name="#" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column Name="Description" SignalsEnabled="True" DiangosticEnabled="True" Width="250" />
+      <Column Name="Data Length" SignalsEnabled="True" DiangosticEnabled="False" Width="55" />
+      <Column Name="Format" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="Address" SignalsEnabled="True" DiangosticEnabled="True" Width="65" />
+      <Column Name="Bit" SignalsEnabled="True" DiangosticEnabled="False" Width="35" />
+      <Column Name="Read / Write" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column Name="String Length" SignalsEnabled="False" DiangosticEnabled="False" Width="55" />
+      <Column Name="Active" SignalsEnabled="True" DiangosticEnabled="False" Width="65" />
+    </InternalColumns>
+    <ExternalColumns>
+      <Column ProtIndex="0" Name="#" SignalsEnabled="False" DiangosticEnabled="False" Width="25" />
+      <Column ProtIndex="0" Name="DPT" SignalsEnabled="True" DiangosticEnabled="True" Width="200" />
+      <Column ProtIndex="0" Name="Group Address" SignalsEnabled="True" DiangosticEnabled="True" Width="100" />
+      <Column ProtIndex="0" Name="Additional Addresses" SignalsEnabled="True" DiangosticEnabled="True" Width="130" />
+      <Column ProtIndex="0" Name="U" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column ProtIndex="0" Name="T" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column ProtIndex="0" Name="Ri" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column ProtIndex="0" Name="W" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column ProtIndex="0" Name="R" SignalsEnabled="True" DiangosticEnabled="True" Width="25" />
+      <Column ProtIndex="0" Name="Priority" SignalsEnabled="False" DiangosticEnabled="False" Width="70" />
+    </ExternalColumns>
+    <ExtraColumns>
+      <Column Name="Conv. Id" SignalsEnabled="False" DiangosticEnabled="False" Width="100" />
+      <Column Name="Conversions" SignalsEnabled="False" DiangosticEnabled="False" Width="80" />
+    </ExtraColumns>
+  </Columns>
+  <Connection Pwd="admin" isUSB="False" Device="" Port="23" />
+  <Header Description="Intesis KNX to Modbus Slave Gateway" Version="1.2.26.0" CompatibilityVersion="0.0.0.0" CreationVersion="1.2.26.0" TimeStamp="-1" Endianess="False" LicenseMode="0" CompatibilityID="7" />
+  <IBOX Name="IN-MBS-KNX" IP="192.168.100.246" NetMask="255.255.255.0" Gateway="" DNS="" DNS2="" DHCP="True" Pwd="" ExtraProtocol="0">
+    <USBConfig GetLogs="True" GetProject="True" SaveProject="True" SaveFirm="True" SponsEnabled="True" CommsEnabled="True" DebugLevel="1" VerboseLevel="1" />
+    <TimeConfiguration Enabled="False" NtpAddress="" TimeZoneIndex="0" NtpUpdateTime="100" SetTimeInDownload="False" />
+    <SecurityConfiguration TCPDisabled="False" UDPDisabled="False" CustomPort="False" Port="23" />
+    <CertUpdateConfig CAUpdateDisabled="False" CAUpdatePeriod="168" CAUpdateUrl="https://api-tools.intesis.com/" />
+    <Conversions>
+      <Conversion Id="0" Description="Limit to 0-100" Type="0" Param1="2" Param2="4" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Limit to 0-255" Type="0" Param1="2" Param2="4" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="Is not 0" Type="0" Param1="0" Param2="1" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Is higher than 100" Type="0" Param1="0" Param2="3" Param3="100" Param4="100" />
+      <Conversion Id="0" Description="Only positive values" Type="0" Param1="2" Param2="3" Param3="0" Param4="100" />
+      <Conversion Id="0" Description="Celsius to Fahrenheit" Type="2" Param1="-1" Param2="18" Param3="32" Param4="0" />
+      <Conversion Id="0" Description="Fahrenheit to Celsius" Type="2" Param1="-3" Param2="555" Param3="-17.78" Param4="0" />
+      <Conversion Id="0" Description="x10" Type="2" Param1="1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/10" Type="2" Param1="-1" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x100" Type="2" Param1="2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/100" Type="2" Param1="-2" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="x1000" Type="2" Param1="3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="/1000" Type="2" Param1="-3" Param2="1" Param3="0" Param4="0" />
+      <Conversion Id="0" Description="0-100 to 0-255" Type="1" Param1="0" Param2="100" Param3="0" Param4="255" />
+      <Conversion Id="0" Description="0-255 to 0-100" Type="1" Param1="0" Param2="255" Param3="0" Param4="100" />
+    </Conversions>
+    <RemapLUTs />
+  </IBOX>
+  <InternalProtocol ProtocolType="Modbus Slave">
+    <Media>0</Media>
+    <ByteOrder>0</ByteOrder>
+    <UpdateCOV>True</UpdateCOV>
+    <AddressMode>0</AddressMode>
+    <TempSetpoint>0</TempSetpoint>
+    <FormatExtra>0</FormatExtra>
+    <CommErrorTout>180</CommErrorTout>
+    <RegisterBase>0</RegisterBase>
+    <RTUConfig ConnectionType="1" Baudrate="9600" DataBits="8" Parity="0" StopBits="1" SlaveNumber="1" />
+    <TCPConfig Port="502" KeepAlive="10" />
+    <TemperatureSensor Enabled="False" />
+    <SlaveAddressMode>0</SlaveAddressMode>
+    <Signals>
+      <Signal ID="0">
+        <isEnabled>True</isEnabled>
+        <idxConfig>0</idxConfig>
+        <idxExternal>0</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>OnOff_Read</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>0</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="1">
+        <isEnabled>True</isEnabled>
+        <idxConfig>1</idxConfig>
+        <idxExternal>1</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>OnOff_Write</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>1</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="2">
+        <isEnabled>True</isEnabled>
+        <idxConfig>2</idxConfig>
+        <idxExternal>2</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>OnOff_ReadWrite</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>2</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="3">
+        <isEnabled>True</isEnabled>
+        <idxConfig>3</idxConfig>
+        <idxExternal>3</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_Read</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>3</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="4">
+        <isEnabled>True</isEnabled>
+        <idxConfig>4</idxConfig>
+        <idxExternal>4</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_Write</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>4</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="5">
+        <isEnabled>True</isEnabled>
+        <idxConfig>5</idxConfig>
+        <idxExternal>5</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Counter_ReadWrite</Description>
+        <LenBits>16</LenBits>
+        <Format>0</Format>
+        <Bit>-1</Bit>
+        <Address>5</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="6">
+        <isEnabled>True</isEnabled>
+        <idxConfig>6</idxConfig>
+        <idxExternal>6</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_0</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>0</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="7">
+        <isEnabled>True</isEnabled>
+        <idxConfig>7</idxConfig>
+        <idxExternal>7</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_1</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>1</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="8">
+        <isEnabled>True</isEnabled>
+        <idxConfig>8</idxConfig>
+        <idxExternal>8</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>BitField_2</Description>
+        <LenBits>16</LenBits>
+        <Format>4</Format>
+        <Bit>2</Bit>
+        <Address>6</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="9">
+        <isEnabled>True</isEnabled>
+        <idxConfig>9</idxConfig>
+        <idxExternal>9</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_Read</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>7</Address>
+        <ReadWrite>0</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="10">
+        <isEnabled>True</isEnabled>
+        <idxConfig>10</idxConfig>
+        <idxExternal>10</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_Write</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>9</Address>
+        <ReadWrite>1</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+      <Signal ID="11">
+        <isEnabled>True</isEnabled>
+        <idxConfig>11</idxConfig>
+        <idxExternal>11</idxExternal>
+        <IdxOperations></IdxOperations>
+        <IdxFilters></IdxFilters>
+        <Description>Temperature_ReadWrite</Description>
+        <LenBits>32</LenBits>
+        <Format>3</Format>
+        <Bit>-1</Bit>
+        <Address>11</Address>
+        <ReadWrite>2</ReadWrite>
+        <StringLength>-1</StringLength>
+        <SlaveIndex>-1</SlaveIndex>
+        <GatewayIndex>-1</GatewayIndex>
+        <Virtual Status="False" Fixed="False" General="False" />
+        <ProtocolIndex>0</ProtocolIndex>
+      </Signal>
+    </Signals>
+  </InternalProtocol>
+  <ExternalProtocol ProtocolType="KNX">
+    <IndAddress>65535</IndAddress>
+    <Keys Key1="0001" Key2="0002" Key3="0003" />
+    <UseExtendedAddresses>False</UseExtendedAddresses>
+    <KNXObject ID="0">
+      <Description>OnOff_Read</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="1" String="0/0/1" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>0</IdxExternal>
+      <IdxConfig>0</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="1">
+      <Description>OnOff_Write</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="2" String="0/0/2" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>1</IdxExternal>
+      <IdxConfig>1</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="2">
+      <Description>OnOff_ReadWrite</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="257" />
+      <SendingAddress Value="3" String="0/0/3" />
+      <ListeningAddresses>
+        <Address Value="20" String="0/0/20" />
+      </ListeningAddresses>
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>2</IdxExternal>
+      <IdxConfig>2</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="3">
+      <Description>Counter_Read</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="4" String="0/0/4" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>3</IdxExternal>
+      <IdxConfig>3</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="4">
+      <Description>Counter_Write</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="5" String="0/0/5" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>4</IdxExternal>
+      <IdxConfig>4</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="5">
+      <Description>Counter_ReadWrite</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="1290" />
+      <SendingAddress Value="6" String="0/0/6" />
+      <ListeningAddresses>
+        <Address Value="21" String="0/0/21" />
+      </ListeningAddresses>
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>5</IdxExternal>
+      <IdxConfig>5</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="6">
+      <Description>BitField_0</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="258" />
+      <SendingAddress Value="7" String="0/0/7" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>6</IdxExternal>
+      <IdxConfig>6</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="7">
+      <Description>BitField_1</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="258" />
+      <SendingAddress Value="8" String="0/0/8" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>7</IdxExternal>
+      <IdxConfig>7</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="8">
+      <Description>BitField_2</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="258" />
+      <SendingAddress Value="9" String="0/0/9" />
+      <ListeningAddresses />
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>8</IdxExternal>
+      <IdxConfig>8</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="9">
+      <Description>Temperature_Read</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="10" String="0/0/10" />
+      <ListeningAddresses />
+      <Flags U="True" T="False" Ri="False" W="True" R="False" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>9</IdxExternal>
+      <IdxConfig>9</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="10">
+      <Description>Temperature_Write</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="11" String="0/0/11" />
+      <ListeningAddresses />
+      <Flags U="False" T="True" Ri="False" W="False" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>10</IdxExternal>
+      <IdxConfig>10</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+    <KNXObject ID="11">
+      <Description>Temperature_ReadWrite</Description>
+      <Active>True</Active>
+      <AllowedValues></AllowedValues>
+      <DPT Value="2305" />
+      <SendingAddress Value="12" String="0/0/12" />
+      <ListeningAddresses>
+        <Address Value="22" String="0/0/22" />
+      </ListeningAddresses>
+      <Flags U="True" T="True" Ri="False" W="True" R="True" />
+      <Priority>3</Priority>
+      <UpdateGA>0</UpdateGA>
+      <IdxExternal>11</IdxExternal>
+      <IdxConfig>11</IdxConfig>
+      <IdxOperations></IdxOperations>
+      <IdxFilters></IdxFilters>
+      <Virtual Status="False" Fixed="False" General="False" />
+      <ProtocolIndex>0</ProtocolIndex>
+    </KNXObject>
+  </ExternalProtocol>
+</Project>

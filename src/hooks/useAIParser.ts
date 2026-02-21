@@ -12,21 +12,33 @@ export type AIParseStatus =
       signals: (DeviceSignal & { confidence: number })[];
       warnings: string[];
       fileName: string;
+      manufacturer: string | null;
+      model: string | null;
+      inputType: string;
+      metadata: AIParseMetadata;
     }
   | { status: 'error'; error: string; code?: string };
+
+interface AIParseMetadata {
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  signalsFound: number;
+  confidenceStats: {
+    high: number;
+    medium: number;
+    low: number;
+  };
+  provider: string;
+  inputType: string;
+}
 
 interface AIParseResult {
   signals: DeviceSignal[];
   warnings: string[];
-  metadata: {
-    fileName: string;
-    signalsFound: number;
-    confidenceStats: {
-      high: number;
-      medium: number;
-      low: number;
-    };
-  };
+  manufacturer: string | null;
+  model: string | null;
+  metadata: AIParseMetadata;
 }
 
 interface UseAIParserReturn {
@@ -90,6 +102,10 @@ export function useAIParser(): UseAIParserReturn {
           signals: result.signals as (DeviceSignal & { confidence: number })[],
           warnings: result.warnings,
           fileName: result.metadata.fileName,
+          manufacturer: result.manufacturer,
+          model: result.model,
+          inputType: result.metadata.inputType,
+          metadata: result.metadata,
         });
       } catch (error) {
         setState({
