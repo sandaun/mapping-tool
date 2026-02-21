@@ -54,7 +54,7 @@ export const useSignalsWorkflow = (
 
     if (detected !== 'unknown' && expectedType && detected !== expectedType) {
       mismatchWarnings.push(
-        `Protocol mismatch: the signals appear to be ${getProtocolLabel(detected)} format, but the selected template expects ${getProtocolLabel(expectedType as 'modbus' | 'bacnet' | 'knx')} signals. Please verify you're using the correct template or signal format.`,
+        `Protocol mismatch: the signals appear to be ${getProtocolLabel(detected)} format, but the selected template expects ${getProtocolLabel(expectedType)} signals. Please verify you're using the correct template or signal format.`,
       );
     }
 
