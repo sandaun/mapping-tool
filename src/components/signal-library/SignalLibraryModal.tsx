@@ -9,6 +9,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { NumberStepper } from '@/components/ui/NumberStepper';
 import { SaveToLibraryDialog } from '@/components/SaveToLibraryDialog';
 import { Library, Download } from 'lucide-react';
 import type {
@@ -20,14 +21,15 @@ import { LibrarySearchBar } from './LibrarySearchBar';
 import { LibraryContent } from './LibraryContent';
 
 // ---------------------------------------------------------------------------
-// Props (public API — unchanged from the original component)
+// Props (public API)
 // ---------------------------------------------------------------------------
 
 export type SignalLibraryModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   inputType: SignalInputType;
-  onLoad: (record: SignalLibraryRecord) => void;
+  onLoad: (record: SignalLibraryRecord, deviceCount: number) => void;
+  isKNXFlow?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -35,7 +37,7 @@ export type SignalLibraryModalProps = {
 // ---------------------------------------------------------------------------
 
 export function SignalLibraryModal(props: SignalLibraryModalProps) {
-  const { open, onOpenChange, inputType } = props;
+  const { open, onOpenChange, inputType, isKNXFlow = false } = props;
   const state = useSignalLibrary(props);
 
   return (
@@ -80,7 +82,7 @@ export function SignalLibraryModal(props: SignalLibraryModalProps) {
             />
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-slate-200 dark:border-slate-700">
+          <DialogFooter className="flex-row! justify-between! items-center pt-4 border-t border-slate-200 dark:border-slate-700">
             <Button
               variant="neutral"
               size="sm"
@@ -88,15 +90,25 @@ export function SignalLibraryModal(props: SignalLibraryModalProps) {
             >
               Cancel
             </Button>
-            <Button
-              variant="primary-action"
-              size="sm"
-              onClick={state.handleLoad}
-              disabled={!state.selectedRecord}
-            >
-              <Download className="w-3.5 h-3.5 mr-1.5" />
-              Load Signals
-            </Button>
+            <div className="flex items-center gap-3">
+              {!isKNXFlow && (
+                <NumberStepper
+                  value={state.deviceCount}
+                  onChange={state.setDeviceCount}
+                  min={1}
+                  max={99}
+                />
+              )}
+              <Button
+                variant="primary-action"
+                size="sm"
+                onClick={state.handleLoad}
+                disabled={!state.selectedRecord}
+              >
+                <Download className="w-3.5 h-3.5 mr-1.5" />
+                Load Signals
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
