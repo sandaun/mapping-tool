@@ -21,7 +21,7 @@ type StepSectionProps = {
   /** Callback when collapsed toggles (only used when collapsible is true) */
   onCollapsedChange?: (collapsed: boolean) => void;
   /** Label shown inline when collapsed (e.g. selected template name) */
-  collapsedLabel?: string;
+  collapsedLabel?: React.ReactNode;
 };
 
 /**
@@ -100,9 +100,15 @@ export function StepSection({
               {title}
             </h2>
             {isCollapsed && collapsedLabel && (
-              <span className="inline-flex items-center rounded-md bg-primary/8 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20 transition-opacity duration-300">
-                {collapsedLabel}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {typeof collapsedLabel === 'string' ? (
+                  <span className="inline-flex items-center rounded-md bg-primary/8 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20 transition-opacity duration-300">
+                    {collapsedLabel}
+                  </span>
+                ) : (
+                  collapsedLabel
+                )}
+              </div>
             )}
           </div>
           {description && !isCollapsed && (
