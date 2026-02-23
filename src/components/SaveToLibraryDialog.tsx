@@ -10,7 +10,15 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Save, SkipForward, Pencil } from 'lucide-react';
+import {
+  Loader2,
+  Save,
+  SkipForward,
+  Pencil,
+  X,
+  SaveAll,
+  PenLine,
+} from 'lucide-react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import type {
   SignalInputType,
@@ -227,6 +235,7 @@ export function SaveToLibraryDialog({
                   onClick={() => setDuplicate(false)}
                   className="text-xs"
                 >
+                  <PenLine className="w-3.5 h-3.5 mr-1.5" />
                   Change name
                 </Button>
                 <Button
@@ -235,6 +244,7 @@ export function SaveToLibraryDialog({
                   onClick={() => handleSave(true)}
                   className="text-xs"
                 >
+                  <SaveAll className="w-3.5 h-3.5 mr-1.5" />
                   Overwrite
                 </Button>
               </div>
@@ -269,6 +279,7 @@ export function SaveToLibraryDialog({
               onClick={() => handleOpenChange(false)}
               disabled={saving}
             >
+              <X className="w-3.5 h-3.5 mr-1.5" />
               Cancel
             </Button>
           )}

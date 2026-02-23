@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { EditableTable } from '@/components/EditableTable';
 import { NumberStepper } from '@/components/ui/NumberStepper';
-import { Check, Zap } from 'lucide-react';
+import { Check, Zap, Trash2 } from 'lucide-react';
 import type { EditableRow } from '@/types/overrides';
 
 interface ParsedSignalsPanelProps {
@@ -94,6 +94,7 @@ export function ParsedSignalsPanel({
             variant="neutral"
             size="sm"
           >
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
             Clear
           </Button>
         </div>

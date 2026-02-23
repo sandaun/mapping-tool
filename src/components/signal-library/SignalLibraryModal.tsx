@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { NumberStepper } from '@/components/ui/NumberStepper';
 import { SaveToLibraryDialog } from '@/components/SaveToLibraryDialog';
-import { Library, Download } from 'lucide-react';
+import { Library, Download, X } from 'lucide-react';
 import type {
   SignalLibraryRecord,
   SignalInputType,
@@ -88,6 +88,7 @@ export function SignalLibraryModal(props: SignalLibraryModalProps) {
               size="sm"
               onClick={() => onOpenChange(false)}
             >
+              <X className="w-3.5 h-3.5 mr-1.5" />
               Cancel
             </Button>
             <div className="flex items-center gap-3">

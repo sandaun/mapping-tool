@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Eye, RotateCcw, FileSpreadsheet, Download } from 'lucide-react';
 
 interface ExportActionsBarProps {
   busy: boolean;
@@ -20,35 +21,18 @@ export function ExportActionsBar({
   onReset,
 }: ExportActionsBarProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <Button
         onClick={onPreview}
         variant="neutral"
         disabled={busy}
         className="text-xs"
       >
-        Preview &amp; Edit Signals
+        <Eye className="w-3.5 h-3.5 mr-1.5" />
+        Preview & Edit Signals
       </Button>
-      <Button
-        onClick={onExport}
-        disabled={busy}
-        variant="secondary-action"
-        className="text-xs"
-      >
-        Export Template
-      </Button>
-      {hasOriginalIbmaps && (
-        <Button
-          onClick={onExportIbmaps}
-          disabled={busy}
-          variant="primary-action"
-          className="text-xs"
-        >
-          Export IBMAPS
-        </Button>
-      )}
 
-      {/* Spacer to push reset to the right */}
+      {/* Spacer to push reset and export buttons to the right */}
       <div className="flex-1" />
 
       {/* Reset button - only show when there are pending signals */}
@@ -59,7 +43,30 @@ export function ExportActionsBar({
           variant="danger"
           className="text-xs"
         >
+          <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
           Reset Signals
+        </Button>
+      )}
+
+      <Button
+        onClick={onExport}
+        disabled={busy}
+        variant="secondary-action"
+        className="text-xs"
+      >
+        <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5" />
+        Export Template
+      </Button>
+
+      {hasOriginalIbmaps && (
+        <Button
+          onClick={onExportIbmaps}
+          disabled={busy}
+          variant="primary-action"
+          className="text-xs"
+        >
+          <Download className="w-3.5 h-3.5 mr-1.5" />
+          Export IBMAPS
         </Button>
       )}
     </div>

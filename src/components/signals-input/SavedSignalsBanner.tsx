@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Save } from 'lucide-react';
+import { Save, FolderOpen } from 'lucide-react';
 
 interface SavedSignalsBannerProps {
   onLoadSaved: () => void;
@@ -20,6 +20,7 @@ export function SavedSignalsBanner({ onLoadSaved }: SavedSignalsBannerProps) {
         size="sm"
         className="text-xs"
       >
+        <FolderOpen className="w-3.5 h-3.5 mr-1.5" />
         Load saved
       </Button>
     </div>
