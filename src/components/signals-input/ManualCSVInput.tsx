@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, FileText, Wand2 } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Wand2,
+  Copy,
+  Play,
+} from 'lucide-react';
 
 interface ManualCSVInputProps {
   csvInput: string;
@@ -55,6 +62,7 @@ export function ManualCSVInput({
               size="sm"
               className="mt-3 text-xs"
             >
+              <Copy className="w-3.5 h-3.5 mr-1.5" />
               Copy Prompt
             </Button>
           </details>
@@ -74,6 +82,7 @@ export function ManualCSVInput({
               variant="primary-action"
               size="sm"
             >
+              <Play className="w-3.5 h-3.5 mr-1.5" />
               Parse Signals
             </Button>
           </div>

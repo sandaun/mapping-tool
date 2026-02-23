@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { usePageOrchestrator } from "@/hooks/usePageOrchestrator";
-import { TemplateSelector } from "@/components/TemplateSelector";
-import { ProtocolsInfo } from "@/components/ProtocolsInfo";
-import { SignalsInputSection } from "@/components/signals-input";
-import { ResultsSection } from "@/components/results-section";
-import { ErrorDisplay } from "@/components/ErrorDisplay";
-import { Header } from "@/components/Header";
-import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { StepSection } from "@/components/ui/StepSection";
+import { usePageOrchestrator } from '@/hooks/usePageOrchestrator';
+import { TemplateSelector } from '@/components/TemplateSelector';
+import { CollapsedProtocolLabel } from '@/components/ProtocolUI';
+import { SignalsInputSection } from '@/components/signals-input';
+import { ResultsSection } from '@/components/results-section';
+import { ErrorDisplay } from '@/components/ErrorDisplay';
+import { Header } from '@/components/Header';
+import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { StepSection } from '@/components/ui/StepSection';
 
 // ---------------------------------------------------------------------------
 // Page (orchestrator — zero business logic)
@@ -55,11 +55,14 @@ export default function Home() {
         <StepSection
           stepNumber={1}
           title="Gateway Templates"
-          description="Select a gateway type to automatically load the template."
           collapsible={!!state.raw}
           collapsed={state.step1Collapsed}
           onCollapsedChange={state.setStep1Collapsed}
-          collapsedLabel={state.selectedTemplate.label}
+          collapsedLabel={
+            <CollapsedProtocolLabel
+              templateLabel={state.selectedTemplate.label}
+            />
+          }
         >
           <TemplateSelector
             selectedTemplateId={state.selectedTemplateId}
@@ -67,8 +70,6 @@ export default function Home() {
             onCustomFileSelect={state.loadCustomFile}
             busy={state.busy}
           />
-
-          <ProtocolsInfo protocols={state.protocols} />
         </StepSection>
 
         {/* Step 2: Import device signals */}
@@ -105,7 +106,7 @@ export default function Home() {
           <StepSection
             stepNumber={3}
             title="Generated Output"
-            description={`Sheets: ${state.sheetNames.join(", ")}`}
+            description={`Sheets: ${state.sheetNames.join(', ')}`}
           >
             <ResultsSection
               raw={state.raw}

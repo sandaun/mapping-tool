@@ -1,32 +1,32 @@
-## Descripció
+## Description
 
-<!-- Explica el canvi en 1-2 frases. Què fa? Per quina raó? -->
+<!-- Explain the change in 1-2 sentences. What does it do? Why? -->
 
-## Tipus de canvi
+## Type of Change
 
-<!-- Marca amb una X el que correspongui -->
+<!-- Mark with an X as appropriate -->
 
-- [ ] `feat` — Nova funcionalitat (minor bump)
-- [ ] `fix` — Correcció d'error (patch bump)
-- [ ] `refactor` — Refactor sense canvi de comportament
-- [ ] `perf` — Millora de rendiment
-- [ ] `chore` — Manteniment, deps, config
-- [ ] `docs` — Documentació
-- [ ] `ci` — Canvis de CI/CD
+- [ ] `feat` — New feature (minor bump)
+- [ ] `fix` — Bug fix (patch bump)
+- [ ] `refactor` — Refactor without behavior change
+- [ ] `perf` — Performance improvement
+- [ ] `chore` — Maintenance, deps, config
+- [ ] `docs` — Documentation
+- [ ] `ci` — CI/CD changes
 
 ## ⚠️ Breaking change?
 
-<!-- Si el format .ibmaps canvia, si l'schema de Supabase canvia, o qualsevol cosa
-     que requereixi acció manual en desplegar. Si no n'hi ha, esborra aquesta secció. -->
+<!-- If the .ibmaps format changes, if the Supabase schema changes, or anything
+     that requires manual action when deploying. If there is none, delete this section. -->
 
-**Descripció del breaking change:**
+**Breaking change description:**
 
-**Acció requerida en desplegar:**
+**Action required when deploying:**
 
 ## Checklist
 
-- [ ] El codi compila sense errors (`pnpm build`)
-- [ ] Els tests passen (`pnpm test:run`)
-- [ ] El linting passa (`pnpm lint`)
-- [ ] He revisat els canvis de l'schema de Supabase (si aplica)
-- [ ] He actualitzat la documentació (si aplica)
+- [ ] Code compiles without errors (`npm run build`)
+- [ ] Tests pass (`npm run test`)
+- [ ] Linting passes (`npm run lint`)
+- [ ] Reviewed Supabase schema changes (if applicable)
+- [ ] Updated documentation (if applicable)

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { FileUploader } from '@/components/FileUploader';
 import { AISignalReviewPanel } from '@/components/AISignalReviewPanel';
-import { Loader2, Sparkles, Library } from 'lucide-react';
+import { Loader2, Sparkles, Library, RotateCcw } from 'lucide-react';
 import type { AIParseStatus } from '@/hooks/useAIParser';
 
 interface AIUploadSectionProps {
@@ -114,6 +114,7 @@ export function AIUploadSection({
             size="sm"
             className="mt-3 text-xs"
           >
+            <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
             Try Again
           </Button>
         </div>

@@ -5,6 +5,16 @@ export type ProtocolsMetadata = {
   externalProtocol: string | null;
 };
 
+export type ParsedProtocol = {
+  name: string;
+  role: string | null;
+};
+
+export type ParsedBridge = {
+  internal: ParsedProtocol;
+  external: ParsedProtocol;
+};
+
 export type ImportResponse = {
   raw: RawWorkbook;
   protocols: ProtocolsMetadata;

@@ -5,11 +5,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { EditableTable } from "@/components/EditableTable";
-import type { EditableRow, Override } from "@/types/overrides";
-import { useState } from "react";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { EditableTable } from '@/components/EditableTable';
+import type { EditableRow, Override } from '@/types/overrides';
+import { useState } from 'react';
+import { CheckSquare, Trash2, RotateCcw, X } from 'lucide-react';
 
 type SignalsPreviewDialogProps = {
   open: boolean;
@@ -33,7 +34,7 @@ export function SignalsPreviewDialog({
   const [selectMode, setSelectMode] = useState(false);
   const [selectedSignalIds, setSelectedSignalIds] = useState<string[]>([]);
 
-  const deletedCount = overrides.filter((o) => o.type === "delete").length;
+  const deletedCount = overrides.filter((o) => o.type === 'delete').length;
   const totalSignals = signals.length;
 
   const handleDeleteSelected = () => {
@@ -57,11 +58,11 @@ export function SignalsPreviewDialog({
         <DialogHeader>
           <DialogTitle>Generated Signals</DialogTitle>
           <DialogDescription>
-            {totalSignals} signal{totalSignals !== 1 ? "s" : ""} ready to export
+            {totalSignals} signal{totalSignals !== 1 ? 's' : ''} ready to export
             {deletedCount > 0 && ` (${deletedCount} marked for deletion)`}
             {selectMode && selectedSignalIds.length > 0
               ? ` • ${selectedSignalIds.length} selected`
-              : ""}
+              : ''}
           </DialogDescription>
         </DialogHeader>
 
@@ -84,7 +85,8 @@ export function SignalsPreviewDialog({
               setSelectedSignalIds([]);
             }}
           >
-            {selectMode ? "Exit Select" : "Select"}
+            <CheckSquare className="w-3.5 h-3.5 mr-1.5" />
+            {selectMode ? 'Exit Select' : 'Select'}
           </Button>
           {selectMode && (
             <Button
@@ -93,11 +95,13 @@ export function SignalsPreviewDialog({
               onClick={handleDeleteSelected}
               disabled={selectedSignalIds.length === 0}
             >
+              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
               Delete selected ({selectedSignalIds.length})
             </Button>
           )}
           {overrides.length > 0 && (
             <Button variant="danger" className="text-xs" onClick={onReset}>
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
               Reset Changes ({overrides.length})
             </Button>
           )}
@@ -106,6 +110,7 @@ export function SignalsPreviewDialog({
             className="text-xs"
             onClick={() => handleOpenChange(false)}
           >
+            <X className="w-3.5 h-3.5 mr-1.5" />
             Close
           </Button>
         </DialogFooter>
