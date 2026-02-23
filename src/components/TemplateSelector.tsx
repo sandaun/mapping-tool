@@ -8,11 +8,8 @@
 import { useRef } from 'react';
 import type { TemplateId } from '@/types/page.types';
 import { TEMPLATES } from '@/constants/templates';
-import {
-  parseTemplateLabel,
-  ProtocolColorBadge,
-  RoleLabel,
-} from '@/components/ProtocolsInfo';
+import { parseTemplateLabel } from '@/lib/protocols';
+import { ProtocolColorBadge, RoleLabel } from '@/components/ProtocolUI';
 import { ArrowRight, UploadCloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

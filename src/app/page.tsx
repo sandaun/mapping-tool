@@ -2,7 +2,7 @@
 
 import { usePageOrchestrator } from '@/hooks/usePageOrchestrator';
 import { TemplateSelector } from '@/components/TemplateSelector';
-import { CollapsedProtocolLabel } from '@/components/ProtocolsInfo';
+import { CollapsedProtocolLabel } from '@/components/ProtocolUI';
 import { SignalsInputSection } from '@/components/signals-input';
 import { ResultsSection } from '@/components/results-section';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
