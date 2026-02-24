@@ -1,26 +1,26 @@
-import { extractSignalsFromWorkbook } from "@/lib/overrides";
-import type { RawWorkbook } from "@/lib/excel/raw";
-import type { RawSheet } from "@/lib/excel/raw";
-import type { Override } from "@/types/overrides";
-import type { IbmapsState } from "@/hooks/useFileImport";
-import { workbookRowsToRawSignals } from "@/lib/ibmaps/reverseAdapters/bac-mbm";
-import { workbookRowsToKnxRawSignals } from "@/lib/ibmaps/reverseAdapters/knx-mbm";
-import { workbookRowsToBACKNXSignals } from "@/lib/ibmaps/reverseAdapters/bac-knx";
-import { workbookRowsToMBSKNXSignals } from "@/lib/ibmaps/reverseAdapters/mbs-knx";
-import { workbookRowsToKNXBACSignals } from "@/lib/ibmaps/reverseAdapters/knx-bac";
-import { workbookRowsToMBSBACSignals } from "@/lib/ibmaps/reverseAdapters/mbs-bac";
-import { addModbusSignals_BAC_MBM } from "@/lib/ibmaps/generators/bac-mbm";
-import { addModbusSignals_KNX_MBM } from "@/lib/ibmaps/generators/knx-mbm";
-import { addKNXSignals_BAC_KNX } from "@/lib/ibmaps/generators/bac-knx";
-import { addSignals_MBS_KNX } from "@/lib/ibmaps/generators/mbs-knx";
-import { addSignals_KNX_BAC } from "@/lib/ibmaps/generators/knx-bac";
-import { addSignals_MBS_BAC } from "@/lib/ibmaps/generators/mbs-bac";
-import { parseIbmapsSignals_BAC_MBM } from "@/lib/ibmaps/parsers/bac-mbm";
-import { parseIbmapsSignals_KNX_MBM } from "@/lib/ibmaps/parsers/knx-mbm";
-import { parseIbmapsSignals_BAC_KNX } from "@/lib/ibmaps/parsers/bac-knx";
-import { parseIbmapsSignals_MBS_KNX } from "@/lib/ibmaps/parsers/mbs-knx";
-import { parseIbmapsSignals_KNX_BAC } from "@/lib/ibmaps/parsers/knx-bac";
-import { parseIbmapsSignals_MBS_BAC } from "@/lib/ibmaps/parsers/mbs-bac";
+import { extractSignalsFromWorkbook } from '@/lib/overrides';
+import type { RawWorkbook } from '@/lib/excel/raw';
+import type { RawSheet } from '@/lib/excel/raw';
+import type { Override } from '@/types/overrides';
+import type { IbmapsState } from '@/hooks/useFileImport';
+import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapters/bac-mbm';
+import { workbookRowsToKnxRawSignals } from '@/lib/ibmaps/reverseAdapters/knx-mbm';
+import { workbookRowsToBACKNXSignals } from '@/lib/ibmaps/reverseAdapters/bac-knx';
+import { workbookRowsToMBSKNXSignals } from '@/lib/ibmaps/reverseAdapters/mbs-knx';
+import { workbookRowsToKNXBACSignals } from '@/lib/ibmaps/reverseAdapters/knx-bac';
+import { workbookRowsToMBSBACSignals } from '@/lib/ibmaps/reverseAdapters/mbs-bac';
+import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generators/bac-mbm';
+import { addModbusSignals_KNX_MBM } from '@/lib/ibmaps/generators/knx-mbm';
+import { addKNXSignals_BAC_KNX } from '@/lib/ibmaps/generators/bac-knx';
+import { addSignals_MBS_KNX } from '@/lib/ibmaps/generators/mbs-knx';
+import { addSignals_KNX_BAC } from '@/lib/ibmaps/generators/knx-bac';
+import { addSignals_MBS_BAC } from '@/lib/ibmaps/generators/mbs-bac';
+import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
+import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
+import { parseIbmapsSignals_BAC_KNX } from '@/lib/ibmaps/parsers/bac-knx';
+import { parseIbmapsSignals_MBS_KNX } from '@/lib/ibmaps/parsers/mbs-knx';
+import { parseIbmapsSignals_KNX_BAC } from '@/lib/ibmaps/parsers/knx-bac';
+import { parseIbmapsSignals_MBS_BAC } from '@/lib/ibmaps/parsers/mbs-bac';
 import type {
   IbmapsDevice,
   RawSignal,
@@ -30,19 +30,19 @@ import type {
   KNXBACRawSignal,
   MBSBACRawSignal,
   BACnetClientDevice,
-} from "@/lib/ibmaps/types";
+} from '@/lib/ibmaps/types';
 
 // ---------------------------------------------------------------------------
 // Filename mapping (shared between download-original and export-updated)
 // ---------------------------------------------------------------------------
 
 const IBMAPS_FILENAME: Record<string, string> = {
-  "bacnet-server__modbus-master": "IN-BAC-MBM",
-  "knx__modbus-master": "IN-KNX-MBM",
-  "bacnet-server__knx": "IN-BAC-KNX",
-  "modbus-slave__knx": "IN-MBS-KNX",
-  "knx__bacnet-client": "IN-KNX-BAC",
-  "modbus-slave__bacnet-client": "IN-MBS-BAC",
+  'bacnet-server__modbus-master': 'IN-BAC-MBM',
+  'knx__modbus-master': 'IN-KNX-MBM',
+  'bacnet-server__knx': 'IN-BAC-KNX',
+  'modbus-slave__knx': 'IN-MBS-KNX',
+  'knx__bacnet-client': 'IN-KNX-BAC',
+  'modbus-slave__bacnet-client': 'IN-MBS-BAC',
 };
 
 // ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ export function exportIbmapsFile({
   if (!pendingExport) {
     downloadXml(
       originalIbmaps.content,
-      `${IBMAPS_FILENAME[templateId] ?? "export"}.ibmaps`,
+      `${IBMAPS_FILENAME[templateId] ?? 'export'}.ibmaps`,
     );
     return;
   }
@@ -89,7 +89,7 @@ export function exportIbmapsFile({
 
   downloadXml(
     newXml,
-    `${IBMAPS_FILENAME[templateId] ?? "UPDATED"}-UPDATED.ibmaps`,
+    `${IBMAPS_FILENAME[templateId] ?? 'UPDATED'}-UPDATED.ibmaps`,
   );
 }
 
@@ -104,18 +104,18 @@ function generateUpdatedXml(
   overrides: Override[],
   signalsCount: number,
 ): string {
-  const signalsSheet = raw.sheets.find((s) => s.name === "Signals");
-  if (!signalsSheet) throw new Error("Signals sheet not found");
+  const signalsSheet = raw.sheets.find((s) => s.name === 'Signals');
+  if (!signalsSheet) throw new Error('Signals sheet not found');
 
   const totalRows = signalsSheet.rows.length;
   const startIdx = totalRows - signalsCount;
-  if (startIdx < 0) throw new Error("Invalid row count calculation");
+  if (startIdx < 0) throw new Error('Invalid row count calculation');
 
   // Build a keep/delete mask for the new signals
   const allExtracted = extractSignalsFromWorkbook(raw, templateId);
   const newExtracted = allExtracted.slice(-signalsCount);
   const deletedIds = new Set(
-    overrides.filter((o) => o.type === "delete").map((o) => o.signalId),
+    overrides.filter((o) => o.type === 'delete').map((o) => o.signalId),
   );
   const keepMask = newExtracted.map((s) => !deletedIds.has(s.id));
 
@@ -128,64 +128,17 @@ function generateUpdatedXml(
     -1,
   );
 
-  switch (templateId) {
-    case "knx__modbus-master":
-      return generateKnxMbm(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-        maxDeviceIndex,
-      );
+  const ctx: GeneratorContext = {
+    sheet: signalsSheet,
+    startIdx,
+    count: signalsCount,
+    ibmaps: originalIbmaps,
+    filterSurviving,
+    maxDeviceIndex,
+  };
 
-    case "bacnet-server__knx":
-      return generateBacKnx(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-      );
-
-    case "modbus-slave__knx":
-      return generateMbsKnx(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-      );
-
-    case "knx__bacnet-client":
-      return generateKnxBac(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-      );
-
-    case "modbus-slave__bacnet-client":
-      return generateMbsBac(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-      );
-
-    default:
-      // BACnet → Modbus Master (default)
-      return generateBacMbm(
-        signalsSheet,
-        startIdx,
-        signalsCount,
-        originalIbmaps,
-        filterSurviving,
-        maxDeviceIndex,
-      );
-  }
+  const generator = GENERATOR_REGISTRY[templateId] ?? DEFAULT_GENERATOR;
+  return generator(ctx);
 }
 
 // ---------------------------------------------------------------------------
@@ -194,14 +147,26 @@ function generateUpdatedXml(
 
 type FilterFn = <T>(signals: T[]) => T[];
 
-function generateKnxMbm(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-  maxDeviceIndex: number,
-): string {
+/** Context shared by all per-template generators. */
+interface GeneratorContext {
+  sheet: RawSheet;
+  startIdx: number;
+  count: number;
+  ibmaps: IbmapsState;
+  filterSurviving: FilterFn;
+  maxDeviceIndex: number;
+}
+
+type GeneratorFn = (ctx: GeneratorContext) => string;
+
+function generateKnxMbm({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+  maxDeviceIndex,
+}: GeneratorContext): string {
   const allNew = workbookRowsToKnxRawSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -221,13 +186,13 @@ function generateKnxMbm(
   return addModbusSignals_KNX_MBM(ibmaps.content, normalized, newDevices);
 }
 
-function generateBacKnx(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-): string {
+function generateBacKnx({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+}: GeneratorContext): string {
   const allNew = workbookRowsToBACKNXSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -250,13 +215,13 @@ function generateBacKnx(
   return addKNXSignals_BAC_KNX(ibmaps.content, normalized);
 }
 
-function generateMbsKnx(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-): string {
+function generateMbsKnx({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+}: GeneratorContext): string {
   const allNew = workbookRowsToMBSKNXSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -271,13 +236,13 @@ function generateMbsKnx(
   return addSignals_MBS_KNX(ibmaps.content, normalized);
 }
 
-function generateKnxBac(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-): string {
+function generateKnxBac({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+}: GeneratorContext): string {
   const allNew = workbookRowsToKNXBACSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -298,13 +263,13 @@ function generateKnxBac(
   return addSignals_KNX_BAC(ibmaps.content, normalized, newBacnetDevices);
 }
 
-function generateMbsBac(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-): string {
+function generateMbsBac({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+}: GeneratorContext): string {
   const allNew = workbookRowsToMBSBACSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -325,14 +290,14 @@ function generateMbsBac(
   return addSignals_MBS_BAC(ibmaps.content, normalized, newBacnetDevices);
 }
 
-function generateBacMbm(
-  sheet: RawSheet,
-  startIdx: number,
-  count: number,
-  ibmaps: IbmapsState,
-  filterSurviving: FilterFn,
-  maxDeviceIndex: number,
-): string {
+function generateBacMbm({
+  sheet,
+  startIdx,
+  count,
+  ibmaps,
+  filterSurviving,
+  maxDeviceIndex,
+}: GeneratorContext): string {
   const allNew = workbookRowsToRawSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
 
@@ -362,6 +327,21 @@ function generateBacMbm(
 
   return addModbusSignals_BAC_MBM(ibmaps.content, normalized, newDevices);
 }
+
+// ---------------------------------------------------------------------------
+// Generator registry — maps template IDs to their generator function
+// ---------------------------------------------------------------------------
+
+const GENERATOR_REGISTRY: Record<string, GeneratorFn> = {
+  'knx__modbus-master': generateKnxMbm,
+  'bacnet-server__knx': generateBacKnx,
+  'modbus-slave__knx': generateMbsKnx,
+  'knx__bacnet-client': generateKnxBac,
+  'modbus-slave__bacnet-client': generateMbsBac,
+};
+
+/** BACnet Server → Modbus Master is the default generator. */
+const DEFAULT_GENERATOR: GeneratorFn = generateBacMbm;
 
 // ---------------------------------------------------------------------------
 // Shared helpers
@@ -404,7 +384,7 @@ function makeBacnetDevice(index: number): BACnetClientDevice {
     index,
     name: `Device ${index}`,
     enabled: true,
-    ip: "192.168.100.10",
+    ip: '192.168.100.10',
     port: 47808,
     objInstance: index,
   };
@@ -434,9 +414,9 @@ function collectNewBacnetDevices(
 
 /** Trigger a browser download for the given XML content. */
 function downloadXml(content: string, filename: string): void {
-  const blob = new Blob([content], { type: "text/xml" });
+  const blob = new Blob([content], { type: 'text/xml' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
