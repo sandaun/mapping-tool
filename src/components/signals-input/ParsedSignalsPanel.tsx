@@ -56,18 +56,34 @@ export function ParsedSignalsPanel({
       ref={panelRef}
       className="rounded-lg border border-border bg-muted/30 p-4 space-y-3"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Badge
-            variant="outline"
-            className="border-secondary bg-transparent text-secondary"
+      <div className="flex items-center gap-2">
+        <Badge
+          variant="outline"
+          className="border-secondary bg-transparent text-secondary"
+        >
+          <Check className="w-3 h-3 mr-1" />
+          PARSED
+        </Badge>
+        <span className="text-sm font-medium text-foreground">
+          {signalsCount} signals ready
+        </span>
+      </div>
+
+      <div className="max-h-64 overflow-auto">
+        <EditableTable data={signalsTableData} />
+      </div>
+
+      <div className="flex justify-between items-center pt-2 mt-2">
+        <div>
+          <Button
+            onClick={onClear}
+            disabled={!canClear || busy}
+            variant="neutral"
+            size="sm"
           >
-            <Check className="w-3 h-3 mr-1" />
-            PARSED
-          </Badge>
-          <span className="text-sm font-medium text-foreground">
-            {signalsCount} signals ready
-          </span>
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+            Clear
+          </Button>
         </div>
         <div className="flex items-center gap-2">
           {!isKNXFlow && (
@@ -88,20 +104,7 @@ export function ParsedSignalsPanel({
             <Zap className="w-3.5 h-3.5" />
             Accept &amp; Generate
           </Button>
-          <Button
-            onClick={onClear}
-            disabled={!canClear || busy}
-            variant="neutral"
-            size="sm"
-          >
-            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-            Clear
-          </Button>
         </div>
-      </div>
-
-      <div className="max-h-64 overflow-auto">
-        <EditableTable data={signalsTableData} />
       </div>
     </div>
   );
