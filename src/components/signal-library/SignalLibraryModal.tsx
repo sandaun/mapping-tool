@@ -43,7 +43,7 @@ export function SignalLibraryModal(props: SignalLibraryModalProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col border-slate-400 dark:border-slate-600">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col border-border shadow-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Library className="w-5 h-5 text-primary" />
@@ -82,7 +82,7 @@ export function SignalLibraryModal(props: SignalLibraryModalProps) {
             />
           </div>
 
-          <DialogFooter className="flex-row! justify-between! items-center pt-4 border-t border-slate-200 dark:border-slate-700">
+          <DialogFooter className="flex-row! justify-between! items-center pt-4 border-t border-border">
             <Button
               variant="neutral"
               size="sm"

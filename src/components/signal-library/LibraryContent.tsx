@@ -78,8 +78,8 @@ export function LibraryContent({
 
       {/* Preview of selected record */}
       {selectedRecord && previewData.length > 0 && (
-        <div className="mt-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-3 space-y-2">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+        <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3 space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">
             Preview — {selectedRecord.signals.length} signals
           </p>
           <div className="max-h-40 overflow-auto">

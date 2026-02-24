@@ -55,6 +55,7 @@ export default function Home() {
         <StepSection
           stepNumber={1}
           title="Gateway Templates"
+          description="Select the template that matches your gateway"
           collapsible={!!state.raw}
           collapsed={state.step1Collapsed}
           onCollapsedChange={state.setStep1Collapsed}

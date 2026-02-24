@@ -28,7 +28,7 @@ export function SaveToLibraryDialog(props: SaveToLibraryDialogProps) {
 
   return (
     <Dialog open={props.open} onOpenChange={state.handleOpenChange}>
-      <DialogContent className="sm:max-w-md border-slate-400 dark:border-slate-600">
+      <DialogContent className="sm:max-w-md border-border shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {state.isEditMode ? (
@@ -115,7 +115,7 @@ export function SaveToLibraryDialog(props: SaveToLibraryDialogProps) {
           )}
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-border">
           {!state.isEditMode && (
             <Button
               variant="neutral"

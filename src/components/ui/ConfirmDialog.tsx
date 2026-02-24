@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Dialog,
@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 type ConfirmDialogProps = {
   /** Whether the dialog is open */
@@ -24,7 +24,7 @@ type ConfirmDialogProps = {
   /** Text for the cancel button */
   cancelText?: string;
   /** Variant for the confirm button */
-  confirmVariant?: "default" | "destructive" | "danger";
+  confirmVariant?: 'default' | 'destructive' | 'danger';
   /** Callback when user confirms */
   onConfirm: () => void;
   /** Callback when user cancels */
@@ -40,9 +40,9 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  confirmVariant = "default",
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  confirmVariant = 'default',
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -58,12 +58,12 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-106.25">
+      <DialogContent className="sm:max-w-106.25 border-border shadow-2xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-0 pt-4 border-t border-border">
           <Button variant="neutral" onClick={handleCancel} className="text-xs">
             {cancelText}
           </Button>

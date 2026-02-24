@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,11 +10,11 @@ import {
   type ColumnDef,
   type RowSelectionState,
   type SortingState,
-} from "@tanstack/react-table";
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { EditableRow } from "@/types/overrides";
-import type { ReactNode } from "react";
+} from '@tanstack/react-table';
+import { Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import type { EditableRow } from '@/types/overrides';
+import type { ReactNode } from 'react';
 
 type EditableTableProps = {
   data: EditableRow[];
@@ -56,7 +56,7 @@ export function EditableTable({
 
     const firstRow = data[0];
     const fields = Object.keys(firstRow).filter(
-      (key) => key !== "id" && !key.startsWith("_"),
+      (key) => key !== 'id' && !key.startsWith('_'),
     );
 
     const dataColumns: ColumnDef<EditableRow>[] = fields.map((field) => ({
@@ -69,7 +69,7 @@ export function EditableTable({
 
         return (
           <div className="flex items-center justify-between">
-            <span className="text-sm">{String(value ?? "")}</span>
+            <span className="text-sm">{String(value ?? '')}</span>
           </div>
         );
       },
@@ -78,8 +78,8 @@ export function EditableTable({
     // Only add actions column if onDelete is provided
     if (onDelete) {
       const actionsColumn: ColumnDef<EditableRow> = {
-        id: "actions",
-        header: "Actions",
+        id: 'actions',
+        header: 'Actions',
         cell: ({ row }) => (
           <Button
             size="sm"
@@ -114,7 +114,7 @@ export function EditableTable({
       if (!enableSelection || !onSelectedRowIdsChange) return;
 
       const nextSelection =
-        typeof updater === "function" ? updater(rowSelection) : updater;
+        typeof updater === 'function' ? updater(rowSelection) : updater;
 
       const nextSelectedSignalIds = Object.keys(nextSelection).filter(
         (key) => nextSelection[key],
@@ -154,8 +154,8 @@ export function EditableTable({
                       <div
                         className={
                           header.column.getCanSort()
-                            ? "cursor-pointer select-none hover:text-foreground"
-                            : ""
+                            ? 'cursor-pointer select-none hover:text-foreground'
+                            : ''
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -164,8 +164,8 @@ export function EditableTable({
                           header.getContext(),
                         )}
                         {{
-                          asc: " ↑",
-                          desc: " ↓",
+                          asc: ' ↑',
+                          desc: ' ↓',
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
@@ -179,11 +179,11 @@ export function EditableTable({
               <tr
                 key={row.id}
                 className={`border-b border-border last:border-0 ${
-                  enableSelection ? "cursor-pointer select-none" : ""
+                  enableSelection ? 'cursor-pointer select-none' : ''
                 } ${
                   row.getIsSelected()
-                    ? "bg-primary/10 hover:bg-primary/15"
-                    : "hover:bg-muted/30"
+                    ? 'bg-primary/10 hover:bg-primary/15'
+                    : 'hover:bg-muted/30'
                 }`}
                 onClick={(e) => {
                   if (!enableSelection || !onSelectedRowIdsChange) return;

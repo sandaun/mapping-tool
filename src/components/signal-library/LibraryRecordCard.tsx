@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Pencil, Trash2 } from 'lucide-react';
+import { FileText, Loader2, Pencil, Trash2 } from 'lucide-react';
 import type { SignalLibraryRecord } from '@/types/signal-library';
 
 interface LibraryRecordCardProps {
@@ -31,7 +31,7 @@ export function LibraryRecordCard({
       className={`rounded-lg border p-3 transition-colors ${
         isSelected
           ? 'border-primary bg-primary/5 ring-1 ring-primary'
-          : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-500 dark:hover:bg-slate-800/50'
+          : 'border-border hover:border-primary/30 hover:bg-muted/50 dark:hover:bg-slate-800/50'
       }`}
     >
       {isConfirmingDelete ? (
@@ -137,7 +137,7 @@ function RecordContent({
           </Badge>
           <button
             type="button"
-            className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-1 rounded hover:bg-muted dark:hover:bg-slate-700 text-muted-foreground hover:text-foreground transition-colors"
             title="Edit"
             onClick={(e) => {
               e.stopPropagation();
@@ -160,7 +160,12 @@ function RecordContent({
         </div>
       </div>
       <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
-        {record.source_file_name && <span>📄 {record.source_file_name}</span>}
+        {record.source_file_name && (
+          <span className="flex items-center gap-1">
+            <FileText className="w-3 h-3" />
+            {record.source_file_name}
+          </span>
+        )}
         <span>{new Date(record.updated_at).toLocaleDateString()}</span>
       </div>
     </div>
