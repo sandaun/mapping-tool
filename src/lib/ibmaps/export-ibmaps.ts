@@ -1,26 +1,26 @@
-import { extractSignalsFromWorkbook } from '@/lib/overrides';
-import type { RawWorkbook } from '@/lib/excel/raw';
-import type { RawSheet } from '@/lib/excel/raw';
-import type { Override } from '@/types/overrides';
-import type { IbmapsState } from '@/hooks/useFileImport';
-import { workbookRowsToRawSignals } from '@/lib/ibmaps/reverseAdapters/bac-mbm';
-import { workbookRowsToKnxRawSignals } from '@/lib/ibmaps/reverseAdapters/knx-mbm';
-import { workbookRowsToBACKNXSignals } from '@/lib/ibmaps/reverseAdapters/bac-knx';
-import { workbookRowsToMBSKNXSignals } from '@/lib/ibmaps/reverseAdapters/mbs-knx';
-import { workbookRowsToKNXBACSignals } from '@/lib/ibmaps/reverseAdapters/knx-bac';
-import { workbookRowsToMBSBACSignals } from '@/lib/ibmaps/reverseAdapters/mbs-bac';
-import { addModbusSignals_BAC_MBM } from '@/lib/ibmaps/generators/bac-mbm';
-import { addModbusSignals_KNX_MBM } from '@/lib/ibmaps/generators/knx-mbm';
-import { addKNXSignals_BAC_KNX } from '@/lib/ibmaps/generators/bac-knx';
-import { addSignals_MBS_KNX } from '@/lib/ibmaps/generators/mbs-knx';
-import { addSignals_KNX_BAC } from '@/lib/ibmaps/generators/knx-bac';
-import { addSignals_MBS_BAC } from '@/lib/ibmaps/generators/mbs-bac';
-import { parseIbmapsSignals_BAC_MBM } from '@/lib/ibmaps/parsers/bac-mbm';
-import { parseIbmapsSignals_KNX_MBM } from '@/lib/ibmaps/parsers/knx-mbm';
-import { parseIbmapsSignals_BAC_KNX } from '@/lib/ibmaps/parsers/bac-knx';
-import { parseIbmapsSignals_MBS_KNX } from '@/lib/ibmaps/parsers/mbs-knx';
-import { parseIbmapsSignals_KNX_BAC } from '@/lib/ibmaps/parsers/knx-bac';
-import { parseIbmapsSignals_MBS_BAC } from '@/lib/ibmaps/parsers/mbs-bac';
+import { extractSignalsFromWorkbook } from "@/lib/overrides";
+import type { RawWorkbook } from "@/lib/excel/raw";
+import type { RawSheet } from "@/lib/excel/raw";
+import type { Override } from "@/types/overrides";
+import type { IbmapsState } from "@/hooks/useFileImport";
+import { workbookRowsToRawSignals } from "@/lib/ibmaps/reverseAdapters/bac-mbm";
+import { workbookRowsToKnxRawSignals } from "@/lib/ibmaps/reverseAdapters/knx-mbm";
+import { workbookRowsToBACKNXSignals } from "@/lib/ibmaps/reverseAdapters/bac-knx";
+import { workbookRowsToMBSKNXSignals } from "@/lib/ibmaps/reverseAdapters/mbs-knx";
+import { workbookRowsToKNXBACSignals } from "@/lib/ibmaps/reverseAdapters/knx-bac";
+import { workbookRowsToMBSBACSignals } from "@/lib/ibmaps/reverseAdapters/mbs-bac";
+import { addModbusSignals_BAC_MBM } from "@/lib/ibmaps/generators/bac-mbm";
+import { addModbusSignals_KNX_MBM } from "@/lib/ibmaps/generators/knx-mbm";
+import { addKNXSignals_BAC_KNX } from "@/lib/ibmaps/generators/bac-knx";
+import { addSignals_MBS_KNX } from "@/lib/ibmaps/generators/mbs-knx";
+import { addSignals_KNX_BAC } from "@/lib/ibmaps/generators/knx-bac";
+import { addSignals_MBS_BAC } from "@/lib/ibmaps/generators/mbs-bac";
+import { parseIbmapsSignals_BAC_MBM } from "@/lib/ibmaps/parsers/bac-mbm";
+import { parseIbmapsSignals_KNX_MBM } from "@/lib/ibmaps/parsers/knx-mbm";
+import { parseIbmapsSignals_BAC_KNX } from "@/lib/ibmaps/parsers/bac-knx";
+import { parseIbmapsSignals_MBS_KNX } from "@/lib/ibmaps/parsers/mbs-knx";
+import { parseIbmapsSignals_KNX_BAC } from "@/lib/ibmaps/parsers/knx-bac";
+import { parseIbmapsSignals_MBS_BAC } from "@/lib/ibmaps/parsers/mbs-bac";
 import type {
   IbmapsDevice,
   RawSignal,
@@ -30,19 +30,19 @@ import type {
   KNXBACRawSignal,
   MBSBACRawSignal,
   BACnetClientDevice,
-} from '@/lib/ibmaps/types';
+} from "@/lib/ibmaps/types";
 
 // ---------------------------------------------------------------------------
 // Filename mapping (shared between download-original and export-updated)
 // ---------------------------------------------------------------------------
 
 const IBMAPS_FILENAME: Record<string, string> = {
-  'bacnet-server__modbus-master': 'IN-BAC-MBM',
-  'knx__modbus-master': 'IN-KNX-MBM',
-  'bacnet-server__knx': 'IN-BAC-KNX',
-  'modbus-slave__knx': 'IN-MBS-KNX',
-  'knx__bacnet-client': 'IN-KNX-BAC',
-  'modbus-slave__bacnet-client': 'IN-MBS-BAC',
+  "bacnet-server__modbus-master": "IN-BAC-MBM",
+  "knx__modbus-master": "IN-KNX-MBM",
+  "bacnet-server__knx": "IN-BAC-KNX",
+  "modbus-slave__knx": "IN-MBS-KNX",
+  "knx__bacnet-client": "IN-KNX-BAC",
+  "modbus-slave__bacnet-client": "IN-MBS-BAC",
 };
 
 // ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ export function exportIbmapsFile({
   if (!pendingExport) {
     downloadXml(
       originalIbmaps.content,
-      `${IBMAPS_FILENAME[templateId] ?? 'export'}.ibmaps`,
+      `${IBMAPS_FILENAME[templateId] ?? "export"}.ibmaps`,
     );
     return;
   }
@@ -89,7 +89,7 @@ export function exportIbmapsFile({
 
   downloadXml(
     newXml,
-    `${IBMAPS_FILENAME[templateId] ?? 'UPDATED'}-UPDATED.ibmaps`,
+    `${IBMAPS_FILENAME[templateId] ?? "UPDATED"}-UPDATED.ibmaps`,
   );
 }
 
@@ -104,18 +104,18 @@ function generateUpdatedXml(
   overrides: Override[],
   signalsCount: number,
 ): string {
-  const signalsSheet = raw.sheets.find((s) => s.name === 'Signals');
-  if (!signalsSheet) throw new Error('Signals sheet not found');
+  const signalsSheet = raw.sheets.find((s) => s.name === "Signals");
+  if (!signalsSheet) throw new Error("Signals sheet not found");
 
   const totalRows = signalsSheet.rows.length;
   const startIdx = totalRows - signalsCount;
-  if (startIdx < 0) throw new Error('Invalid row count calculation');
+  if (startIdx < 0) throw new Error("Invalid row count calculation");
 
   // Build a keep/delete mask for the new signals
   const allExtracted = extractSignalsFromWorkbook(raw, templateId);
   const newExtracted = allExtracted.slice(-signalsCount);
   const deletedIds = new Set(
-    overrides.filter((o) => o.type === 'delete').map((o) => o.signalId),
+    overrides.filter((o) => o.type === "delete").map((o) => o.signalId),
   );
   const keepMask = newExtracted.map((s) => !deletedIds.has(s.id));
 
@@ -127,11 +127,9 @@ function generateUpdatedXml(
     (max, d) => Math.max(max, d.index),
     -1,
   );
-  const newDeviceIndex = maxDeviceIndex + 1;
-  const newSlaveNum = 10 + newDeviceIndex;
 
   switch (templateId) {
-    case 'knx__modbus-master':
+    case "knx__modbus-master":
       return generateKnxMbm(
         signalsSheet,
         startIdx,
@@ -139,11 +137,9 @@ function generateUpdatedXml(
         originalIbmaps,
         filterSurviving,
         maxDeviceIndex,
-        newDeviceIndex,
-        newSlaveNum,
       );
 
-    case 'bacnet-server__knx':
+    case "bacnet-server__knx":
       return generateBacKnx(
         signalsSheet,
         startIdx,
@@ -152,7 +148,7 @@ function generateUpdatedXml(
         filterSurviving,
       );
 
-    case 'modbus-slave__knx':
+    case "modbus-slave__knx":
       return generateMbsKnx(
         signalsSheet,
         startIdx,
@@ -161,7 +157,7 @@ function generateUpdatedXml(
         filterSurviving,
       );
 
-    case 'knx__bacnet-client':
+    case "knx__bacnet-client":
       return generateKnxBac(
         signalsSheet,
         startIdx,
@@ -170,7 +166,7 @@ function generateUpdatedXml(
         filterSurviving,
       );
 
-    case 'modbus-slave__bacnet-client':
+    case "modbus-slave__bacnet-client":
       return generateMbsBac(
         signalsSheet,
         startIdx,
@@ -188,8 +184,6 @@ function generateUpdatedXml(
         originalIbmaps,
         filterSurviving,
         maxDeviceIndex,
-        newDeviceIndex,
-        newSlaveNum,
       );
   }
 }
@@ -207,8 +201,6 @@ function generateKnxMbm(
   ibmaps: IbmapsState,
   filterSurviving: FilterFn,
   maxDeviceIndex: number,
-  newDeviceIndex: number,
-  newSlaveNum: number,
 ): string {
   const allNew = workbookRowsToKnxRawSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
@@ -221,10 +213,10 @@ function generateKnxMbm(
     idxExternal: baseMaxId + 1 + i,
   }));
 
-  const newDevices: IbmapsDevice[] = [];
-  if (normalized.some((s) => s.modbus.deviceIndex > maxDeviceIndex)) {
-    newDevices.push(makeModbusDevice(newDeviceIndex, newSlaveNum));
-  }
+  const newDevices: IbmapsDevice[] = collectNewModbusDevices(
+    normalized.map((s) => s.modbus.deviceIndex),
+    maxDeviceIndex,
+  );
 
   return addModbusSignals_KNX_MBM(ibmaps.content, normalized, newDevices);
 }
@@ -291,21 +283,17 @@ function generateKnxBac(
 
   const parseResult = parseIbmapsSignals_KNX_BAC(ibmaps.content);
   const baseMaxId = maxIdxExternal(parseResult.signals);
-  const newDeviceIdx = maxDeviceIdx(parseResult.devices) + 1;
+  const existingMaxDevIdx = maxDeviceIdx(parseResult.devices);
 
   const normalized: KNXBACRawSignal[] = newSignals.map((s, i) => ({
     ...s,
     idxExternal: baseMaxId + 1 + i,
-    bacnetClient: {
-      ...s.bacnetClient,
-      deviceIndex: newDeviceIdx,
-      deviceName: `Device ${newDeviceIdx}`,
-    },
   }));
 
-  const newBacnetDevices: BACnetClientDevice[] = [
-    makeBacnetDevice(newDeviceIdx),
-  ];
+  const newBacnetDevices: BACnetClientDevice[] = collectNewBacnetDevices(
+    normalized.map((s) => s.bacnetClient.deviceIndex),
+    existingMaxDevIdx,
+  );
 
   return addSignals_KNX_BAC(ibmaps.content, normalized, newBacnetDevices);
 }
@@ -322,21 +310,17 @@ function generateMbsBac(
 
   const parseResult = parseIbmapsSignals_MBS_BAC(ibmaps.content);
   const baseMaxId = maxIdxExternal(parseResult.signals);
-  const newDeviceIdx = maxDeviceIdx(parseResult.devices) + 1;
+  const existingMaxDevIdx = maxDeviceIdx(parseResult.devices);
 
   const normalized: MBSBACRawSignal[] = newSignals.map((s, i) => ({
     ...s,
     idxExternal: baseMaxId + 1 + i,
-    bacnetClient: {
-      ...s.bacnetClient,
-      deviceIndex: newDeviceIdx,
-      deviceName: `Device ${newDeviceIdx}`,
-    },
   }));
 
-  const newBacnetDevices: BACnetClientDevice[] = [
-    makeBacnetDevice(newDeviceIdx),
-  ];
+  const newBacnetDevices: BACnetClientDevice[] = collectNewBacnetDevices(
+    normalized.map((s) => s.bacnetClient.deviceIndex),
+    existingMaxDevIdx,
+  );
 
   return addSignals_MBS_BAC(ibmaps.content, normalized, newBacnetDevices);
 }
@@ -348,8 +332,6 @@ function generateBacMbm(
   ibmaps: IbmapsState,
   filterSurviving: FilterFn,
   maxDeviceIndex: number,
-  newDeviceIndex: number,
-  newSlaveNum: number,
 ): string {
   const allNew = workbookRowsToRawSignals(sheet, startIdx, count);
   const newSignals = filterSurviving(allNew);
@@ -373,10 +355,10 @@ function generateBacMbm(
     };
   });
 
-  const newDevices: IbmapsDevice[] = [];
-  if (normalized.some((s) => s.modbus.deviceIndex > maxDeviceIndex)) {
-    newDevices.push(makeModbusDevice(newDeviceIndex, newSlaveNum));
-  }
+  const newDevices: IbmapsDevice[] = collectNewModbusDevices(
+    normalized.map((s) => s.modbus.deviceIndex),
+    maxDeviceIndex,
+  );
 
   return addModbusSignals_BAC_MBM(ibmaps.content, normalized, newDevices);
 }
@@ -422,17 +404,39 @@ function makeBacnetDevice(index: number): BACnetClientDevice {
     index,
     name: `Device ${index}`,
     enabled: true,
-    ip: '192.168.100.10',
+    ip: "192.168.100.10",
     port: 47808,
     objInstance: index,
   };
 }
 
+/** Collect unique device indices that exceed the existing max and create Modbus Devices for each. */
+function collectNewModbusDevices(
+  deviceIndices: number[],
+  existingMaxIndex: number,
+): IbmapsDevice[] {
+  const uniqueNew = [
+    ...new Set(deviceIndices.filter((idx) => idx > existingMaxIndex)),
+  ].sort((a, b) => a - b);
+  return uniqueNew.map((idx) => makeModbusDevice(idx, 10 + idx));
+}
+
+/** Collect unique device indices that exceed the existing max and create BACnet Devices for each. */
+function collectNewBacnetDevices(
+  deviceIndices: number[],
+  existingMaxIndex: number,
+): BACnetClientDevice[] {
+  const uniqueNew = [
+    ...new Set(deviceIndices.filter((idx) => idx > existingMaxIndex)),
+  ].sort((a, b) => a - b);
+  return uniqueNew.map((idx) => makeBacnetDevice(idx));
+}
+
 /** Trigger a browser download for the given XML content. */
 function downloadXml(content: string, filename: string): void {
-  const blob = new Blob([content], { type: 'text/xml' });
+  const blob = new Blob([content], { type: "text/xml" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);

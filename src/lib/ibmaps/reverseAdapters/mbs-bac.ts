@@ -1,5 +1,5 @@
-import type { MBSBACRawSignal } from '../types';
-import type { RawSheet, CellValue } from '../../excel/raw';
+import type { MBSBACRawSignal } from "../types";
+import type { RawSheet, CellValue } from "../../excel/raw";
 
 /**
  * Column headers - must match adapters/mbs-bac.ts COLUMN_HEADERS exactly
@@ -9,36 +9,36 @@ import type { RawSheet, CellValue } from '../../excel/raw';
  */
 const COLUMN_HEADERS = [
   // Internal (Modbus Slave)
-  '#',
-  'Active',
-  'Description',
-  'Data Length',
-  'Format',
-  'Address',
-  'Bit',
-  'Read / Write',
-  'String Length',
+  "#",
+  "Active",
+  "Description",
+  "Data Length",
+  "Format",
+  "Address",
+  "Bit",
+  "Read / Write",
+  "String Length",
   // External (BACnet Client)
-  '#',
-  'Device Name',
-  'Type',
-  'Instance',
+  "#",
+  "Device Name",
+  "Type",
+  "Instance",
   // Extra
-  'Conv. Id',
-  'Conversions',
+  "Conv. Id",
+  "Conversions",
 ];
 
 // Reverse mapping of BACnet type names to codes
 const BAC_TYPE_CODES: Record<string, number> = {
-  'AI': 0,
-  'AO': 1,
-  'AV': 2,
-  'BI': 3,
-  'BO': 4,
-  'BV': 5,
-  'MI': 13,
-  'MO': 14,
-  'MV': 19,
+  AI: 0,
+  AO: 1,
+  AV: 2,
+  BI: 3,
+  BO: 4,
+  BV: 5,
+  MI: 13,
+  MO: 14,
+  MV: 19,
 };
 
 // BACnet object type to ObjectID base multiplier
@@ -61,7 +61,7 @@ const BAC_TYPE_OBJECT_ID_BASE: Record<number, number> = {
 function extractLeadingCode(value: CellValue, fallback: number): number {
   if (value === null || value === undefined) return fallback;
   const str = String(value).trim();
-  if (str === '' || str === '-') return fallback;
+  if (str === "" || str === "-") return fallback;
   const match = str.match(/^(\d+):/);
   if (match) return parseInt(match[1], 10);
   const num = parseInt(str, 10);
@@ -75,7 +75,7 @@ function extractLeadingCode(value: CellValue, fallback: number): number {
 function extractBacType(value: CellValue): number {
   if (value === null || value === undefined) return 2; // Default to AV
   const str = String(value).trim();
-  if (str === '' || str === '-') return 2;
+  if (str === "" || str === "-") return 2;
 
   // Try "number: name" format first
   const match = str.match(/^(\d+):/);
@@ -98,7 +98,7 @@ function extractBacType(value: CellValue): number {
  * Safe number extraction
  */
 function safeNumber(val: CellValue, fallback: number = -1): number {
-  if (val === null || val === undefined || val === '-') return fallback;
+  if (val === null || val === undefined || val === "-") return fallback;
   const n = Number(val);
   return isNaN(n) ? fallback : n;
 }
@@ -109,7 +109,7 @@ function safeNumber(val: CellValue, fallback: number = -1): number {
  */
 function parseBoolean(val: CellValue): boolean {
   if (val === null || val === undefined) return false;
-  return String(val).toLowerCase() === 'true';
+  return String(val).toLowerCase() === "true";
 }
 
 /**
@@ -143,30 +143,35 @@ export function workbookRowsToMBSBACSignals(
   const col = (name: string): number => columnIndex.get(name) ?? -1;
 
   // Use first '#' (index 0) for internal
-  const firstHashIdx = COLUMN_HEADERS.indexOf('#');
+  const firstHashIdx = COLUMN_HEADERS.indexOf("#");
 
   return rows.map((row) => {
     // Internal (Modbus Slave)
     const internalIdx = safeNumber(row[firstHashIdx], 0);
-    const description = String(row[col('Description')] || '');
-    const isEnabled = parseBoolean(row[col('Active')]);
-    const dataLength = extractLeadingCode(row[col('Data Length')], 16);
-    const format = extractLeadingCode(row[col('Format')], 0);
-    const address = safeNumber(row[col('Address')], 0);
-    const bit = safeNumber(row[col('Bit')], -1);
-    const readWrite = extractLeadingCode(row[col('Read / Write')], 2);
-    const stringLength = safeNumber(row[col('String Length')], -1);
+    const description = String(row[col("Description")] || "");
+    const isEnabled = parseBoolean(row[col("Active")]);
+    const dataLength = extractLeadingCode(row[col("Data Length")], 16);
+    const format = extractLeadingCode(row[col("Format")], 0);
+    const address = safeNumber(row[col("Address")], 0);
+    const bit = safeNumber(row[col("Bit")], -1);
+    const readWrite = extractLeadingCode(row[col("Read / Write")], 2);
+    const stringLength = safeNumber(row[col("String Length")], -1);
 
     // External (BACnet Client)
-    const deviceName = String(row[col('Device Name')] || 'Device 0');
-    const bacType = extractBacType(row[col('Type')]);
-    const bacInstance = safeNumber(row[col('Instance')], 0);
+    const deviceName = String(row[col("Device Name")] || "Device 0");
+    const bacType = extractBacType(row[col("Type")]);
+    const bacInstance = safeNumber(row[col("Instance")], 0);
     const objectId = calculateObjectId(bacType, bacInstance);
+
+    // Extract device index from device name (e.g. "Device 3" → 3)
+    let deviceIndex = 0;
+    const deviceMatch = deviceName.match(/Device\s+(\d+)/i);
+    if (deviceMatch) deviceIndex = parseInt(deviceMatch[1], 10);
 
     return {
       idxExternal: internalIdx,
       name: description,
-      direction: 'Modbus Slave->BACnet Client',
+      direction: "Modbus Slave->BACnet Client",
       modbusSlave: {
         description,
         dataLength,
@@ -180,7 +185,7 @@ export function workbookRowsToMBSBACSignals(
         extraAttrs: {},
       },
       bacnetClient: {
-        deviceIndex: 0, // Default to first device
+        deviceIndex,
         deviceName,
         bacType,
         bacInstance,

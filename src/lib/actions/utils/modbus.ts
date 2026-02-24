@@ -51,7 +51,7 @@ export function getModbusReadWrite(objectType: string): string {
 
 /**
  * Map Modbus data type to Format code
- * 0: Unsigned, 1: Signed(C2), 2: Signed(C1), 3: Float, 4: BitFields
+ * 0: Unsigned, 1: Signed (C2), 2: Signed (C1), 3: Float, 4: BitFields
  */
 export function getModbusFormat(
   dataType: string,
@@ -67,7 +67,7 @@ export function getModbusFormat(
     return "3: Float";
   }
   if (/^int\d+$/i.test(dataType) || /^s\d+$/i.test(dataType)) {
-    return "1: Signed(C2)";
+    return "1: Signed (C2)";
   }
   // BV (Binary Value) → BitFields
   if (objectType === "BV") return "4: BitFields";

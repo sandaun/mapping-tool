@@ -1,5 +1,5 @@
-import type { KNXBACRawSignal } from '../types';
-import type { RawSheet, CellValue } from '../../excel/raw';
+import type { KNXBACRawSignal } from "../types";
+import type { RawSheet, CellValue } from "../../excel/raw";
 
 /**
  * Column headers - must match adapters/knx-bac.ts COLUMN_HEADERS exactly
@@ -9,38 +9,38 @@ import type { RawSheet, CellValue } from '../../excel/raw';
  */
 const COLUMN_HEADERS = [
   // Internal (KNX)
-  '#',
-  'Active',
-  'Description',
-  'DPT',
-  'Group Address',
-  'Additional Addresses',
-  'U',
-  'T',
-  'Ri',
-  'W',
-  'R',
+  "#",
+  "Active",
+  "Description",
+  "DPT",
+  "Group Address",
+  "Additional Addresses",
+  "U",
+  "T",
+  "Ri",
+  "W",
+  "R",
   // External (BACnet Client)
-  '#',
-  'Device Name',
-  'Type',
-  'Instance',
+  "#",
+  "Device Name",
+  "Type",
+  "Instance",
   // Extra
-  'Conv. Id',
-  'Conversions',
+  "Conv. Id",
+  "Conversions",
 ];
 
 // Reverse mapping of BACnet type names to codes
 const BAC_TYPE_CODES: Record<string, number> = {
-  'AI': 0,
-  'AO': 1,
-  'AV': 2,
-  'BI': 3,
-  'BO': 4,
-  'BV': 5,
-  'MI': 13,
-  'MO': 14,
-  'MV': 19,
+  AI: 0,
+  AO: 1,
+  AV: 2,
+  BI: 3,
+  BO: 4,
+  BV: 5,
+  MI: 13,
+  MO: 14,
+  MV: 19,
 };
 
 // BACnet object type to ObjectID base multiplier
@@ -63,7 +63,7 @@ const BAC_TYPE_OBJECT_ID_BASE: Record<number, number> = {
 function extractBacType(value: CellValue): number {
   if (value === null || value === undefined) return 2; // Default to AV
   const str = String(value).trim();
-  if (str === '' || str === '-') return 2;
+  if (str === "" || str === "-") return 2;
 
   // Try "number: name" format first
   const match = str.match(/^(\d+):/);
@@ -92,7 +92,7 @@ function extractBacType(value: CellValue): number {
 function extractDPTValue(value: CellValue): number {
   if (value === null || value === undefined) return 257; // Default to 1.001: switch
   const str = String(value).trim();
-  if (str === '' || str === '-') return 257;
+  if (str === "" || str === "-") return 257;
 
   // Match pattern "main.sub" at start (e.g., "9.001")
   const match = str.match(/^(\d+)\.(\d+)/);
@@ -107,8 +107,8 @@ function extractDPTValue(value: CellValue): number {
   if (fallbackMatch) {
     const main = parseInt(fallbackMatch[1], 10);
     // Use common defaults for each family
-    if (main === 3) return 3 * 256 + 7;  // 3.007: dimming control
-    if (main === 2) return 2 * 256 + 1;  // 2.001: switch control
+    if (main === 3) return 3 * 256 + 7; // 3.007: dimming control
+    if (main === 2) return 2 * 256 + 1; // 2.001: switch control
     return main * 256 + 1; // Default to .001 for unknown families
   }
 
@@ -122,7 +122,7 @@ function extractDPTValue(value: CellValue): number {
  * "0/0/1" -> 1, "1/2/3" -> 2563
  */
 function parseGroupAddressValue(groupAddress: string): number {
-  const parts = groupAddress.split('/').map((p) => parseInt(p.trim(), 10));
+  const parts = groupAddress.split("/").map((p) => parseInt(p.trim(), 10));
   if (parts.length !== 3 || parts.some(isNaN)) return 0;
   const [main, middle, sub] = parts;
   return (main << 11) | (middle << 8) | sub;
@@ -132,7 +132,7 @@ function parseGroupAddressValue(groupAddress: string): number {
  * Safe number extraction
  */
 function safeNumber(val: CellValue, fallback: number = -1): number {
-  if (val === null || val === undefined || val === '-') return fallback;
+  if (val === null || val === undefined || val === "-") return fallback;
   const n = Number(val);
   return isNaN(n) ? fallback : n;
 }
@@ -152,7 +152,7 @@ function parseFlag(val: CellValue): boolean {
  */
 function parseBoolean(val: CellValue): boolean {
   if (val === null || val === undefined) return false;
-  return String(val).toLowerCase() === 'true';
+  return String(val).toLowerCase() === "true";
 }
 
 /**
@@ -186,35 +186,40 @@ export function workbookRowsToKNXBACSignals(
   const col = (name: string): number => columnIndex.get(name) ?? -1;
 
   // Use first '#' (index 0) for internal, second '#' (index 11) for external
-  const firstHashIdx = COLUMN_HEADERS.indexOf('#');
+  const firstHashIdx = COLUMN_HEADERS.indexOf("#");
 
   return rows.map((row) => {
     // Internal (KNX)
     const internalIdx = safeNumber(row[firstHashIdx], 0);
-    const description = String(row[col('Description')] || '');
-    const active = parseBoolean(row[col('Active')]);
-    const dptValue = extractDPTValue(row[col('DPT')]);
-    const groupAddress = String(row[col('Group Address')] || '0/0/0');
+    const description = String(row[col("Description")] || "");
+    const active = parseBoolean(row[col("Active")]);
+    const dptValue = extractDPTValue(row[col("DPT")]);
+    const groupAddress = String(row[col("Group Address")] || "0/0/0");
     const groupAddressValue = parseGroupAddressValue(groupAddress);
-    const additionalAddresses = String(row[col('Additional Addresses')] || '');
+    const additionalAddresses = String(row[col("Additional Addresses")] || "");
 
     // Parse flags
-    const u = parseFlag(row[col('U')]);
-    const t = parseFlag(row[col('T')]);
-    const ri = parseFlag(row[col('Ri')]);
-    const w = parseFlag(row[col('W')]);
-    const r = parseFlag(row[col('R')]);
+    const u = parseFlag(row[col("U")]);
+    const t = parseFlag(row[col("T")]);
+    const ri = parseFlag(row[col("Ri")]);
+    const w = parseFlag(row[col("W")]);
+    const r = parseFlag(row[col("R")]);
 
     // External (BACnet Client)
-    const deviceName = String(row[col('Device Name')] || 'Device 0');
-    const bacType = extractBacType(row[col('Type')]);
-    const bacInstance = safeNumber(row[col('Instance')], 0);
+    const deviceName = String(row[col("Device Name")] || "Device 0");
+    const bacType = extractBacType(row[col("Type")]);
+    const bacInstance = safeNumber(row[col("Instance")], 0);
     const objectId = calculateObjectId(bacType, bacInstance);
+
+    // Extract device index from device name (e.g. "Device 3" → 3)
+    let deviceIndex = 0;
+    const deviceMatch = deviceName.match(/Device\s+(\d+)/i);
+    if (deviceMatch) deviceIndex = parseInt(deviceMatch[1], 10);
 
     return {
       idxExternal: internalIdx,
       name: description,
-      direction: 'KNX->BACnet Client',
+      direction: "KNX->BACnet Client",
       knx: {
         description,
         active,
@@ -228,7 +233,7 @@ export function workbookRowsToKNXBACSignals(
         extraAttrs: {},
       },
       bacnetClient: {
-        deviceIndex: 0, // Default to first device
+        deviceIndex,
         deviceName,
         bacType,
         bacInstance,
