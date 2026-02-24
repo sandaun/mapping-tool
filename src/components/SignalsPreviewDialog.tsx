@@ -33,7 +33,7 @@ export function SignalsPreviewDialog(props: SignalsPreviewDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto border rounded-md border-slate-400 dark:border-slate-600">
+        <div className="flex-1 overflow-auto border rounded-lg border-slate-400 dark:border-slate-600">
           <EditableTable
             data={props.signals}
             onDelete={props.onDelete}

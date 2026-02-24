@@ -69,7 +69,7 @@ export function ParsedSignalsPanel({
         </span>
       </div>
 
-      <div className="max-h-64 overflow-auto">
+      <div className="max-h-64 overflow-auto rounded-lg border border-border">
         <EditableTable data={signalsTableData} />
       </div>
 

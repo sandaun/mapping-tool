@@ -139,7 +139,7 @@ export function EditableTable({
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card">
+    <div className="overflow-hidden">
       <div className="overflow-auto">
         <table className="w-full">
           <thead className="border-b border-border bg-muted/50">

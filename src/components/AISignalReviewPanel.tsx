@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   AlertTriangle,
   RefreshCw,
@@ -9,13 +9,13 @@ import {
   CircleAlert,
   FileText,
   Copy,
-} from "lucide-react";
-import type { DeviceSignal } from "@/lib/deviceSignals";
-import { EditableTable } from "./EditableTable";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { NumberStepper } from "@/components/ui/NumberStepper";
-import type { EditableRow } from "@/types/overrides";
+} from 'lucide-react';
+import type { DeviceSignal } from '@/lib/deviceSignals';
+import { EditableTable } from './EditableTable';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { NumberStepper } from '@/components/ui/NumberStepper';
+import type { EditableRow } from '@/types/overrides';
 
 type SignalWithConfidence = DeviceSignal & { confidence: number };
 
@@ -34,34 +34,34 @@ const signalsToEditableRows = (
   signals: SignalWithConfidence[],
 ): EditableRow[] => {
   return signals.map((signal, index) => {
-    let type = "-";
-    let address: string | number = "-";
-    let dataType = "-";
+    let type = '-';
+    let address: string | number = '-';
+    let dataType = '-';
 
-    if ("registerType" in signal) {
+    if ('registerType' in signal) {
       type = signal.registerType;
       address = signal.address;
       dataType = signal.dataType;
-    } else if ("objectType" in signal) {
+    } else if ('objectType' in signal) {
       type = signal.objectType;
       address = signal.instance;
-    } else if ("groupAddress" in signal) {
-      type = "KNX";
+    } else if ('groupAddress' in signal) {
+      type = 'KNX';
       address = signal.groupAddress;
       dataType = signal.dpt;
     }
 
     const confidenceLevel =
       signal.confidence >= 0.8
-        ? "high"
+        ? 'high'
         : signal.confidence >= 0.6
-          ? "medium"
-          : "low";
+          ? 'medium'
+          : 'low';
 
     const confidenceLabels = {
-      high: "High",
-      medium: "Medium",
-      low: "Low",
+      high: 'High',
+      medium: 'Medium',
+      low: 'Low',
     };
 
     return {
@@ -86,7 +86,7 @@ export function AISignalReviewPanel({
   onDeviceCountChange,
   templateId,
 }: AISignalReviewPanelProps) {
-  const isKNXFlow = templateId.includes("knx");
+  const isKNXFlow = templateId.includes('knx');
   const lowConfidenceCount = signals.filter((s) => s.confidence < 0.6).length;
   const mediumConfidenceCount = signals.filter(
     (s) => s.confidence >= 0.6 && s.confidence < 0.8,
@@ -155,22 +155,22 @@ export function AISignalReviewPanel({
         </div>
       )}
 
-      <div className="max-h-80 overflow-auto">
+      <div className="max-h-80 overflow-auto rounded-lg border border-border">
         <EditableTable
           data={tableData}
           renderCell={(columnKey, value, row) => {
-            if (columnKey === "Confidence") {
+            if (columnKey === 'Confidence') {
               const level = (row as Record<string, unknown>)
                 ._confidenceLevel as string;
               const colorMap: Record<string, string> = {
-                high: "text-emerald-500",
-                medium: "text-amber-400",
-                low: "text-red-400",
+                high: 'text-emerald-500',
+                medium: 'text-amber-400',
+                low: 'text-red-400',
               };
               return (
                 <div className="flex items-center justify-between">
                   <span
-                    className={`text-sm font-medium ${colorMap[level] ?? ""}`}
+                    className={`text-sm font-medium ${colorMap[level] ?? ''}`}
                   >
                     {String(value)}
                   </span>
