@@ -12,12 +12,14 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo and title */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-17 items-center justify-center rounded-lg text-primary-foreground ">
+          <div className="flex items-center justify-center rounded-lg text-primary-foreground">
             <Image
-              src="/LogoTransparentCut.png"
+              src="/LogoSignal.svg"
               alt="Logo"
-              width={64}
-              height={64}
+              width={223}
+              height={100}
+              className="h-8 w-auto"
+              priority
             />
           </div>
           <div>
