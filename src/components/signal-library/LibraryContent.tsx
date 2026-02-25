@@ -78,11 +78,11 @@ export function LibraryContent({
 
       {/* Preview of selected record */}
       {selectedRecord && previewData.length > 0 && (
-        <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3 space-y-2">
-          <p className="text-xs font-medium text-muted-foreground">
+        <div className="mt-4 space-y-1.5">
+          <p className="text-xs font-medium text-muted-foreground px-1">
             Preview — {selectedRecord.signals.length} signals
           </p>
-          <div className="max-h-40 overflow-auto">
+          <div className="max-h-40 overflow-auto rounded-lg border border-border">
             <EditableTable data={previewData} />
           </div>
         </div>
