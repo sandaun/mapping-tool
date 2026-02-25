@@ -6,7 +6,7 @@ import { CollapsedProtocolLabel } from '@/components/ProtocolUI';
 import { SignalsInputSection } from '@/components/signals-input';
 import { ResultsSection } from '@/components/results-section';
 import { ErrorDisplay } from '@/components/ErrorDisplay';
-import { Header } from '@/components/Header';
+
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { StepSection } from '@/components/ui/StepSection';
@@ -20,8 +20,6 @@ export default function Home() {
 
   return (
     <div className="bg-background pb-12">
-      <Header />
-
       <LoadingOverlay visible={state.busy} message="Loading template..." />
 
       {/* Confirmation dialog for template change with pending signals */}
