@@ -1,10 +1,10 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from "react";
-import { applyOverridesToWorkbook } from "@/lib/overrides";
-import { useFileImport } from "@/hooks/useFileImport";
-import { useTemplateManager } from "@/hooks/useTemplateManager";
-import { useSignalsWorkflow } from "@/hooks/useSignalsWorkflow";
-import type { Override } from "@/types/overrides";
-import type { TemplateId } from "@/types/page.types";
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { applyOverridesToWorkbook } from '@/lib/overrides';
+import { useFileImport } from '@/hooks/useFileImport';
+import { useTemplateManager } from '@/hooks/useTemplateManager';
+import { useSignalsWorkflow } from '@/hooks/useSignalsWorkflow';
+import type { Override } from '@/types/overrides';
+import type { TemplateId } from '@/types/page.types';
 
 // ---------------------------------------------------------------------------
 // Hook — composes child hooks + page-level orchestration logic
@@ -59,6 +59,8 @@ export function usePageOrchestrator() {
 
   const handleTemplateChange = useCallback(
     (templateId: TemplateId) => {
+      if (templateId === selectedTemplateId) return;
+
       if (pendingExport) {
         setPendingTemplateId(templateId);
       } else {
@@ -67,7 +69,7 @@ export function usePageOrchestrator() {
         setStep1Collapsed(true);
       }
     },
-    [pendingExport, setTemplateId, loadTemplate],
+    [pendingExport, selectedTemplateId, setTemplateId, loadTemplate],
   );
 
   const handleConfirmTemplateChange = useCallback(() => {
@@ -119,11 +121,11 @@ export function usePageOrchestrator() {
 
         // Update timestamp to current date
         const signalsSheet = workbookToExport.sheets.find(
-          (s) => s.name === "Signals",
+          (s) => s.name === 'Signals',
         );
         if (signalsSheet) {
           const timestampRowIndex = signalsSheet.rows.findIndex(
-            (row) => row[0] === "Timestamp",
+            (row) => row[0] === 'Timestamp',
           );
           if (timestampRowIndex !== -1) {
             signalsSheet.rows[timestampRowIndex][1] =
@@ -131,25 +133,25 @@ export function usePageOrchestrator() {
           }
         }
 
-        const res = await fetch("/api/export", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(workbookToExport),
         });
 
-        if (!res.ok) throw new Error("Error exportant.");
+        if (!res.ok) throw new Error('Error exportant.');
 
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
-        a.download = "export.xlsx";
+        a.download = 'export.xlsx';
         document.body.appendChild(a);
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
       } catch (e) {
-        console.error("Export error:", e);
+        console.error('Export error:', e);
       }
     },
     [raw, selectedTemplateId],
