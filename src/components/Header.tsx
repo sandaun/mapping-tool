@@ -1,11 +1,30 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
 import { ThemeToggleIcon } from './icons/ThemeToggle';
+import { createClient } from '@/lib/supabase/client';
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUserEmail(data.user?.email ?? null);
+    });
+  }, []);
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
@@ -30,8 +49,24 @@ export function Header() {
           </div>
         </div>
 
-        {/* Toggle dark/light */}
-        <div
+        {/* Right side: user info + theme toggle */}
+        <div className="flex items-center gap-3">
+          {userEmail && (
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:block text-xs text-muted-foreground max-w-40 truncate">
+                {userEmail}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1.5 transition-colors hover:bg-accent"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
+
+          {/* Toggle dark/light */}
+          <div
           onClick={toggleTheme}
           className="flex items-center justify-center rounded-full p-2 cursor-pointer transition-all duration-300"
           style={{
@@ -47,6 +82,7 @@ export function Header() {
           }}
         >
           <ThemeToggleIcon theme={theme} />
+          </div>
         </div>
       </div>
     </header>
