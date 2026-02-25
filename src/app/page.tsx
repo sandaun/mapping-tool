@@ -19,7 +19,7 @@ export default function Home() {
   const state = usePageOrchestrator();
 
   return (
-    <div className="bg-background">
+    <div className="bg-background pb-12">
       <Header />
 
       <LoadingOverlay visible={state.busy} message="Loading template..." />
