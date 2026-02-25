@@ -1,6 +1,7 @@
 'use client';
 
-import { usePageOrchestrator } from '@/hooks/usePageOrchestrator';
+import { useState } from 'react';
+import { useOrchestrator } from '@/contexts/OrchestratorContext';
 import { TemplateSelector } from '@/components/TemplateSelector';
 import { CollapsedProtocolLabel } from '@/components/ProtocolUI';
 import { SignalsInputSection } from '@/components/signals-input';
@@ -11,18 +12,16 @@ import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { StepSection } from '@/components/ui/StepSection';
 
-// ---------------------------------------------------------------------------
-// Page (orchestrator — zero business logic)
-// ---------------------------------------------------------------------------
-
 export default function Home() {
-  const state = usePageOrchestrator();
+  const state = useOrchestrator();
 
+  // Captured once at mount: if raw was already loaded (e.g. returning from
+  // Settings), skip the entrance animation. Only animate on fresh load/login.
+  const [shouldAnimate] = useState(() => !state.raw);
   return (
     <div className="bg-background pb-12">
       <LoadingOverlay visible={state.busy} message="Loading template..." />
 
-      {/* Confirmation dialog for template change with pending signals */}
       <ConfirmDialog
         open={state.pendingTemplateId !== null}
         onOpenChange={(open) => !open && state.handleCancelTemplateChange()}
@@ -35,7 +34,6 @@ export default function Home() {
         onCancel={state.handleCancelTemplateChange}
       />
 
-      {/* Confirmation dialog for Reset Signals */}
       <ConfirmDialog
         open={state.showResetConfirm}
         onOpenChange={(open) => !open && state.setShowResetConfirm(false)}
@@ -49,7 +47,7 @@ export default function Home() {
       />
 
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
-        {/* Step 1: Gateway Templates */}
+        {/* Step 1 — always visible immediately */}
         <StepSection
           stepNumber={1}
           title="Gateway Templates"
@@ -71,52 +69,60 @@ export default function Home() {
           />
         </StepSection>
 
-        {/* Step 2: Import device signals */}
+        {/*
+          Steps 2 & 3 — NOT in DOM until raw data is ready.
+          When raw arrives (~150ms), the wrapper mounts with a CSS @keyframes
+          animation (opacity 0→1 + translateY 12→0 over 500ms).
+          Unlike CSS transitions, @keyframes animations fire on mount —
+          the browser renders the first frame at opacity:0 then animates.
+          This avoids any layout shift: nothing grows or collapses.
+        */}
         {state.raw && (
-          <StepSection
-            stepNumber={2}
-            title="Import Device Signals"
-            description="Parse signals from CSV or AI-extracted data."
-            collapsible
-            collapsed={state.step2Collapsed}
-            onCollapsedChange={state.setStep2Collapsed}
+          <div
+            className={`flex flex-col gap-8${shouldAnimate ? ' animate-fadeIn' : ''}`}
           >
-            <SignalsInputSection
-              template={state.selectedTemplate}
-              csvInput={state.csvInput}
-              onCsvInputChange={state.setCsvInput}
-              onParseCSV={state.handleParseCSV}
-              parseAndAddSignals={state.parseAndAddSignals}
-              onCopyPrompt={state.handleCopyPrompt}
-              onGenerateSignals={state.handleGenerateSignals}
-              generateWithSignals={state.generateWithSignals}
-              onClearSignals={state.handleClearSignals}
-              deviceSignals={state.deviceSignals}
-              inputWarnings={state.inputWarnings}
-              busy={state.busy}
-            />
-          </StepSection>
-        )}
+            <StepSection
+              stepNumber={2}
+              title="Import Device Signals"
+              description="Parse signals from CSV or AI-extracted data."
+              collapsible
+              collapsed={state.step2Collapsed}
+              onCollapsedChange={state.setStep2Collapsed}
+            >
+              <SignalsInputSection
+                template={state.selectedTemplate}
+                csvInput={state.csvInput}
+                onCsvInputChange={state.setCsvInput}
+                onParseCSV={state.handleParseCSV}
+                parseAndAddSignals={state.parseAndAddSignals}
+                onCopyPrompt={state.handleCopyPrompt}
+                onGenerateSignals={state.handleGenerateSignals}
+                generateWithSignals={state.generateWithSignals}
+                onClearSignals={state.handleClearSignals}
+                deviceSignals={state.deviceSignals}
+                inputWarnings={state.inputWarnings}
+                busy={state.busy}
+              />
+            </StepSection>
 
-        <ErrorDisplay error={state.error} />
+            <ErrorDisplay error={state.error} />
 
-        {/* Step 3: Results */}
-        {state.raw && (
-          <StepSection
-            stepNumber={3}
-            title="Generated Output"
-            description={`Sheets: ${state.sheetNames.join(', ')}`}
-          >
-            <ResultsSection
-              raw={state.raw}
-              onExport={state.handleExport}
-              onReset={state.handleResetRequest}
-              busy={state.busy}
-              pendingExport={state.pendingExport}
-              templateId={state.selectedTemplateId}
-              originalIbmaps={state.originalIbmaps}
-            />
-          </StepSection>
+            <StepSection
+              stepNumber={3}
+              title="Generated Output"
+              description={`Sheets: ${state.sheetNames.join(', ')}`}
+            >
+              <ResultsSection
+                raw={state.raw}
+                onExport={state.handleExport}
+                onReset={state.handleResetRequest}
+                busy={state.busy}
+                pendingExport={state.pendingExport}
+                templateId={state.selectedTemplateId}
+                originalIbmaps={state.originalIbmaps}
+              />
+            </StepSection>
+          </div>
         )}
       </main>
     </div>

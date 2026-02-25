@@ -48,7 +48,7 @@ export function useFileImport() {
 
   // Delayed busy: avoids visual blink on fast loads
   const busyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
-  const BUSY_DELAY_MS = 150;
+  const BUSY_DELAY_MS = 500;
 
   const startBusy = useCallback(() => {
     busyTimerRef.current = setTimeout(() => setBusy(true), BUSY_DELAY_MS);
@@ -127,38 +127,71 @@ export function useFileImport() {
         let devices: IbmapsDevice[];
 
         // Route to appropriate parser based on protocol combination
-        if (internalProtocol === 'KNX' && externalProtocol === 'Modbus Master') {
+        if (
+          internalProtocol === 'KNX' &&
+          externalProtocol === 'Modbus Master'
+        ) {
           const parseResult = parseIbmapsSignals_KNX_MBM(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (KNX-MBM):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (KNX-MBM):',
+              parseResult.warnings,
+            );
           }
-          workbook = rawKNXSignalsToWorkbook(parseResult.signals, parseResult.devices);
+          workbook = rawKNXSignalsToWorkbook(
+            parseResult.signals,
+            parseResult.devices,
+          );
           devices = parseResult.devices;
-        } else if (internalProtocol === 'BACnet Server' && externalProtocol === 'KNX') {
+        } else if (
+          internalProtocol === 'BACnet Server' &&
+          externalProtocol === 'KNX'
+        ) {
           const parseResult = parseIbmapsSignals_BAC_KNX(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (BAC-KNX):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (BAC-KNX):',
+              parseResult.warnings,
+            );
           }
           workbook = rawBACKNXSignalsToWorkbook(parseResult.signals);
           devices = []; // BAC-KNX doesn't have Modbus devices
-        } else if (internalProtocol === 'Modbus Slave' && externalProtocol === 'KNX') {
+        } else if (
+          internalProtocol === 'Modbus Slave' &&
+          externalProtocol === 'KNX'
+        ) {
           const parseResult = parseIbmapsSignals_MBS_KNX(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (MBS-KNX):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (MBS-KNX):',
+              parseResult.warnings,
+            );
           }
           workbook = rawMBSKNXSignalsToWorkbook(parseResult.signals);
           devices = []; // MBS-KNX doesn't have Modbus devices
-        } else if (internalProtocol === 'KNX' && externalProtocol === 'BACnet Client') {
+        } else if (
+          internalProtocol === 'KNX' &&
+          externalProtocol === 'BACnet Client'
+        ) {
           const parseResult = parseIbmapsSignals_KNX_BAC(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (KNX-BAC):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (KNX-BAC):',
+              parseResult.warnings,
+            );
           }
           workbook = rawKNXBACSignalsToWorkbook(parseResult.signals);
           devices = []; // KNX-BAC doesn't have Modbus devices
-        } else if (internalProtocol === 'Modbus Slave' && externalProtocol === 'BACnet Client') {
+        } else if (
+          internalProtocol === 'Modbus Slave' &&
+          externalProtocol === 'BACnet Client'
+        ) {
           const parseResult = parseIbmapsSignals_MBS_BAC(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (MBS-BAC):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (MBS-BAC):',
+              parseResult.warnings,
+            );
           }
           workbook = rawMBSBACSignalsToWorkbook(parseResult.signals);
           devices = []; // MBS-BAC doesn't have Modbus devices
@@ -166,9 +199,15 @@ export function useFileImport() {
           // Default to BACnet-Modbus
           const parseResult = parseIbmapsSignals_BAC_MBM(xmlContent);
           if (parseResult.warnings.length > 0) {
-            console.warn('IBMAPS Parse Warnings (BAC-MBM):', parseResult.warnings);
+            console.warn(
+              'IBMAPS Parse Warnings (BAC-MBM):',
+              parseResult.warnings,
+            );
           }
-          workbook = rawSignalsToWorkbook(parseResult.signals, parseResult.devices);
+          workbook = rawSignalsToWorkbook(
+            parseResult.signals,
+            parseResult.devices,
+          );
           devices = parseResult.devices;
         }
 
