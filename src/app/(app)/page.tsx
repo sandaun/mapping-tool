@@ -20,7 +20,10 @@ export default function Home() {
   const [shouldAnimate] = useState(() => !state.raw);
   return (
     <div className="bg-background pb-12">
-      <LoadingOverlay visible={state.busy} message="Loading template..." />
+      {/* LoadingOverlay intentionally hidden for template loads — the 500ms
+          delay + brief display creates visual noise. Buttons stay disabled
+          via the busy prop to prevent double-clicks. */}
+      <LoadingOverlay visible={false} message="Loading template..." />
 
       <ConfirmDialog
         open={state.pendingTemplateId !== null}
