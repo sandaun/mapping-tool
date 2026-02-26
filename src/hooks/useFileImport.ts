@@ -41,25 +41,28 @@ export function useFileImport() {
   const [raw, setRaw] = useState<RawWorkbook | null>(null);
   const [protocols, setProtocols] = useState<ProtocolsMetadata | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
   const [originalIbmaps, setOriginalIbmaps] = useState<IbmapsState | null>(
     null,
   );
 
-  // Delayed busy: avoids visual blink on fast loads
-  const busyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
-  const BUSY_DELAY_MS = 500;
+  // Delayed loading indicator: avoids visual blink on fast loads (<500ms)
+  const loadingTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const LOADING_DELAY_MS = 500;
 
-  const startBusy = useCallback(() => {
-    busyTimerRef.current = setTimeout(() => setBusy(true), BUSY_DELAY_MS);
+  const startLoading = useCallback(() => {
+    loadingTimerRef.current = setTimeout(
+      () => setTemplateLoading(true),
+      LOADING_DELAY_MS,
+    );
   }, []);
 
-  const stopBusy = useCallback(() => {
-    if (busyTimerRef.current) {
-      clearTimeout(busyTimerRef.current);
-      busyTimerRef.current = null;
+  const stopLoading = useCallback(() => {
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
     }
-    setBusy(false);
+    setTemplateLoading(false);
   }, []);
 
   async function importArrayBufferAsFile(
@@ -69,7 +72,7 @@ export function useFileImport() {
     baseXlsxHref?: string,
   ) {
     setError(null);
-    startBusy();
+    startLoading();
 
     const importXlsxArrayBuffer = async (
       buffer: ArrayBuffer,
@@ -285,13 +288,13 @@ export function useFileImport() {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setError(message);
     } finally {
-      stopBusy();
+      stopLoading();
     }
   }
 
   async function exportWorkbook() {
     if (!raw) return;
-    startBusy();
+    startLoading();
     setError(null);
 
     try {
@@ -322,7 +325,7 @@ export function useFileImport() {
       const message = e instanceof Error ? e.message : 'Error desconegut';
       setError(message);
     } finally {
-      stopBusy();
+      stopLoading();
     }
   }
 
@@ -331,7 +334,7 @@ export function useFileImport() {
     setRaw,
     protocols,
     error,
-    busy,
+    templateLoading,
     importArrayBufferAsFile,
     exportWorkbook,
     originalIbmaps,

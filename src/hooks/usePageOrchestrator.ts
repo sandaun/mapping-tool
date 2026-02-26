@@ -19,7 +19,7 @@ export function usePageOrchestrator() {
     setRaw,
     protocols,
     error,
-    busy,
+    templateLoading,
     importArrayBufferAsFile,
     originalIbmaps,
   } = fileImport;
@@ -177,7 +177,7 @@ export function usePageOrchestrator() {
     raw,
     protocols,
     error,
-    busy,
+    templateLoading,
     originalIbmaps,
 
     // Template

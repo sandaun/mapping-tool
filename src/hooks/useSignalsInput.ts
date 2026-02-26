@@ -31,7 +31,7 @@ export interface UseSignalsInputParams {
   onClearSignals: () => void;
   deviceSignals: DeviceSignal[];
   inputWarnings: string[];
-  busy: boolean;
+  busy?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -90,7 +90,7 @@ export function useSignalsInput(params: UseSignalsInputParams) {
     onClearSignals,
     deviceSignals,
     inputWarnings,
-    busy,
+    busy = false,
   } = params;
 
   // UI toggles

@@ -17,7 +17,7 @@ export interface UseResultsSectionParams {
   raw: RawWorkbook;
   onExport: (overrides: Override[]) => void;
   onReset: () => void;
-  busy: boolean;
+  busy?: boolean;
   pendingExport: { signalsCount: number; targetSheet: string } | null;
   templateId: string;
   originalIbmaps?: IbmapsState | null;
@@ -123,7 +123,7 @@ export function useResultsSection(params: UseResultsSectionParams) {
 
     // Pass-through
     pendingExport: params.pendingExport,
-    busy: params.busy,
+    busy: params.busy ?? false,
     onReset: params.onReset,
     originalIbmaps: params.originalIbmaps,
   } as const;

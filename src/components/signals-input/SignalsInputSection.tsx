@@ -27,7 +27,7 @@ export type SignalsInputSectionProps = {
   onClearSignals: () => void;
   deviceSignals: DeviceSignal[];
   inputWarnings: string[];
-  busy: boolean;
+  busy?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ export function SignalsInputSection(props: SignalsInputSectionProps) {
   const state = useSignalsInput(props);
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Restore previously parsed signals */}
       {state.hasSavedData && (
         <SavedSignalsBanner onLoadSaved={state.handleLoadSaved} />

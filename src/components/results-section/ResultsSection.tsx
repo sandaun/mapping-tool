@@ -16,7 +16,7 @@ export type ResultsSectionProps = {
   raw: RawWorkbook;
   onExport: (overrides: Override[]) => void;
   onReset: () => void;
-  busy: boolean;
+  busy?: boolean;
   pendingExport: { signalsCount: number; targetSheet: string } | null;
   templateId: string;
   originalIbmaps?: IbmapsState | null;
@@ -30,7 +30,7 @@ export function ResultsSection(props: ResultsSectionProps) {
   const state = useResultsSection(props);
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {state.pendingExport && (
         <PendingExportBanner signalsCount={state.pendingExport.signalsCount} />
       )}

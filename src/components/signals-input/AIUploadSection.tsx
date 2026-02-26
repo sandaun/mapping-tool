@@ -37,19 +37,19 @@ export function AIUploadSection({
   onOpenLibrary,
 }: AIUploadSectionProps) {
   return (
-    <div className="space-y-4">
-      <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
-        <Sparkles className="w-4 h-4 text-primary" />
+    <div className='space-y-4'>
+      <h3 className='text-sm font-medium text-foreground flex items-center gap-1.5'>
+        <Sparkles className='w-4 h-4 text-primary' />
         AI-Powered File Upload
         {inputType !== 'knx' && (
           <Button
-            variant="neutral"
-            size="sm"
-            className="ml-auto text-xs"
+            variant='neutral'
+            size='sm'
+            className='ml-auto text-xs'
             onClick={onOpenLibrary}
             disabled={busy}
           >
-            <Library className="w-3.5 h-3.5 mr-1" />
+            <Library className='w-3.5 h-3.5 mr-1' />
             Load from Library
           </Button>
         )}
@@ -60,14 +60,14 @@ export function AIUploadSection({
       )}
 
       {aiState.status === 'uploading' && (
-        <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
-          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
-          <p className="text-sm text-blue-800 dark:text-blue-300">
+        <div className='rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center'>
+          <Loader2 className='w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2' />
+          <p className='text-sm text-blue-800 dark:text-blue-300'>
             Uploading {aiState.file.name}...
           </p>
-          <div className="mt-3 w-full bg-blue-200 dark:bg-blue-900/40 rounded-full h-2">
+          <div className='mt-3 w-full bg-blue-200 dark:bg-blue-900/40 rounded-full h-2'>
             <div
-              className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all"
+              className='bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all'
               style={{ width: `${aiState.progress}%` }}
             />
           </div>
@@ -75,13 +75,13 @@ export function AIUploadSection({
       )}
 
       {aiState.status === 'parsing' && (
-        <div className="rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center">
-          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2" />
-          <p className="text-sm text-blue-800 dark:text-blue-300 flex items-center justify-center gap-1.5">
-            <Sparkles className="w-4 h-4" />
+        <div className='rounded-lg border border-blue-200 dark:border-blue-400/30 bg-blue-50 dark:bg-blue-950/20 p-6 text-center'>
+          <Loader2 className='w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-2' />
+          <p className='text-sm text-blue-800 dark:text-blue-300 flex items-center justify-center gap-1.5'>
+            <Sparkles className='w-4 h-4' />
             {analyzingProvider} is analyzing {aiState.file.name}...
           </p>
-          <p className="text-xs text-blue-600 dark:text-blue-400/70 mt-1">
+          <p className='text-xs text-blue-600 dark:text-blue-400/70 mt-1'>
             This may take 10-30 seconds depending on file size
           </p>
         </div>
@@ -101,20 +101,20 @@ export function AIUploadSection({
       )}
 
       {aiState.status === 'error' && (
-        <div className="rounded-lg border border-red-200 dark:border-red-400/30 bg-red-50 dark:bg-red-950/20 p-4">
-          <p className="text-sm text-red-800 dark:text-red-300 font-medium">
+        <div className='rounded-lg border border-red-200 dark:border-red-400/30 bg-red-50 dark:bg-red-950/20 p-4'>
+          <p className='text-sm text-red-800 dark:text-red-300 font-medium'>
             Error parsing file
           </p>
-          <p className="text-xs text-red-600 dark:text-red-400/70 mt-1">
+          <p className='text-xs text-red-600 dark:text-red-400/70 mt-1'>
             {aiState.error}
           </p>
           <Button
             onClick={onReset}
-            variant="neutral"
-            size="sm"
-            className="mt-3 text-xs"
+            variant='neutral'
+            size='sm'
+            className='mt-3 text-xs'
           >
-            <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+            <RotateCcw className='w-3.5 h-3.5 mr-1.5' />
             Try Again
           </Button>
         </div>
