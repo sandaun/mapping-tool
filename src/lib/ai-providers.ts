@@ -2,25 +2,18 @@ import type { TemplateId } from '@/types/page.types';
 import type { SignalInputType } from '@/types/signal-library';
 
 // ---------------------------------------------------------------------------
-// AI Provider types & constants
+// AI Provider types & constants (client-safe — no server imports)
 // ---------------------------------------------------------------------------
 
-export type AIProvider = 'openai' | 'groq' | 'cerebras';
+export type AIProvider = 'openai' | 'kimi';
 
 export const PROVIDER_LABEL: Record<AIProvider, string> = {
   openai: 'OpenAI',
-  groq: 'Groq',
-  cerebras: 'Cerebras',
+  kimi: 'Kimi',
 };
 
 export function isAIProvider(value: unknown): value is AIProvider {
-  return value === 'openai' || value === 'groq' || value === 'cerebras';
-}
-
-export function shouldUseOpenAIForFile(file: File): boolean {
-  return (
-    file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
-  );
+  return value === 'openai' || value === 'kimi';
 }
 
 // ---------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { DeviceSignal } from '@/lib/deviceSignals';
 import type { TemplateId } from '@/types/page.types';
-import type { AIModel } from '@/lib/ai/config';
 
 export type AIParseStatus =
   | { status: 'idle' }
@@ -43,80 +42,70 @@ interface AIParseResult {
 
 interface UseAIParserReturn {
   state: AIParseStatus;
-  parseFile: (
-    file: File,
-    templateId: TemplateId,
-    model?: AIModel,
-  ) => Promise<void>;
+  parseFile: (file: File, templateId: TemplateId) => Promise<void>;
   reset: () => void;
   acceptSignals: () => (DeviceSignal & { confidence: number })[] | null;
-  retry: (file: File, templateId: TemplateId, model?: AIModel) => Promise<void>;
+  retry: (file: File, templateId: TemplateId) => Promise<void>;
 }
 
 export function useAIParser(): UseAIParserReturn {
   const [state, setState] = useState<AIParseStatus>({ status: 'idle' });
 
-  const parseFile = useCallback(
-    async (file: File, templateId: TemplateId, model?: AIModel) => {
-      setState({ status: 'uploading', file, progress: 0 });
+  const parseFile = useCallback(async (file: File, templateId: TemplateId) => {
+    setState({ status: 'uploading', file, progress: 0 });
 
-      try {
-        // Simulate progress updates
-        const progressInterval = setInterval(() => {
-          setState((prev) => {
-            if (prev.status === 'uploading' && prev.progress < 90) {
-              return { ...prev, progress: prev.progress + 10 };
-            }
-            return prev;
-          });
-        }, 500);
-
-        // Create form data
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('templateId', templateId);
-        if (model) {
-          formData.append('model', model);
-        }
-
-        setState({ status: 'parsing', file });
-
-        // Call API
-        const response = await fetch('/api/parse-file', {
-          method: 'POST',
-          body: formData,
+    try {
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setState((prev) => {
+          if (prev.status === 'uploading' && prev.progress < 90) {
+            return { ...prev, progress: prev.progress + 10 };
+          }
+          return prev;
         });
+      }, 500);
 
-        clearInterval(progressInterval);
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('templateId', templateId);
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Failed to parse file');
-        }
+      setState({ status: 'parsing', file });
 
-        const result: AIParseResult = await response.json();
+      // Call API
+      const response = await fetch('/api/parse-file', {
+        method: 'POST',
+        body: formData,
+      });
 
-        // Store signals with confidence in review state
-        setState({
-          status: 'review',
-          signals: result.signals as (DeviceSignal & { confidence: number })[],
-          warnings: result.warnings,
-          fileName: result.metadata.fileName,
-          manufacturer: result.manufacturer,
-          model: result.model,
-          inputType: result.metadata.inputType,
-          metadata: result.metadata,
-        });
-      } catch (error) {
-        setState({
-          status: 'error',
-          error:
-            error instanceof Error ? error.message : 'Unknown error occurred',
-        });
+      clearInterval(progressInterval);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to parse file');
       }
-    },
-    [],
-  );
+
+      const result: AIParseResult = await response.json();
+
+      // Store signals with confidence in review state
+      setState({
+        status: 'review',
+        signals: result.signals as (DeviceSignal & { confidence: number })[],
+        warnings: result.warnings,
+        fileName: result.metadata.fileName,
+        manufacturer: result.manufacturer,
+        model: result.model,
+        inputType: result.metadata.inputType,
+        metadata: result.metadata,
+      });
+    } catch (error) {
+      setState({
+        status: 'error',
+        error:
+          error instanceof Error ? error.message : 'Unknown error occurred',
+      });
+    }
+  }, []);
 
   const reset = useCallback(() => {
     setState({ status: 'idle' });
@@ -132,9 +121,9 @@ export function useAIParser(): UseAIParserReturn {
   }, [state]);
 
   const retry = useCallback(
-    async (file: File, templateId: TemplateId, model?: AIModel) => {
+    async (file: File, templateId: TemplateId) => {
       setState({ status: 'idle' });
-      await parseFile(file, templateId, model);
+      await parseFile(file, templateId);
     },
     [parseFile],
   );

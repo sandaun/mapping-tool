@@ -11,7 +11,6 @@ import {
   TEMPLATE_INPUT_TYPE,
   PROVIDER_LABEL,
   isAIProvider,
-  shouldUseOpenAIForFile,
 } from '@/lib/ai-providers';
 import { convertSignalsToCSV } from '@/lib/signals-csv';
 
@@ -151,32 +150,27 @@ export function useSignalsInput(params: UseSignalsInputParams) {
   // Handlers
   // -----------------------------------------------------------------------
 
-  const resolveProviderLabel = useCallback(
-    async (file: File): Promise<string> => {
-      if (shouldUseOpenAIForFile(file)) return PROVIDER_LABEL.openai;
+  const resolveProviderLabel = useCallback(async (): Promise<string> => {
+    try {
+      const response = await fetch('/api/parse-file', { method: 'GET' });
+      if (!response.ok) return 'AI';
 
-      try {
-        const response = await fetch('/api/parse-file', { method: 'GET' });
-        if (!response.ok) return 'AI';
+      const data: unknown = await response.json();
+      const provider =
+        typeof data === 'object' && data !== null
+          ? (data as { currentProvider?: unknown }).currentProvider
+          : undefined;
 
-        const data: unknown = await response.json();
-        const provider =
-          typeof data === 'object' && data !== null
-            ? (data as { currentProvider?: unknown }).currentProvider
-            : undefined;
-
-        if (!isAIProvider(provider)) return 'AI';
-        return PROVIDER_LABEL[provider];
-      } catch {
-        return 'AI';
-      }
-    },
-    [],
-  );
+      if (!isAIProvider(provider)) return 'AI';
+      return PROVIDER_LABEL[provider];
+    } catch {
+      return 'AI';
+    }
+  }, []);
 
   const handleFileSelect = useCallback(
     async (file: File) => {
-      setAnalyzingProvider(await resolveProviderLabel(file));
+      setAnalyzingProvider(await resolveProviderLabel());
       await parseFile(file, template.id);
     },
     [resolveProviderLabel, parseFile, template.id],

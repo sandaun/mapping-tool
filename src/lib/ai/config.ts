@@ -1,19 +1,23 @@
-// AI Configuration and Model Selection
-// Supports: OpenAI (with vision), Groq, Cerebras (text-based)
+// ---------------------------------------------------------------------------
+// AI Configuration — single source of truth
+// ---------------------------------------------------------------------------
+// Providers: OpenAI (vision + structured output), Kimi (file-extract + 256K ctx)
+//
+// To switch providers, change ACTIVE_AI_PROVIDER below. That's it.
 
-import { openai } from '@ai-sdk/openai';
-import { groq } from '@ai-sdk/groq';
-import { cerebras } from '@ai-sdk/cerebras';
+import { openai, createOpenAI } from '@ai-sdk/openai';
 import type { LanguageModel } from 'ai';
+import type { AIProvider } from '@/lib/ai-providers';
 
-// Provider configuration
-export type AIProvider = 'openai' | 'groq' | 'cerebras';
+// Re-export so consumers can import from either location
+export type { AIProvider };
 
-// Default provider from environment variable (server-side only)
-export const DEFAULT_PROVIDER: AIProvider =
-  (process.env.AI_PROVIDER as AIProvider) || 'openai';
+// ── Active provider ─────────────────────────────────────────────────────────
+// CHANGE THIS VALUE TO SWITCH: 'openai' or 'kimi'
+export const ACTIVE_AI_PROVIDER: AIProvider = 'openai';
 
-// Provider information for UI
+// ── Provider metadata ───────────────────────────────────────────────────────
+
 export const PROVIDER_INFO: Record<
   AIProvider,
   {
@@ -29,93 +33,69 @@ export const PROVIDER_INFO: Record<
     supportsVision: true,
     apiKeyName: 'OPENAI_API_KEY',
   },
-  groq: {
-    name: 'Groq',
-    description: 'Fast inference. Text extraction required for PDFs.',
+  kimi: {
+    name: 'Kimi (Moonshot)',
+    description:
+      'Supports PDFs via file-extract API. 256K context. OpenAI-compatible.',
     supportsVision: false,
-    apiKeyName: 'GROQ_API_KEY',
-  },
-  cerebras: {
-    name: 'Cerebras',
-    description: 'Fast inference. Text extraction required for PDFs.',
-    supportsVision: false,
-    apiKeyName: 'CEREBRAS_API_KEY',
+    apiKeyName: 'MOONSHOT_API_KEY',
   },
 };
 
-// Default model per provider from environment
+// ── Kimi SDK instance (OpenAI-compatible) ───────────────────────────────────
+
+const kimiClient = createOpenAI({
+  baseURL: 'https://api.moonshot.ai/v1',
+  apiKey: process.env.MOONSHOT_API_KEY ?? '',
+  name: 'kimi',
+});
+
+// ── Default models ──────────────────────────────────────────────────────────
+
 const PROVIDER_DEFAULT_MODELS: Record<AIProvider, string> = {
   openai: 'gpt-4o',
-  groq: 'llama-3.3-70b-versatile',
-  cerebras: 'llama3.1-8b',
+  kimi: 'kimi-k2.5',
 };
 
-// Get the AI model instance based on provider
+// ── Provider functions ──────────────────────────────────────────────────────
+
 export function getAIModel(
-  provider: AIProvider = DEFAULT_PROVIDER,
+  provider: AIProvider = ACTIVE_AI_PROVIDER,
   model?: string,
 ): LanguageModel {
-  // AI_MODEL env only applies to the DEFAULT_PROVIDER (avoid cross-provider model mismatch)
-  const envModel =
-    provider === DEFAULT_PROVIDER ? process.env.AI_MODEL : undefined;
-  const modelToUse = model || envModel || PROVIDER_DEFAULT_MODELS[provider];
+  const modelToUse = model || PROVIDER_DEFAULT_MODELS[provider];
 
   switch (provider) {
-    case 'groq':
-      return groq(modelToUse);
-    case 'cerebras':
-      return cerebras(modelToUse);
+    case 'kimi':
+      return kimiClient.chat(modelToUse);
     case 'openai':
     default:
       return openai(modelToUse);
   }
 }
 
-// Check if provider supports vision
 export function supportsVision(
-  provider: AIProvider = DEFAULT_PROVIDER,
+  provider: AIProvider = ACTIVE_AI_PROVIDER,
 ): boolean {
   return PROVIDER_INFO[provider].supportsVision;
 }
 
-// Get API key for current provider
 export function getApiKey(
-  provider: AIProvider = DEFAULT_PROVIDER,
+  provider: AIProvider = ACTIVE_AI_PROVIDER,
 ): string | undefined {
   switch (provider) {
-    case 'groq':
-      return process.env.GROQ_API_KEY;
-    case 'cerebras':
-      return process.env.CEREBRAS_API_KEY;
+    case 'kimi':
+      return process.env.MOONSHOT_API_KEY;
     case 'openai':
     default:
       return process.env.OPENAI_API_KEY;
   }
 }
 
-// Legacy exports for backward compatibility
-export type AIModel = 'gpt-4o' | 'gpt-4o-mini';
+// ── File upload config ──────────────────────────────────────────────────────
 
-export const MODEL_INFO: Record<
-  AIModel,
-  { name: string; description: string; costLevel: string }
-> = {
-  'gpt-4o': {
-    name: 'GPT-4o',
-    description:
-      'Best accuracy for complex PDFs and images. Has vision capabilities.',
-    costLevel: 'Higher cost',
-  },
-  'gpt-4o-mini': {
-    name: 'GPT-4o Mini',
-    description: 'Good for well-formatted files. 60% cheaper.',
-    costLevel: 'Lower cost',
-  },
-};
-
-// File upload configuration
 export const UPLOAD_CONFIG = {
-  maxFileSize: 10 * 1024 * 1024, // 10MB in bytes
+  maxFileSize: 10 * 1024 * 1024, // 10MB
   maxFileSizeMB: 10,
   allowedMimeTypes: [
     'application/pdf',
@@ -123,6 +103,7 @@ export const UPLOAD_CONFIG = {
     'application/vnd.ms-excel',
     'text/csv',
     'text/plain',
+    'text/html',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'image/png',
@@ -135,6 +116,7 @@ export const UPLOAD_CONFIG = {
     '.xls',
     '.csv',
     '.txt',
+    '.html',
     '.doc',
     '.docx',
     '.png',
@@ -144,7 +126,6 @@ export const UPLOAD_CONFIG = {
   ],
 } as const;
 
-// Check if file type is allowed
 export function isAllowedFileType(
   mimeType: string,
   extension: string,
@@ -159,12 +140,12 @@ export function isAllowedFileType(
   );
 }
 
-// Get file extension from filename
 export function getFileExtension(filename: string): string {
   return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2);
 }
 
-// AI parsing prompts for each signal type
+// ── AI prompts per signal type ──────────────────────────────────────────────
+
 export const AI_PROMPTS = {
   modbus: `You are a building automation engineer extracting Modbus signals from device documentation.
 
@@ -224,14 +205,14 @@ IMPORTANT:
 - Do not invent data`,
 } as const;
 
-// Confidence level thresholds
+// ── Confidence levels ───────────────────────────────────────────────────────
+
 export const CONFIDENCE_LEVELS = {
   high: { min: 0.8, label: 'High', color: 'green' },
   medium: { min: 0.6, max: 0.8, label: 'Medium', color: 'yellow' },
   low: { max: 0.6, label: 'Low', color: 'red' },
 } as const;
 
-// Get confidence level for a score
 export function getConfidenceLevel(score: number): 'high' | 'medium' | 'low' {
   if (score >= CONFIDENCE_LEVELS.high.min) return 'high';
   if (score >= CONFIDENCE_LEVELS.medium.min) return 'medium';
